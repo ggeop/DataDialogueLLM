@@ -1,0 +1,37 @@
+version: '1.0'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        - MODEL_REPO=${MODEL_REPO}
+        - MODEL_FILE=${MODEL_FILE}
+        - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
+    env_file:
+      - .env
+    environment:
+      - MODEL_REPO=${MODEL_REPO}
+      - MODEL_FILE=${MODEL_FILE}
+      - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    image: data-dialogue-backend:latest
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - LLM_BACKEND_URL=${LLM_BACKEND_URL}
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      - backend
+    image: data-dialogue-frontend:latest
