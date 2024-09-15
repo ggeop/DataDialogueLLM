@@ -1,6 +1,7 @@
 # Data Dialogue
-
 Data Dialogue is an application that creates prompts, retrieves data from various sources, and generates responses using an LLM backend. The application runs in Docker and consists of two main services: the LLM backend and the UI.
+
+<img src="imgs\datadialogue_screenshot.png" alt="alt text" title="UI Screenshot">
 
 ## Project Structure
 
@@ -47,10 +48,6 @@ data-dialogue/
    git clone https://github.com/yourusername/data-dialogue.git
    cd data-dialogue
    ```
-
-2. Set up environment variables:
-   - Copy `.env.example` to `.env`
-   - Fill in the required environment variables
 
 3. Build and run the Docker containers:
    ```
