@@ -1,7 +1,7 @@
-from app.models.database import SQLiteDatabase
+from app.db_clients import SQLiteClient
 
 
-def create_tables(db: SQLiteDatabase):
+def create_tables(db: SQLiteClient):
     # Create tables
     db.execute_query('''
     CREATE TABLE employees (
@@ -45,7 +45,7 @@ def create_tables(db: SQLiteDatabase):
     ''')
 
 
-def insert_dummy_data(db: SQLiteDatabase):
+def insert_dummy_data(db: SQLiteClient):
     departments = [
         (1, 'Engineering', 1000000),
         (2, 'Marketing', 500000),
@@ -100,7 +100,7 @@ def insert_dummy_data(db: SQLiteDatabase):
 
 
 def create_examples_database():
-    sqlite_db = SQLiteDatabase(':memory:')
+    sqlite_db = SQLiteClient(':memory:')
     create_tables(sqlite_db)
     insert_dummy_data(sqlite_db)
     return sqlite_db

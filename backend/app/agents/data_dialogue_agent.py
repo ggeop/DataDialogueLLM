@@ -1,34 +1,20 @@
-from typing import Any, Optional, Union
-from pydantic import BaseModel
+from app.db_clients import DatabaseClient
+from app.llm import LanguageModel
+from app.schemas.request_response import (
+    SQLResponse,
+    GeneralResponse,
+    DialogueResult
 
-from app.models.database import Database
-from app.models.language_model import LanguageModel
+)
 from app.agents.text_to_sql_agent import TextToSQLAgent
 from app.agents.question_relevance_agent import QuestionRelevanceAgent
 from app.core.config import settings
 
 
-class SQLResponse(BaseModel):
-    sql: str
-    results: Any
-    error: Optional[str] = None
-
-
-class GeneralResponse(BaseModel):
-    response: str
-
-
-class DialogueResult(BaseModel):
-    user_prompt: str
-    agent: str
-    response: Union[SQLResponse, GeneralResponse]
-    is_sql_response: bool
-
-
 class DataDialogueAgent:
     def __init__(
         self,
-        database: Database,
+        database: DatabaseClient,
         sql_model: LanguageModel,
         general_model: LanguageModel,
         relevance_threshold: float = 0.6
