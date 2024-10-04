@@ -1,11 +1,11 @@
 import logging
 from fastapi import APIRouter, HTTPException, Depends
 
-from app.schemas.request_response import (
+from app.schemas import (
     Query,
     RegisterSource
 )
-from app.services.data_dialogue_service import (
+from app.services.data_dialogue import (
     get_data_dialogue_service,
     update_data_dialogue_service
 )

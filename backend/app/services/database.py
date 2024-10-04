@@ -1,4 +1,4 @@
-from app.db_clients import SQLiteClient
+from app.clients.db import SQLiteClient
 
 
 def create_tables(db: SQLiteClient):

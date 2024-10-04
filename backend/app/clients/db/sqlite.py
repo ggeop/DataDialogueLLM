@@ -3,7 +3,7 @@ import sqlite3
 from contextlib import contextmanager
 from typing import Tuple, Any, Optional
 
-from app.db_clients.base import DatabaseClient
+from app.clients.db.base import DatabaseClient
 from app.utils.query_result import QueryResult
 
 

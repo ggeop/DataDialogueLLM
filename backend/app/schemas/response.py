@@ -1,22 +1,6 @@
-from pydantic import BaseModel
 from typing import Any, Optional, Union
 
-
-class Query(BaseModel):
-    text: str
-
-
-class DatabaseCreationResponse(BaseModel):
-    message: str
-
-
-class RegisterSource(BaseModel):
-    dbname: str
-    sourceType: str
-    username: str
-    password: str
-    host: str
-    port: str
+from app.schemas.base import BaseModel
 
 
 class SQLResponse(BaseModel):

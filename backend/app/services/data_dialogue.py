@@ -1,10 +1,10 @@
 import logging
 
-from app.db_clients import PostgresClient
+from app.clients.db import PostgresClient
 from app.llm import SQLModel, GeneralModel
-from app.schemas.request_response import RegisterSource
+from app.schemas import RegisterSource
 from app.agents.data_dialogue_agent import DataDialogueAgent
-from app.services.database_service import create_examples_database
+from app.services.database import create_examples_database
 from app.core.config import settings
 
 # Configure logging

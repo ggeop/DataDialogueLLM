@@ -1,6 +1,6 @@
-from app.db_clients import DatabaseClient
+from app.clients.db import DatabaseClient
 from app.llm import LanguageModel
-from app.schemas.request_response import (
+from app.schemas import (
     SQLResponse,
     GeneralResponse,
     DialogueResult
