@@ -1,0 +1,96 @@
+.conversations {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.conversation {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.conversation:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+}
+
+.user-message {
+    background-color: var(--user-message-bg);
+    color: var(--text-color);
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+}
+
+.user-icon {
+    margin-right: 1rem;
+    color: var(--primary-color);
+}
+
+.agent-response {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.agent-name {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sql-agent {
+    background-color: rgba(78, 204, 163, 0.1);
+}
+
+.general-agent {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.error-response {
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+pre {
+    background-color: var(--code-background);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+code {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.copy-btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.copy-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.copy-btn:active {
+    transform: scale(0.98);
+}
+
+.error-message {
+    color: var(--error-color);
+    font-weight: bold;
+    margin-top: 1rem;
+}

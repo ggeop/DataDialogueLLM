@@ -1,0 +1,69 @@
+.example-section {
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out;
+    max-height: 1000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.example-section.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.example-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.example-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 0;
+}
+
+.example-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.example-section li {
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.example-section li:hover {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+.hide-button {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 5px 10px;
+    font-weight: 400;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); 
+}
+
+.hide-button:hover {
+    background-color: var(--primary-dark);
+}

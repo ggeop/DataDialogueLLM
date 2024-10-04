@@ -1,0 +1,77 @@
+.question-container {
+    background-color: var(--input-background);
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.question-container:focus-within {
+    box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.3);
+    transform: translateY(-2px);
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--card-background);
+    border-radius: 15px;
+    overflow: hidden;
+    flex-grow: 1;
+    margin-right: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper:focus-within {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+input[type="text"] {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.ask-button {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--background-color);
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.ask-button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.ask-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.ask-button svg {
+    width: 20px;
+    height: 20px;
+}

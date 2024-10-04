@@ -1,0 +1,40 @@
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.result-table th, .result-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.result-table th {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    font-weight: 600;
+}
+
+.result-table tr:last-child td {
+    border-bottom: none;
+}
+
+.result-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sql-code {
+    background-color: var(--code-background);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.sql-code code {
+    font-family: 'Courier New', Courier, monospace;
+}

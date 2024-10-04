@@ -1,0 +1,114 @@
+:root {
+    --background-color: #1a1a2e;
+    --text-color: #ffffff;
+    --card-background: #232741;
+    --border-color: #2c2c44;
+    --sql-agent-color: #4ecca3;
+    --general-agent-color: #3498db;
+    --error-color: #e74c3c;
+    --code-background: #1a1a2e;
+    --sql-keyword-color: #569cd6;
+}
+
+.conversation {
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.user-message {
+    background-color: var(--card-background);
+    padding: 12px 15px;
+    font-weight: bold;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.app-response {
+    padding: 15px;
+}
+
+.agent-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sql-agent {
+    background-color: rgba(78, 204, 163, 0.1);
+}
+
+.general-agent {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.error-response {
+    background-color: rgba(231, 76, 60, 0.1);
+}
+
+.sql-code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    background-color: var(--code-background);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.sql-keyword {
+    color: var(--sql-keyword-color);
+    font-weight: bold;
+}
+
+.copy-btn {
+    background-color: var(--sql-agent-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.copy-btn:hover {
+    background-color: #3da88a;
+}
+
+.copy-btn:active {
+    transform: scale(0.98);
+}
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.result-table th, .result-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.result-table th {
+    background-color: var(--card-background);
+    font-weight: bold;
+}
+
+.result-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* New styles for compact layout */
+.user-message + .app-response {
+    border-top: none;
+}
+
+.app-response + .user-message {
+    margin-top: 20px;
+}

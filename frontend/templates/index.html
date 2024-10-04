@@ -3,33 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism-okaidia.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-sql.min.js"></script>
+    <title>Data Dialogue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/atom-one-dark.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/17.0.2/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/17.0.2/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/question-input.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/example-section.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/response-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register-source.css') }}">
 </head>
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="45" fill="#4CAF50" />
-                <path d="M30 35 L70 35 L50 65 Z" fill="white" />
-            </svg>
-            <h1 class="title">Data Dialogue</h1>
-        </div>
-    </header>
-
-    <div class="chat-container">
-        <div id="chatHistory" class="chat-history"></div>
-        <div class="input-area">
-            <textarea id="userInput" placeholder="Type your message..."></textarea>
-            <button id="submitButton">Send</button>
-        </div>
+    <div id="header-component"></div>
+    
+    <div class="container">
+        <div id="register-form-component"></div>
+        <div id="question-input-component"></div>
+        <div id="example-section-component"></div>
+        <div id="loading-indicator-component"></div>
+        <div id="conversations-component"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/queryHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uiInteractions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/responseRendering.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/exampleSection.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/register-source.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/componentLoader.js') }}"></script>
 </body>
 </html>
