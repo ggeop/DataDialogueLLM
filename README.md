@@ -1,7 +1,7 @@
 # Data Dialogue
 Data Dialogue is an application that creates prompts, retrieves data from various sources, and generates responses using an LLM backend. The application runs in Docker and consists of two main services: the LLM backend and the UI.
 
-<img src="imgs\datadialogue_screenshot.png" alt="alt text" title="UI Screenshot">
+<img src="imgs\data_dialogue_agent_responses.png" alt="alt text" title="UI Screenshot">
 
 ## Project Structure
 
@@ -12,14 +12,14 @@ data-dialogue/
    │   │   ├── api/
    │   │   │   ├── __init__.py
    │   │   │   ├── endpoints.py
-   │   │   │   └── models.py
+   │   │   │   └── ...
    │   │   ├── core/
    │   │   │   ├── __init__.py
    │   │   │   ├── config.py
    │   │   │   └── logging.py
    │   │   ├── services/
    │   │   │   ├── __init__.py
-   │   │   │   └── llm_service.py
+   │   │   │   └── ...
    │   │   └── main.py
    │   ├── Dockerfile
    │   └── requirements.txt
