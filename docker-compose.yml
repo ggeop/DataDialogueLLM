@@ -11,6 +11,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d dvd_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./backend
@@ -29,7 +35,10 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-    image: data-dialogue-backend:latest
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   frontend:
     build:
       context: ./frontend
@@ -43,7 +52,11 @@ services:
       - ./frontend:/app
     depends_on:
       - backend
-    image: data-dialogue-frontend:latest
 
 volumes:
   postgres_data:
+
+networks:
+  default:
+    name: data-dialogue-network
+    driver: bridge
