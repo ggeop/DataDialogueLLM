@@ -21,6 +21,10 @@ COPY app/utils/download_model.py app/utils/download_model.py
 # Run the download script
 RUN python -m app.utils.download_model
 
+RUN pip install nltk
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('punkt_tab'); nltk.download('stopwords')"
+
+
 
 # Copy the rest of the application
 COPY . .

@@ -104,7 +104,6 @@ After building with Docker Compose:
 
 For local development:
 - Run the backend and frontend in separate terminal windows using the local development instructions above.
-- Ensure the `LLM_BACKEND_URL` in your frontend `.env` file is set to `http://localhost:8000/generate`.
 
 ## Troubleshooting
 
@@ -117,7 +116,6 @@ For local development:
    - Check if ports 3000 and 8000 are free on your machine.
 
 4. **Backend and Frontend can't communicate**:
-   - Check the `LLM_BACKEND_URL` in the frontend `.env` file.
    - Ensure your firewall isn't blocking the communication.
 
 For any other issues, check the application logs using `docker-compose logs` or the individual service logs.

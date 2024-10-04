@@ -1,6 +1,16 @@
 version: '1.0'
 
 services:
+  postgres:
+    build: ./database/postgres
+    environment:
+      POSTGRES_DB: dvd_db
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   backend:
     build:
       context: ./backend
@@ -25,7 +35,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     environment:
-      - LLM_BACKEND_URL=${LLM_BACKEND_URL}
       - FLASK_ENV=development
       - FLASK_DEBUG=1
     ports:
@@ -35,3 +44,6 @@ services:
     depends_on:
       - backend
     image: data-dialogue-frontend:latest
+
+volumes:
+  postgres_data:
