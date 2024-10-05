@@ -1,6 +1,12 @@
 function toggleForm() {
     const formContainer = document.getElementById('formContainer');
+    const pageOverlay = document.getElementById('pageOverlay');
+    
     formContainer.classList.toggle('show');
+    pageOverlay.style.display = formContainer.classList.contains('show') ? 'block' : 'none';
+    
+    // Toggle body scroll
+    document.body.style.overflow = formContainer.classList.contains('show') ? 'hidden' : 'auto';
     
     // Close the menu when the form is toggled
     const menuContainer = document.querySelector('.menu-container');
@@ -73,3 +79,10 @@ async function submitForm() {
         }, 2000);
     }
 }
+
+// Add event listener for overlay click to close the form
+document.getElementById('pageOverlay').addEventListener('click', function(event) {
+    if (event.target === this) {
+        toggleForm();
+    }
+});
