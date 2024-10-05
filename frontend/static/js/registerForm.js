@@ -14,6 +14,16 @@ function toggleForm() {
     }
 }
 
+function showLoadingAnimation() {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    loadingOverlay.classList.add('show');
+}
+
+function hideLoadingAnimation() {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    loadingOverlay.classList.remove('show');
+}
+
 async function submitForm() {
     const sourceType = document.getElementById('sourceType').value;
     const dbname = document.getElementById('dbname').value;
@@ -30,6 +40,8 @@ async function submitForm() {
         host,
         port
     };
+
+    showLoadingAnimation();
 
     try {
         const response = await fetch('http://localhost:8000/api/register', {
@@ -53,5 +65,7 @@ async function submitForm() {
     } catch (error) {
         console.error('Error submitting form:', error);
         alert('Error submitting form. Please try again.');
+    } finally {
+        hideLoadingAnimation();
     }
 }
