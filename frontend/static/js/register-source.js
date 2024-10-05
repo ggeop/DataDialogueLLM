@@ -1,8 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const cancelCloseBtn = document.querySelector('.cancel-close-btn');
-    cancelCloseBtn.addEventListener('click', toggleForm);
-});
-
 function toggleForm() {
     const formContainer = document.getElementById('formContainer');
     formContainer.classList.toggle('show');

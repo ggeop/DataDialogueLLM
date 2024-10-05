@@ -13,6 +13,7 @@ DataDialogue.init = () => {
     const loadingIndicator = document.getElementById('loadingIndicator');
     const menuIcon = document.querySelector('.menu-icon');
     const menuContainer = document.querySelector('.menu-container');
+    const cancelCloseBtn = document.querySelector('.cancel-close-btn');
 
     // Store these elements in the DataDialogue object so they're accessible in other files
     DataDialogue.elements = {
@@ -21,7 +22,8 @@ DataDialogue.init = () => {
         conversationsDiv,
         loadingIndicator,
         menuIcon,
-        menuContainer
+        menuContainer,
+        cancelCloseBtn
     };
 
     // Set up event listeners
@@ -33,6 +35,7 @@ DataDialogue.init = () => {
     });
 
     menuIcon.addEventListener('click', toggleMenu);
+    cancelCloseBtn.addEventListener('click', toggleForm);
 
     document.addEventListener('click', (event) => {
         if (!menuContainer.contains(event.target) && !menuIcon.contains(event.target)) {
