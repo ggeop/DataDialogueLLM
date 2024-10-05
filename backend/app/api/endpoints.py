@@ -24,12 +24,14 @@ async def generate_text(query: Query, service=Depends(get_data_dialogue_service)
         response = service.generate(query.text)
         return response
     except Exception as e:
+        logger.error(f"Failed with error {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/register")
 async def register_source(register_source: RegisterSource):
     try:
+        logger.info(f"Starting Register {register_source.sourceType} source")
         update_data_dialogue_service(register_source)
         logger.info(f"Register successful!! data:{register_source}")
     except Exception as e:

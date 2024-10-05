@@ -29,12 +29,18 @@ def get_data_dialogue_service():
 def update_data_dialogue_service(register_params: RegisterSource):
     global data_dialogue_service
     logger.info(f"Try to register with params: {register_params}")
-    db = PostgresClient(
-        dbname=register_params.dbname,
-        user=register_params.username,
-        password=register_params.password,
-        host=register_params.host,
-        port=register_params.port
-    )
-    db.test_connection()
-    pass
+    if register_params.sourceType == 'postgresql':
+        db = PostgresClient(
+            dbname=register_params.dbname,
+            user=register_params.username,
+            password=register_params.password,
+            host=register_params.host,
+            port=register_params.port
+        )
+        db.test_connection()
+        logger.info(db.get_schema())
+        data_dialogue_service = DataDialogueAgent(
+            database=db,
+            sql_model=SQLModel(settings.MODEL_PATH),
+            general_model=GeneralModel(settings.MODEL_PATH)
+        )

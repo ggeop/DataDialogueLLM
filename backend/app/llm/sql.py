@@ -10,10 +10,11 @@ class SQLLlamaModel(LanguageModel):
     def __init__(self, model_path: str):
         self.llm = Llama(
             model_path=model_path,
-            verbose=False
+            verbose=False,
+            n_ctx=1024
         )
 
-    def generate(self, prompt: str, max_tokens: int=100, stop: List[str]=[], temperature: float=0) -> str:
+    def generate(self, prompt: str, max_tokens: int=300, stop: List[str]=[], temperature: float=0) -> str:
         response = self.llm(
             prompt,
             max_tokens=max_tokens,

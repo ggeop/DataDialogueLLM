@@ -4,18 +4,32 @@ services:
   postgres:
     build: ./database/postgres
     environment:
-      POSTGRES_DB: dvd_db
+      POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: 123456
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    command: >
+      bash -c "
+        echo 'Starting PostgreSQL and initialization script...';
+        docker-entrypoint.sh postgres &
+        until pg_isready -U demo -d dvdrental; do
+          echo 'Waiting for PostgreSQL to start...';
+          sleep 2;
+        done;
+        echo 'PostgreSQL is ready. Running initialization script...';
+        bash /docker-entrypoint-initdb.d/load-dvd-rental-db.sh;
+        echo 'Initialization complete. Keeping container running...';
+        wait
+      "
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U demo -d dvd_db"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U demo -d dvdrental"]
+      interval: 10s
       timeout: 5s
       retries: 5
+
 
   backend:
     build:
