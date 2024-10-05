@@ -55,7 +55,8 @@ def update_data_dialogue_service(register_params: RegisterSource):
         )
         db.test_connection()
         logger.info(db.get_schema())
-        registered_agents[ModelType.SQL.value] = DataDialogueAgent(
+        model = SQLLlama31Model(settings.MODEL_PATH)
+        registered_agents[model.alias] = DataDialogueAgent(
             database=db,
-            model=SQLLlama31Model(settings.MODEL_PATH)
+            model=model
         )
