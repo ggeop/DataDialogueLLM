@@ -1,12 +1,12 @@
 <div class="question-container fade-in-up">
     <div class="agent-select-wrapper">
-        <select class="agent-select">
-            <option value="general">General (LLAMA 3.1)</option>
-            <option value="sql">SQL (LLAMA 3.1)</option>
+        <select id="modelSelect" class="agent-select">
+            <option value="General (LLAMA 3.1)">General (LLAMA 3.1)</option>
+            <option value="SQL (LLAMA 3.1)">SQL (LLAMA 3.1)</option>
         </select>
     </div>
     <div class="input-wrapper">
-        <input type="text" id="queryInput" placeholder="Ask a question about your data...">
+        <input type="text" id="queryInput" placeholder="Ask a question...">
     </div>
     <button id="askButton" class="ask-button">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

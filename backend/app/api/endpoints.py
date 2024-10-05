@@ -7,7 +7,7 @@ from app.schemas import (
     RegisterSource
 )
 from app.services.data_dialogue import (
-    get_data_dialogue_service,
+    get_data_dialogue_agent,
     update_data_dialogue_service
 )
 
@@ -20,9 +20,11 @@ logger = logging.getLogger(__name__)
 
 
 @router.post("/generate")
-async def generate_text(query: Query, service=Depends(get_data_dialogue_service)):
+async def generate_text(query: Query):
     try:
-        response = service.generate(query.text)
+        agent = get_data_dialogue_agent(query.model)
+        logger.info(f"Selected model {agent.model.alias}")
+        response = agent.generate(query.text)
         return response
     except Exception as e:
         logger.error(f"Failed with error {e}")

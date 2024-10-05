@@ -1,11 +1,11 @@
-DataDialogue.submitQuery = async (query) => {
+DataDialogue.submitQuery = async (query, model) => {
     try {
         const response = await fetch('http://localhost:8000/api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ text: query }),
+            body: JSON.stringify({ text: query, model: model }),
         });
 
         if (!response.ok) {

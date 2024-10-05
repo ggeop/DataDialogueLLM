@@ -1,9 +1,14 @@
 from app.llm.base import LanguageModel
-from app.llm.general import GeneralLlamaModel as GeneralModel
-from app.llm.sql import SQLLlamaModel as SQLModel
+from app.llm.general.llama_3_1 import GeneralLlama31Model
+from app.llm.sql.llama_3_1 import SQLLlama31Model
 
 __all__ = [
     LanguageModel,
-    GeneralModel,
-    SQLModel
+    GeneralLlama31Model,
+    SQLLlama31Model
+]
+
+registry = [
+    GeneralLlama31Model,
+    SQLLlama31Model
 ]

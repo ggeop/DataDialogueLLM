@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 DataDialogue.init = () => {
     const queryInput = document.getElementById('queryInput');
     const askButton = document.getElementById('askButton');
+    const modelSelect = document.getElementById('modelSelect');
     const conversationsDiv = document.getElementById('conversations');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const menuIcon = document.querySelector('.menu-icon');
@@ -19,6 +20,7 @@ DataDialogue.init = () => {
     DataDialogue.elements = {
         queryInput,
         askButton,
+        modelSelect,
         conversationsDiv,
         loadingIndicator,
         menuIcon,
@@ -51,12 +53,13 @@ DataDialogue.init = () => {
 
 DataDialogue.handleSubmit = () => {
     const query = DataDialogue.elements.queryInput.value.trim();
+    const model = DataDialogue.elements.modelSelect.value;
     if (query === '') return;
 
     DataDialogue.addMessageToConversation('user-message', query);
     DataDialogue.elements.queryInput.value = '';
     DataDialogue.showLoadingAnimation();
-    DataDialogue.submitQuery(query);
+    DataDialogue.submitQuery(query, model);
 };
 
 function toggleMenu() {

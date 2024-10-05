@@ -1,7 +1,8 @@
 import logging
 
 from app.clients.db import PostgresClient
-from app.llm import SQLModel, GeneralModel
+from app.llm import registry, SQLLlama31Model, GeneralLlama31Model
+from app.llm.model_type import ModelType
 from app.schemas import RegisterSource
 from app.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.database import create_examples_database
@@ -12,18 +13,33 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-# Service Initialization
-database = create_examples_database()
-data_dialogue_service = DataDialogueAgent(
-    database=database,
-    sql_model=SQLModel(settings.MODEL_PATH),
-    general_model=GeneralModel(settings.MODEL_PATH)
+registered_agents = {}
+
+# ===================
+# Initialize Agents
+# ===================
+model = SQLLlama31Model(settings.MODEL_PATH)
+database_agent = DataDialogueAgent(
+    database=create_examples_database(),
+    model=model,
 )
+registered_agents[model.alias] = database_agent
+
+model = GeneralLlama31Model(settings.MODEL_PATH)
+general_agent = DataDialogueAgent(
+    database=None,
+    model=model,
+)
+registered_agents[model.alias] = general_agent
 
 
-def get_data_dialogue_service():
-    global data_dialogue_service
-    return data_dialogue_service
+def get_data_dialogue_agent(model):
+    global registered_agents
+    if model not in registered_agents:
+        message = f"`{model}` is not a valid model. Valid registered models are {list(registered_agents.keys())}"
+        logger.error(message)
+        raise Exception(message)
+    return registered_agents[model]
 
 
 def update_data_dialogue_service(register_params: RegisterSource):
@@ -39,8 +55,7 @@ def update_data_dialogue_service(register_params: RegisterSource):
         )
         db.test_connection()
         logger.info(db.get_schema())
-        data_dialogue_service = DataDialogueAgent(
+        registered_agents[ModelType.SQL.value] = DataDialogueAgent(
             database=db,
-            sql_model=SQLModel(settings.MODEL_PATH),
-            general_model=GeneralModel(settings.MODEL_PATH)
+            model=SQLLlama31Model(settings.MODEL_PATH)
         )
