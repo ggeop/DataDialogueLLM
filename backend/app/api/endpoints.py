@@ -1,5 +1,6 @@
 import logging
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import JSONResponse
 
 from app.schemas import (
     Query,
@@ -34,5 +35,7 @@ async def register_source(register_source: RegisterSource):
         logger.info(f"Starting Register {register_source.sourceType} source")
         update_data_dialogue_service(register_source)
         logger.info(f"Register successful!! data:{register_source}")
+        return JSONResponse(content={"message": "Registration successful"}, status_code=200)
     except Exception as e:
+        logger.error(f"Failed with error {e}")
         raise HTTPException(status_code=500, detail=str(e))

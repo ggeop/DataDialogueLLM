@@ -14,8 +14,10 @@ function toggleForm() {
     }
 }
 
-function showLoadingAnimation() {
+function showLoadingAnimation(sourceType) {
     const loadingOverlay = document.querySelector('.loading-overlay');
+    const loadingMessage = loadingOverlay.querySelector('.loading-message');
+    loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Embedding database schema`;
     loadingOverlay.classList.add('show');
 }
 
@@ -41,7 +43,7 @@ async function submitForm() {
         port
     };
 
-    showLoadingAnimation();
+    showLoadingAnimation(sourceType);
 
     try {
         const response = await fetch('http://localhost:8000/api/register', {
@@ -58,14 +60,16 @@ async function submitForm() {
 
         const result = await response.json();
         console.log('Form submitted successfully:', result);
-        alert('Form submitted successfully!');
 
-        // Hide the form after successful submission
+        // Hide loading animation and close form immediately on success
+        hideLoadingAnimation();
         toggleForm();
     } catch (error) {
         console.error('Error submitting form:', error);
-        alert('Error submitting form. Please try again.');
-    } finally {
-        hideLoadingAnimation();
+        const loadingMessage = document.querySelector('.loading-message');
+        loadingMessage.textContent = "Error connecting to database. Please try again.";
+        setTimeout(() => {
+            hideLoadingAnimation();
+        }, 2000);
     }
 }
