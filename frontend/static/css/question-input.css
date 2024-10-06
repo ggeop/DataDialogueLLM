@@ -59,6 +59,7 @@
 .input-wrapper {
     display: flex;
     align-items: center;
+    margin-right: 1rem;
     background-color: var(--card-background);
     border-radius: 8px;
     overflow: hidden;
