@@ -10,7 +10,7 @@ from app.llm.model_type import ModelType
 class SQLLlama31Model(LanguageModel):
     def __init__(self, model_path: str):
         self.model_type = ModelType.SQL.value
-        self.model = "LLAMA"
+        self.model = "LLAMA 8B"
         self.version = "3.1"
         self.alias = f"{self.model_type} ({self.model} {self.version})"
         self.llm = Llama(

@@ -42,7 +42,7 @@ def get_data_dialogue_agent(model):
     return registered_agents[model]
 
 
-def update_data_dialogue_service(register_params: RegisterSource):
+def register_data_source(register_params: RegisterSource):
     global data_dialogue_service
     logger.info(f"Try to register with params: {register_params}")
     if register_params.sourceType == 'postgresql':
