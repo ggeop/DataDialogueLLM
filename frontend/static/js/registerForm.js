@@ -52,7 +52,7 @@ async function submitForm() {
     showLoadingAnimation(sourceType);
 
     try {
-        const response = await fetch('http://localhost:8000/api/register', {
+        const response = await fetch('http://localhost:8000/api/agents/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

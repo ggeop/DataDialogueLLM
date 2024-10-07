@@ -1,3 +1,4 @@
+from app.agents.text_to_sql_agent import TextToSQLAgent
 from app.clients.db import DatabaseClient
 from app.llm import LanguageModel
 from app.llm.model_type import ModelType
@@ -7,7 +8,6 @@ from app.schemas import (
     DialogueResult
 
 )
-from app.agents.text_to_sql_agent import TextToSQLAgent
 
 
 class DataDialogueAgent:
