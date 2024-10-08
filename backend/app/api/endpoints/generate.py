@@ -1,15 +1,19 @@
 import logging
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    status
+)
 
-from app.schemas import Query
+from app.schemas import Query, GeneralResponse
 from app.services.data_dialogue import data_dialogue_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
 
-@router.post("/generate")
+@router.post("/generate", response_model=GeneralResponse)
 async def generate_text(query: Query):
     try:
         agent = data_dialogue_service.get_agent(query.model)
