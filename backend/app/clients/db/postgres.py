@@ -3,11 +3,15 @@ import socket
 import psycopg2
 import os
 import socket
+import logging
 from contextlib import contextmanager
 from typing import Tuple, Any, Optional
 
 from app.clients.db.base import DatabaseClient
 from app.utils.query_result import QueryResult
+
+
+logger = logging.getLogger(__name__)
 
 
 class PostgresClient(DatabaseClient):
@@ -59,9 +63,9 @@ class PostgresClient(DatabaseClient):
                 conn = psycopg2.connect(**self.connection_params)
                 yield conn
             except psycopg2.OperationalError as e:
-                print(f"Connection error: {e}")
-                print(f"Attempted to connect with: {self.connection_params}")
-                print("Please check your PostgreSQL server status and connection details.")
+                logger.info(f"Connection error: {e}")
+                logger.info(f"Attempted to connect with: {self.connection_params}")
+                logger.info("Please check your PostgreSQL server status and connection details.")
                 raise
             finally:
                 if 'conn' in locals() and conn is not None:
@@ -74,11 +78,11 @@ class PostgresClient(DatabaseClient):
                     cursor.execute("SELECT 1")
                     result = cursor.fetchone()
                     if result == (1,):
-                        print("Connection successful!")
+                        logger.info("Connection successful!")
                     else:
-                        print("Connection test failed.")
+                        logger.info("Connection test failed.")
         except Exception as e:
-            print(f"Connection test failed: {e}")
+            logger.info(f"Connection test failed: {e}")
 
     def get_tablenames(self) -> str:
         with self.get_connection() as conn:
