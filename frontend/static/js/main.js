@@ -7,6 +7,7 @@ DataDialogue.init = () => {
     DataDialogue.cacheElements();
     DataDialogue.attachEventListeners();
     DataDialogue.renderExampleSection();
+    DataDialogue.fetchAgentList();
     console.log('Data Dialogue initialized successfully');
 };
 
@@ -37,6 +38,33 @@ DataDialogue.attachEventListeners = () => {
     if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
 
     document.addEventListener('click', DataDialogue.handleOutsideClick);
+};
+
+DataDialogue.fetchAgentList = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/agents/list');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const agents = await response.json();
+        DataDialogue.populateAgentList(agents);
+    } catch (error) {
+        console.error('Error fetching agent list:', error);
+        DataDialogue.elements.modelSelect.innerHTML = '<option value="">Error loading agents</option>';
+    }
+};
+
+// Updated function to populate the agent list
+DataDialogue.populateAgentList = (agents) => {
+    const { modelSelect } = DataDialogue.elements;
+    modelSelect.innerHTML = ''; // Clear existing options
+
+    agents.forEach(agent => {
+        const option = document.createElement('option');
+        option.value = agent; // The value is the full string
+        option.textContent = agent; // The text is also the full string
+        modelSelect.appendChild(option);
+    });
 };
 
 // Event handler functions
