@@ -2,6 +2,7 @@
 window.DataDialogue = window.DataDialogue || {};
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('ComponentLoader: DOMContentLoaded event fired');
     const componentPromises = [
         loadComponent('header-component', 'header'),
         loadComponent('register-form-component', 'register_form'),
@@ -13,8 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     Promise.all(componentPromises)
         .then(() => {
-            // Initialize the application after all components are loaded
-            DataDialogue.init();
+            console.log('ComponentLoader: All components loaded');
+            window.DataDialogue.componentsLoaded = true;
+            window.dispatchEvent(new Event('componentsLoaded'));
         })
         .catch(error => console.error('Error loading components:', error));
 });

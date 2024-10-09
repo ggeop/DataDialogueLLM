@@ -16,7 +16,7 @@ class SQLLlama31Model(LanguageModel):
         self.llm = Llama(
             model_path=model_path,
             verbose=False,
-            n_ctx=2048
+            #n_ctx=2048
         )
 
     def generate(self, prompt: str, max_tokens: int=300, stop: List[str]=[], temperature: float=0) -> str:

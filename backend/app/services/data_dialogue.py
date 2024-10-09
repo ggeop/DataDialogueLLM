@@ -46,7 +46,7 @@ class DataDialogueService:
                 port=register_params.port
             )
             db.test_connection()
-            logger.info(db.get_schema())
+            logger.info(db.get_tablenames())
             model = SQLLlama31Model(settings.MODEL_PATH)
             self.registered_agents[model.alias] = DataDialogueAgent(
                 database=db,
