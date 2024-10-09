@@ -17,6 +17,9 @@ DataDialogue.cacheElements = () => {
         queryInput: document.getElementById('queryInput'),
         askButton: document.getElementById('askButton'),
         modelSelect: document.getElementById('modelSelect'),
+        customDropdown: document.getElementById('customDropdown'),
+        dropdownButton: document.getElementById('dropdownButton'),
+        dropdownList: document.getElementById('dropdownList'),
         conversationsDiv: document.getElementById('conversations'),
         loadingIndicator: document.getElementById('loadingIndicator'),
         menuIcon: document.querySelector('.menu-icon'),
@@ -27,17 +30,72 @@ DataDialogue.cacheElements = () => {
     };
 };
 
+DataDialogue.isFetching = false;
+DataDialogue.isDropdownOpen = false;
+
 // Attach event listeners
 DataDialogue.attachEventListeners = () => {
-    const { askButton, queryInput, menuIcon, cancelCloseBtn, pageOverlay } = DataDialogue.elements;
+    const { askButton, queryInput, menuIcon, cancelCloseBtn, pageOverlay, dropdownButton, dropdownList } = DataDialogue.elements;
 
     if (askButton) askButton.addEventListener('click', DataDialogue.handleSubmit);
     if (queryInput) queryInput.addEventListener('keypress', DataDialogue.handleEnterKey);
     if (menuIcon) menuIcon.addEventListener('click', DataDialogue.toggleMenu);
     if (cancelCloseBtn) cancelCloseBtn.addEventListener('click', DataDialogue.toggleForm);
     if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
+    if (dropdownButton) dropdownButton.addEventListener('click', DataDialogue.toggleDropdown);
+    if (dropdownList) dropdownList.addEventListener('click', DataDialogue.handleOptionClick);
 
-    document.addEventListener('click', DataDialogue.handleOutsideClick);
+    document.addEventListener('click', DataDialogue.closeDropdownOutside);
+};
+
+
+DataDialogue.toggleDropdown = async (event) => {
+    event.stopPropagation();
+    if (!DataDialogue.isDropdownOpen) {
+        await DataDialogue.openDropdown();
+    } else {
+        DataDialogue.closeDropdown();
+    }
+};
+
+DataDialogue.openDropdown = async () => {
+    if (DataDialogue.isFetching) return;
+    
+    DataDialogue.isFetching = true;
+    DataDialogue.elements.dropdownButton.textContent = 'Loading...';
+    DataDialogue.elements.customDropdown.classList.add('open');
+    
+    try {
+        await DataDialogue.fetchAgentList();
+        DataDialogue.elements.dropdownList.classList.add('show');
+        DataDialogue.isDropdownOpen = true;
+    } catch (error) {
+        console.error('Error fetching agent list:', error);
+        DataDialogue.elements.dropdownButton.textContent = 'Error loading agents';
+    } finally {
+        DataDialogue.isFetching = false;
+    }
+};
+
+DataDialogue.closeDropdown = () => {
+    DataDialogue.elements.dropdownList.classList.remove('show');
+    DataDialogue.elements.customDropdown.classList.remove('open');
+    DataDialogue.isDropdownOpen = false;
+};
+
+DataDialogue.handleOptionClick = (event) => {
+    if (event.target.tagName === 'LI') {
+        DataDialogue.elements.dropdownButton.textContent = event.target.textContent;
+        DataDialogue.elements.dropdownList.querySelectorAll('li').forEach(li => li.classList.remove('selected'));
+        event.target.classList.add('selected');
+        DataDialogue.closeDropdown();
+    }
+};
+
+DataDialogue.closeDropdownOutside = (event) => {
+    if (DataDialogue.isDropdownOpen && !DataDialogue.elements.customDropdown.contains(event.target)) {
+        DataDialogue.closeDropdown();
+    }
 };
 
 DataDialogue.fetchAgentList = async () => {
@@ -50,34 +108,39 @@ DataDialogue.fetchAgentList = async () => {
         DataDialogue.populateAgentList(agents);
     } catch (error) {
         console.error('Error fetching agent list:', error);
-        DataDialogue.elements.modelSelect.innerHTML = '<option value="">Error loading agents</option>';
+        DataDialogue.elements.dropdownButton.textContent = 'Error loading agents';
     }
 };
 
-// Updated function to populate the agent list
 DataDialogue.populateAgentList = (agents) => {
-    const { modelSelect } = DataDialogue.elements;
-    modelSelect.innerHTML = ''; // Clear existing options
+    const { dropdownList, dropdownButton } = DataDialogue.elements;
+    dropdownList.innerHTML = ''; // Clear existing options
 
     agents.forEach(agent => {
-        const option = document.createElement('option');
-        option.value = agent; // The value is the full string
-        option.textContent = agent; // The text is also the full string
-        modelSelect.appendChild(option);
+        const option = document.createElement('li');
+        option.textContent = agent;
+        dropdownList.appendChild(option);
     });
+
+    if (agents.length > 0) {
+        dropdownButton.textContent = agents[0]; // Select the first option by default
+    }
 };
+
 
 // Event handler functions
 DataDialogue.handleSubmit = () => {
     const query = DataDialogue.elements.queryInput.value.trim();
-    const model = DataDialogue.elements.modelSelect.value;
-    if (query === '') return;
+    const model = DataDialogue.elements.dropdownButton.textContent.trim();
+    if (query === '' || model === 'Select an agent') return;
 
     DataDialogue.addMessageToConversation('user-message', query);
     DataDialogue.elements.queryInput.value = '';
     DataDialogue.showLoadingAnimation();
     DataDialogue.submitQuery(query, model);
 };
+
+
 
 DataDialogue.handleEnterKey = (e) => {
     if (e.key === 'Enter') DataDialogue.handleSubmit();
