@@ -26,7 +26,9 @@ DataDialogue.cacheElements = () => {
         menuContainer: document.querySelector('.menu-container'),
         cancelCloseBtn: document.querySelector('.cancel-close-btn'),
         pageOverlay: document.getElementById('pageOverlay'),
-        formContainer: document.getElementById('formContainer')
+        formContainer: document.getElementById('formContainer'),
+        tryDemoButton: document.getElementById('tryDemoButton'),
+        messageBox: document.getElementById('messageBox')
     };
 };
 
@@ -35,7 +37,7 @@ DataDialogue.isDropdownOpen = false;
 
 // Attach event listeners
 DataDialogue.attachEventListeners = () => {
-    const { askButton, queryInput, menuIcon, cancelCloseBtn, pageOverlay, dropdownButton, dropdownList } = DataDialogue.elements;
+    const { askButton, queryInput, menuIcon, cancelCloseBtn, pageOverlay, dropdownButton, dropdownList, tryDemoButton } = DataDialogue.elements;
 
     if (askButton) askButton.addEventListener('click', DataDialogue.handleSubmit);
     if (queryInput) queryInput.addEventListener('keypress', DataDialogue.handleEnterKey);
@@ -44,8 +46,24 @@ DataDialogue.attachEventListeners = () => {
     if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
     if (dropdownButton) dropdownButton.addEventListener('click', DataDialogue.toggleDropdown);
     if (dropdownList) dropdownList.addEventListener('click', DataDialogue.handleOptionClick);
+    if (tryDemoButton) tryDemoButton.addEventListener('click', DataDialogue.handleTryDemo);
 
     document.addEventListener('click', DataDialogue.closeDropdownOutside);
+};
+
+DataDialogue.handleTryDemo = () => {
+    DataDialogue.toggleForm(); // Open the register form
+    DataDialogue.showDemoMessage();
+
+};
+
+DataDialogue.showDemoMessage = () => {
+    const messageBox = DataDialogue.elements.messageBox;
+    messageBox.textContent = "Welcome to demo mode! A dummy database for DVDs will be registered. An SQL agent is automatically created for you. Let's Play!";
+    messageBox.style.display = 'block';
+    setTimeout(() => {
+        messageBox.style.display = 'none';
+    }, 5000); // Hide message after 5 seconds
 };
 
 
