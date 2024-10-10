@@ -27,7 +27,43 @@ body {
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem;
+    position: relative;
 }
+
+
+#try-demo-container {
+    margin-top: 2rem;
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.try-demo-btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.try-demo-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.try-demo-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Existing styles ... */
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
