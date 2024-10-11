@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const componentPromises = [
         loadComponent('header-component', 'header'),
         loadComponent('register-form-component', 'register_form'),
+        loadComponent('demo-form-component', 'demo_form'),
         loadComponent('question-input-component', 'question_input'),
         loadComponent('loading-indicator-component', 'loading_indicator'),
         loadComponent('conversations-component', 'conversations'),

@@ -1,0 +1,63 @@
+<div id="demoFormOverlay" class="page-overlay">
+    <div id="demoFormContainer" class="form-container demo-form">
+      <button class="cancel-close-btn" onclick="DataDialogue.closeDemoForm()">&times;</button>
+      <div class="demo-header">
+        <h2 class="form-title">Get Started with Demo Data</h2>
+      </div>
+      <div id="demoMessage" class="demo-message">
+        <p>Welcome to demo mode! A dummy database for DVDs will be registered. An SQL agent is automatically created for you. Let's Play!</p>
+        <p class="demo-reference">
+          <i class="info-icon"></i>
+          Using sample data from:&nbsp 
+          <a href="https://www.postgresqltutorial.com/postgresql-getting-started/postgresql-sample-database/" target="_blank" rel="noopener noreferrer" class="demo-link">
+            PostgreSQL Tutorial
+            <i class="external-link-icon"></i>
+          </a>
+        </p>
+      </div>
+      <div class="demo-features">
+        <div class="feature-item">
+          <i class="feature-icon database-icon"></i>
+          <span>Pre-configured PostgreSQL DB</span>
+        </div>
+        <div class="feature-item">
+          <i class="feature-icon ai-icon"></i>
+          <span>AI-powered SQL Agent</span>
+        </div>
+        <div class="feature-item">
+          <i class="feature-icon security-icon"></i>
+          <span>Secure Local Environment</span>
+        </div>
+      </div>
+      <form id="demoForm">
+        <div class="form-group">
+          <label for="demoSourceType">Source Type:</label>
+          <input type="text" id="demoSourceType" value="postgresql" readonly>
+        </div>
+        <div class="form-group">
+          <label for="demoDbname">Database:</label>
+          <input type="text" id="demoDbname" value="dvdrental" readonly>
+        </div>
+        <div class="form-group">
+          <label for="demoUsername">Username:</label>
+          <input type="text" id="demoUsername" value="demo" readonly>
+        </div>
+        <div class="form-group">
+          <label for="demoPassword">Password:</label>
+          <input type="password" id="demoPassword" value="123456" readonly>
+        </div>
+        <div class="form-group">
+          <label for="demoHost">Host:</label>
+          <input type="text" id="demoHost" value="localhost" readonly>
+        </div>
+        <div class="form-group">
+          <label for="demoPort">Port:</label>
+          <input type="text" id="demoPort" value="5432" readonly>
+        </div>
+        <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">
+          <span>Launch Demo Experience</span>
+          <i class="btn-icon rocket-icon"></i>
+        </button>
+      </form>
+    </div>
+  </div>

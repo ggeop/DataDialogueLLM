@@ -51,19 +51,64 @@ DataDialogue.attachEventListeners = () => {
     document.addEventListener('click', DataDialogue.closeDropdownOutside);
 };
 
-DataDialogue.handleTryDemo = () => {
-    DataDialogue.toggleForm(); // Open the register form
-    DataDialogue.showDemoMessage();
 
+DataDialogue.handleTryDemo = () => {
+    DataDialogue.openDemoForm();
 };
 
-DataDialogue.showDemoMessage = () => {
-    const messageBox = DataDialogue.elements.messageBox;
-    messageBox.textContent = "Welcome to demo mode! A dummy database for DVDs will be registered. An SQL agent is automatically created for you. Let's Play!";
-    messageBox.style.display = 'block';
-    setTimeout(() => {
-        messageBox.style.display = 'none';
-    }, 5000); // Hide message after 5 seconds
+
+DataDialogue.openDemoForm = () => {
+    const demoFormOverlay = document.getElementById('demoFormOverlay');
+    const demoFormContainer = document.getElementById('demoFormContainer');
+
+    demoFormOverlay.style.display = 'block';
+    demoFormContainer.classList.add('show');
+    document.body.style.overflow = 'hidden';
+};
+
+DataDialogue.closeDemoForm = () => {
+    const demoFormOverlay = document.getElementById('demoFormOverlay');
+    const demoFormContainer = document.getElementById('demoFormContainer');
+
+    demoFormOverlay.style.display = 'none';
+    demoFormContainer.classList.remove('show');
+    document.body.style.overflow = 'auto';
+};
+
+DataDialogue.submitDemoForm = async () => {
+    const formData = {
+        sourceType: document.getElementById('demoSourceType').value,
+        dbname: document.getElementById('demoDbname').value,
+        username: document.getElementById('demoUsername').value,
+        password: document.getElementById('demoPassword').value,
+        host: document.getElementById('demoHost').value,
+        port: document.getElementById('demoPort').value
+    };
+
+    DataDialogue.showLoadingAnimation(formData.sourceType);
+
+    try {
+        const response = await fetch('http://localhost:8000/agents/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const result = await response.json();
+        console.log('Demo form submitted successfully:', result);
+
+        DataDialogue.hideLoadingAnimation();
+        DataDialogue.closeDemoForm();
+    } catch (error) {
+        console.error('Error submitting demo form:', error);
+        const loadingMessage = document.querySelector('.loading-message');
+        if (loadingMessage) {
+            loadingMessage.textContent = "Error connecting to demo database. Please try again.";
+        }
+        setTimeout(DataDialogue.hideLoadingAnimation, 2000);
+    }
 };
 
 
@@ -214,7 +259,7 @@ DataDialogue.showLoadingAnimation = (sourceType) => {
     if (loadingOverlay) {
         const loadingMessage = loadingOverlay.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Embedding database schema`;
+            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
         }
         loadingOverlay.classList.add('show');
     }
