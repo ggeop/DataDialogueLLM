@@ -8,6 +8,7 @@ DataDialogue.init = () => {
     DataDialogue.attachEventListeners();
     DataDialogue.renderExampleSection();
     DataDialogue.fetchAgentList();
+    DataDialogue.hideExampleSection();
     console.log('Data Dialogue initialized successfully');
 };
 
@@ -101,6 +102,7 @@ DataDialogue.submitDemoForm = async () => {
 
         DataDialogue.hideLoadingAnimation();
         DataDialogue.closeDemoForm();
+        DataDialogue.showExampleSection();  // Add this line to show examples after successful submission
     } catch (error) {
         console.error('Error submitting demo form:', error);
         const loadingMessage = document.querySelector('.loading-message');

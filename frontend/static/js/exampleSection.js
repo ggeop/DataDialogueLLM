@@ -1,13 +1,9 @@
 DataDialogue.ExampleSection = () => {
     const [isVisible, setIsVisible] = React.useState(true);
     const examples = [
-        "What are the names and salaries of all employees in the Engineering department?",
-        "I want the the average sales per month for the employees in the `Sales` and `HR` department per project",
-        "What is the average salary across all departments?",
-        "List all projects that start in 2024 along with their end dates.",
-        "Who is the highest paid employee in the Marketing department?",
-        "What is the capital of france?",
-        "What is a department?",
+        "Give me the most popular DVD titles",
+        "Give me the top 3 customers the last 3 months",
+        "Give me the top 5 stores per year",
     ];
 
     const handleExampleClick = (example) => {
@@ -24,7 +20,7 @@ DataDialogue.ExampleSection = () => {
         React.createElement(
             'div',
             { className: 'example-header' },
-            React.createElement('h2', null, 'Example Questions'),
+            React.createElement('h2', null, 'Demo Data question ideas 🔥'),
             React.createElement(
                 'button',
                 { onClick: toggleVisibility, className: 'hide-button' },
@@ -52,4 +48,19 @@ DataDialogue.ExampleSection = () => {
 
 DataDialogue.renderExampleSection = () => {
     ReactDOM.render(React.createElement(DataDialogue.ExampleSection), document.getElementById('exampleSection'));
+};
+
+
+DataDialogue.showExampleSection = () => {
+    const exampleSection = document.querySelector('.example-section');
+    if (exampleSection) {
+        exampleSection.classList.remove('hidden');
+    }
+};
+
+DataDialogue.hideExampleSection = () => {
+    const exampleSection = document.querySelector('.example-section');
+    if (exampleSection) {
+        exampleSection.classList.add('hidden');
+    }
 };
