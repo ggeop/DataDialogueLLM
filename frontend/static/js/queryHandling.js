@@ -1,5 +1,7 @@
 DataDialogue.submitQuery = async (query, model) => {
     try {
+        DataDialogue.showLoadingAnimation();
+
         const response = await fetch('http://localhost:8000/api/generate', {
             method: 'POST',
             headers: {
@@ -9,14 +11,34 @@ DataDialogue.submitQuery = async (query, model) => {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorBody = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
         }
 
         const data = await response.json();
         DataDialogue.displayResponse(data);
     } catch (error) {
         console.error('Error details:', error);
-        DataDialogue.addMessageToConversation('app-response error-response', `<div class="error-message">Error: ${error.message}</div>`);
+        let errorMessage = 'An unexpected error occurred.';
+
+        if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+            errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection and try again.';
+        } else if (error.message.includes('HTTP error!')) {
+            errorMessage = `Server error: ${error.message}`;
+        } else {
+            errorMessage = `Error: ${error.message}`;
+        }
+
+        DataDialogue.addMessageToConversation('app-response error-response', `
+            <div class="error-message">
+                <h3>Error Occurred</h3>
+                <p>${errorMessage}</p>
+                <details>
+                    <summary>Technical Details</summary>
+                    <pre>${error.stack || 'No stack trace available'}</pre>
+                </details>
+            </div>
+        `);
     } finally {
         DataDialogue.hideLoadingAnimation();
     }
