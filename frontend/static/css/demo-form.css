@@ -158,23 +158,22 @@
     z-index: 1000;
 }
 
+
 .try-demo-btn {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
+    background-color: transparent;
+    color: #4ecca3;
+    border: 1px solid #4ecca3;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .try-demo-btn:hover {
-    background-color: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    background-color: #4ecca3;
+    color: #ffff;
 }
 
 .try-demo-btn:active {
