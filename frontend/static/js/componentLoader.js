@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         loadComponent('question-input-component', 'question_input'),
         loadComponent('loading-indicator-component', 'loading_indicator'),
         loadComponent('conversations-component', 'conversations'),
-        loadComponent('example-section-component', 'example_section')
+        loadComponent('example-section-component', 'demo_examples')
     ];
 
     Promise.all(componentPromises)
