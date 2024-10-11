@@ -86,7 +86,7 @@ DataDialogue.submitDemoForm = async () => {
         port: document.getElementById('demoPort').value
     };
 
-    DataDialogue.showLoadingAnimation(formData.sourceType);
+    DataDialogue.showFormLoadingAnimation(formData.sourceType);
 
     try {
         const response = await fetch('http://localhost:8000/agents/register', {
@@ -100,7 +100,7 @@ DataDialogue.submitDemoForm = async () => {
         const result = await response.json();
         console.log('Demo form submitted successfully:', result);
 
-        DataDialogue.hideLoadingAnimation();
+        DataDialogue.hideFormLoadingAnimation();
         DataDialogue.closeDemoForm();
         DataDialogue.showExampleSection();  // Add this line to show examples after successful submission
     } catch (error) {
@@ -109,7 +109,7 @@ DataDialogue.submitDemoForm = async () => {
         if (loadingMessage) {
             loadingMessage.textContent = "Error connecting to demo database. Please try again.";
         }
-        setTimeout(DataDialogue.hideLoadingAnimation, 2000);
+        setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
     }
 };
 
@@ -255,24 +255,6 @@ DataDialogue.clearFormFields = () => {
     if (password) password.value = '';
 };
 
-// Loading animation functions
-DataDialogue.showLoadingAnimation = (sourceType) => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
-    if (loadingOverlay) {
-        const loadingMessage = loadingOverlay.querySelector('.loading-message');
-        if (loadingMessage) {
-            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
-        }
-        loadingOverlay.classList.add('show');
-    }
-};
-
-DataDialogue.hideLoadingAnimation = () => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
-    if (loadingOverlay) {
-        loadingOverlay.classList.remove('show');
-    }
-};
 
 // Form submission function
 DataDialogue.submitForm = async () => {
@@ -285,7 +267,7 @@ DataDialogue.submitForm = async () => {
         port: document.getElementById('port').value
     };
 
-    DataDialogue.showLoadingAnimation(formData.sourceType);
+    DataDialogue.showFormLoadingAnimation(formData.sourceType);
 
     try {
         const response = await fetch('http://localhost:8000/agents/register', {
@@ -299,7 +281,7 @@ DataDialogue.submitForm = async () => {
         const result = await response.json();
         console.log('Form submitted successfully:', result);
 
-        DataDialogue.hideLoadingAnimation();
+        DataDialogue.hideFormLoadingAnimation();
         DataDialogue.toggleForm();
     } catch (error) {
         console.error('Error submitting form:', error);
@@ -307,7 +289,26 @@ DataDialogue.submitForm = async () => {
         if (loadingMessage) {
             loadingMessage.textContent = "Error connecting to database. Please try again.";
         }
-        setTimeout(DataDialogue.hideLoadingAnimation, 2000);
+        setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
+    }
+};
+
+
+DataDialogue.showFormLoadingAnimation = (sourceType) => {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    if (loadingOverlay) {
+        const loadingMessage = loadingOverlay.querySelector('.loading-message');
+        if (loadingMessage) {
+            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
+        }
+        loadingOverlay.classList.add('show');
+    }
+};
+
+DataDialogue.hideFormLoadingAnimation = () => {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.remove('show');
     }
 };
 
