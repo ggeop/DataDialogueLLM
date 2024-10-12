@@ -6,15 +6,24 @@ from app.llm import SQLLlama31Model, GeneralLlama31Model
 from app.schemas import RegisterSource
 from app.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.database import create_examples_database
-from app.core.config import settings
+from app.llm.model_manager import ModelManager
 
 logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 class DataDialogueService:
     def __init__(self):
         self.registered_agents: Dict[str, DataDialogueAgent] = {}
+
+        # TODO: TMP hardcoded model strings
+        model_manager = ModelManager(base_path="/data/models")
+        model_manager.download_model(
+            model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
+            filename="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+            source="huggingface"
+        )
+        self.model_path = model_manager.get_model_path("lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf")
         self._initialize_agents()  # TODO: TMP Solution, until try-on feature will be created
 
     def get_agents(self) -> List[str]:
@@ -47,21 +56,21 @@ class DataDialogueService:
             )
             db.test_connection()
             logger.info(db.get_tablenames())
-            model = SQLLlama31Model(settings.MODEL_PATH)
+            model = SQLLlama31Model(self.model_path)
             self.registered_agents[model.alias] = DataDialogueAgent(
                 database=db,
                 model=model
             )
 
     def _initialize_agents(self):
-        sql_model = SQLLlama31Model(settings.MODEL_PATH)
+        sql_model = SQLLlama31Model(self.model_path)
         database_agent = DataDialogueAgent(
             database=create_examples_database(),
             model=sql_model,
         )
         self.registered_agents[sql_model.alias] = database_agent
 
-        general_model = GeneralLlama31Model(settings.MODEL_PATH)
+        general_model = GeneralLlama31Model(self.model_path)
         general_agent = DataDialogueAgent(
             database=None,
             model=general_model,

@@ -34,20 +34,13 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        - MODEL_REPO=${MODEL_REPO}
-        - MODEL_FILE=${MODEL_FILE}
-        - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
     env_file:
       - .env
-    environment:
-      - MODEL_REPO=${MODEL_REPO}
-      - MODEL_FILE=${MODEL_FILE}
-      - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
+      - models:/data/models
 
   frontend:
     build:
@@ -65,6 +58,7 @@ services:
 
 volumes:
   postgres_data:
+  models:
 
 networks:
   default:
