@@ -2,7 +2,6 @@ DataDialogue.handleTryDemo = () => {
     DataDialogue.openDemoForm();
 };
 
-
 DataDialogue.openDemoForm = () => {
     const demoFormOverlay = document.getElementById('demoFormOverlay');
     const demoFormContainer = document.getElementById('demoFormContainer');
@@ -59,16 +58,20 @@ DataDialogue.submitDemoForm = async () => {
 };
 
 DataDialogue.toggleForm = () => {
-    const { formContainer, pageOverlay } = DataDialogue.elements;
+    const { formContainer, pageOverlay, menuIcon } = DataDialogue.elements;
     
-    if (formContainer && pageOverlay) {
-        formContainer.classList.toggle('show');
-        pageOverlay.style.display = formContainer.classList.contains('show') ? 'block' : 'none';
-        document.body.style.overflow = formContainer.classList.contains('show') ? 'hidden' : 'auto';
+    if (formContainer && pageOverlay && menuIcon) {
+        const isFormShown = formContainer.classList.toggle('show');
+        pageOverlay.style.display = isFormShown ? 'block' : 'none';
+        document.body.style.overflow = isFormShown ? 'hidden' : 'auto';
         
+        // Hide menu container
         DataDialogue.elements.menuContainer.classList.remove('active');
 
-        if (!formContainer.classList.contains('show')) {
+        // Hide menu icon when form is shown, show it when form is hidden
+        menuIcon.style.display = isFormShown ? 'none' : 'block';
+
+        if (!isFormShown) {
             DataDialogue.clearFormFields();
         }
     }

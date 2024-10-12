@@ -22,20 +22,35 @@ h1 {
 
 .menu-icon {
     position: absolute;
-    top: 1.5rem;
+    top: 2.5rem;
     left: 1.5rem;
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     z-index: 1000;
+    background-color: var(--input-background);
+    border-radius: 10px;
+    padding: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.menu-icon:hover {
+    box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.3);
+    transform: translateY(-2px);
 }
 
 .menu-icon svg {
-    stroke: var(--primary-color);
-    transition: stroke 0.3s ease;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
 }
 
-.menu-icon:hover svg {
+.menu-icon:hover svg rect {
+    fill: var(--card-background);
+}
+
+.menu-icon:hover svg line {
     stroke: var(--text-color);
 }
 

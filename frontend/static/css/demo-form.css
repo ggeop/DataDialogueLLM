@@ -150,41 +150,45 @@
     margin-bottom: 0;
 }
 
+
 #try-demo-container {
-    margin-top: 2rem;
     position: absolute;
-    top: 1rem;
-    right: 2rem;
+    top: 3.0rem;
+    right: 1.5rem;
     z-index: 1000;
 }
 
-
 .try-demo-btn {
-    background-color: transparent;
-    color: #4ecca3;
-    border: 1px solid #4ecca3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--primary-color);
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
-    font-weight: 300;
-    letter-spacing: 1px;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .try-demo-btn:hover {
-    background-color: #4ecca3;
-    color: #ffff;
-}
-
-.try-demo-btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(223, 201, 201, 0.2);
+    box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.3);
+    transform: translateY(-2px);
+    color: var(--text-color);
 }
 
 .try-demo-btn svg {
-    width: 16px;
-    height: 16px;
-  }
+    width: 20px;
+    height: 30px;
+    margin-right: 0.5rem;
+}
+
+.try-demo-btn:hover svg {
+    color: var(--text-color);
+}
 
 .message-box {
     display: none;
