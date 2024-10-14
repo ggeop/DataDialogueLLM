@@ -1,6 +1,6 @@
 from app.schemas.database import (
     DatabaseCreationResponse,
-    RegisterSource
+    RegisterAgent
 )
 from app.schemas.response import (
     SQLResponse,
@@ -13,7 +13,7 @@ from app.schemas.query import Query
 __all__ = [
     Query,
     DatabaseCreationResponse,
-    RegisterSource,
+    RegisterAgent,
     SQLResponse,
     GeneralResponse,
     DialogueResult

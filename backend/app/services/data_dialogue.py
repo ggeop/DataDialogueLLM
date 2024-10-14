@@ -3,10 +3,11 @@ from typing import Dict, List
 
 from app.clients.db import PostgresClient
 from app.llm import SQLLlama31Model, GeneralLlama31Model
-from app.schemas import RegisterSource
+from app.schemas import RegisterAgent
 from app.agents.data_dialogue_agent import DataDialogueAgent
-from app.services.database import create_examples_database
 from app.llm.model_manager import ModelManager
+from app.core.config import settings
+from app.llm.model_type import ModelType
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger()
@@ -15,16 +16,8 @@ logger = logging.getLogger()
 class DataDialogueService:
     def __init__(self):
         self.registered_agents: Dict[str, DataDialogueAgent] = {}
-
-        # TODO: TMP hardcoded model strings
-        model_manager = ModelManager(base_path="/data/models")
-        model_manager.download_model(
-            model_name="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-            filename="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
-            source="huggingface"
-        )
-        self.model_path = model_manager.get_model_path("lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf")
-        self._initialize_agents()  # TODO: TMP Solution, until try-on feature will be created
+        self.model_manager = ModelManager(base_path=settings.MODELS_BASE_PATH)
+        self._initialize_agents()
 
     def get_agents(self) -> List[str]:
         return list(self.registered_agents.keys())
@@ -44,33 +37,59 @@ class DataDialogueService:
         del self.registered_agents[model]
         logger.info(f"{model} is deleted successful!")
 
-    def register_source(self, register_params: RegisterSource):
+    def register_agent(self, register_params: RegisterAgent):
         logger.info(f"Try to register with params: {register_params}")
-        if register_params.sourceType == 'postgresql':
-            db = PostgresClient(
-                dbname=register_params.dbname,
-                user=register_params.username,
-                password=register_params.password,
-                host=register_params.host,
-                port=register_params.port
-            )
-            db.test_connection()
-            logger.info(db.get_tablenames())
-            model = SQLLlama31Model(self.model_path)
-            self.registered_agents[model.alias] = DataDialogueAgent(
-                database=db,
-                model=model
-            )
+
+        supported_model_types = ModelType.values()
+        if register_params.modelType not in supported_model_types:
+            raise Exception(f"{register_params.modelType} is not a valid modelType value. Supported values are: {supported_model_types}")
+
+        # =============================
+        # Configure External Source
+        # =============================
+        if register_params.modelType == ModelType.SQL.value:
+            if register_params.sourceType == 'postgresql':
+                db = PostgresClient(
+                    dbname=register_params.dbname,
+                    user=register_params.username,
+                    password=register_params.password,
+                    host=register_params.host,
+                    port=register_params.port
+                )
+                db.test_connection()
+            else:
+                raise Exception(f"Not supported {register_params.sourceType} source type")
+        elif register_params.modelType == ModelType.GENERAL.value:
+            db = None
+
+        # =============================
+        # Configure LLM Model
+        # =============================
+        self.model_manager.download_model(
+            source="huggingface",  # TODO: Support only HuggingFace repository
+            repo_id=register_params.repoID,
+            model_name=register_params.modelName
+        )
+        self.sql_model_path = self.model_manager.get_model_path(f'{register_params.repoID}/{register_params.modelName}')
+
+        model = SQLLlama31Model(self.sql_model_path)
+        self.registered_agents[model.alias] = DataDialogueAgent(
+            database=db,
+            model=model
+        )
 
     def _initialize_agents(self):
-        sql_model = SQLLlama31Model(self.model_path)
-        database_agent = DataDialogueAgent(
-            database=create_examples_database(),
-            model=sql_model,
-        )
-        self.registered_agents[sql_model.alias] = database_agent
+        # =============================
+        # General Agent Setup
+        # =============================
+        self.model_manager.download_model(
+            source=settings.DEFAULT_GENERAL_LLM["source"],
+            repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],
+            model_name=settings.DEFAULT_GENERAL_LLM["model_name"])
 
-        general_model = GeneralLlama31Model(self.model_path)
+        self.general_model_path = self.model_manager.get_model_path(f'{settings.DEFAULT_GENERAL_LLM["repo_id"]}/{settings.DEFAULT_GENERAL_LLM["model_name"]}')
+
+        general_model = GeneralLlama31Model(self.general_model_path)
         general_agent = DataDialogueAgent(
             database=None,
             model=general_model,

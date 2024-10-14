@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
-from app.schemas import RegisterSource
+from app.schemas import RegisterAgent
 from app.services.data_dialogue import data_dialogue_service
 
 router = APIRouter()
@@ -16,11 +16,11 @@ async def get_agents():
 
 
 @router.post("/register")
-async def register_source(register_source: RegisterSource):
+async def register(register_agent: RegisterAgent):
     try:
-        logger.info(f"Starting Register {register_source.sourceType} source")
-        data_dialogue_service.register_source(register_source)
-        logger.info(f"Register {register_source.sourceType} successful!")
+        logger.info(f"Starting Register {register_agent.sourceType} source and model type {register_agent.modelType}")
+        data_dialogue_service.register_agent(register_agent)
+        logger.info(f"Register {register_agent.sourceType} successful!")
         return JSONResponse(
             content={"message": "Registration successful"},
             status_code=status.HTTP_200_OK

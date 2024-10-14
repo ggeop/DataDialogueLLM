@@ -22,12 +22,19 @@ DataDialogue.closeDemoForm = () => {
 
 DataDialogue.submitDemoForm = async () => {
     const formData = {
+        // General
+        modelType: document.getElementById('demoModelType').value,
+        // Source
         sourceType: document.getElementById('demoSourceType').value,
         dbname: document.getElementById('demoDbname').value,
         username: document.getElementById('demoUsername').value,
         password: document.getElementById('demoPassword').value,
         host: document.getElementById('demoHost').value,
-        port: document.getElementById('demoPort').value
+        port: document.getElementById('demoPort').value,
+        // LLM Model
+        repoID : document.getElementById('demoRepoId').value,
+        modelName: document.getElementById('demoModelName').value,
+        token: document.getElementById('demoToken').value
     };
 
     DataDialogue.showFormLoadingAnimation(formData.sourceType);
@@ -89,12 +96,19 @@ DataDialogue.clearFormFields = () => {
 
 DataDialogue.submitForm = async () => {
     const formData = {
+        // General
+        modelType: document.getElementById('modelType').value,
+        // Source
         sourceType: document.getElementById('sourceType').value,
         dbname: document.getElementById('dbname').value,
         username: document.getElementById('username').value,
         password: document.getElementById('password').value,
         host: document.getElementById('host').value,
-        port: document.getElementById('port').value
+        port: document.getElementById('port').value,
+        // LLM Model
+        repoID: document.getElementById('repoId').value,
+        modelName: document.getElementById('modelName').value,
+        token: document.getElementById('token').value
     };
 
     DataDialogue.showFormLoadingAnimation(formData.sourceType);

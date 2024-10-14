@@ -33,7 +33,7 @@ class HuggingFaceAuth:
 
 class ModelDownloader(ABC):
     @abstractmethod
-    def download(self, model_name: str, save_path: str, force: bool = False, filename: Optional[str] = None) -> str:
+    def download(self, repo_id: str, save_path: str, force: bool = False, model_name: Optional[str] = None) -> str:
         pass
 
 
@@ -41,12 +41,12 @@ class HuggingFaceDownloader(ModelDownloader):
     def __init__(self, auth: Optional[HuggingFaceAuth] = None):
         self.auth = auth
 
-    def download(self, model_name: str, save_path: str, force: bool = False, filename: Optional[str] = None) -> str:
+    def download(self, repo_id: str, save_path: str, force: bool = False, model_name: Optional[str] = None) -> str:
         token = self.auth.token if self.auth else None
         try:
             return hf_hub_download(
-                repo_id=model_name,
-                filename=filename,
+                repo_id=repo_id,
+                model_name=model_name,
                 local_dir=save_path,
                 force_download=force,
                 token=token
@@ -67,40 +67,40 @@ class ModelManager:
             "huggingface": HuggingFaceDownloader(self.hf_auth)
         }
 
-    def download_model(self, model_name: str, source: str = "huggingface", force: bool = False, filename: Optional[str] = None) -> str:
+    def download_model(self, repo_id: str, source: str = "huggingface", force: bool = False, model_name: Optional[str] = None) -> str:
         if source not in self.downloaders:
             raise ValueError(f"Unsupported source: {source}")
 
-        save_path = os.path.join(self.base_path, source, model_name)
+        save_path = os.path.join(self.base_path, source, repo_id)
         os.makedirs(save_path, exist_ok=True)
 
-        if not force and self.model_exists(model_name, source, filename):
-            logger.info(f"Model {model_name} {'file ' + filename if filename else ''} already exists. Use force=True to re-download.")
-            return os.path.join(save_path, filename) if filename else save_path
+        if not force and self.model_exists(repo_id, source, model_name):
+            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} already exists. Use force=True to re-download.")
+            return os.path.join(save_path, model_name) if model_name else save_path
 
         downloader = self.downloaders[source]
         try:
-            logger.info(f"Model {model_name} {'file ' + filename if filename else ''} downloading")
-            model_path = downloader.download(model_name, save_path, force, filename)
-            logger.info(f"Model {model_name} {'file ' + filename if filename else ''} downloaded successfully.")
+            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} downloading")
+            model_path = downloader.download(repo_id, save_path, force, model_name)
+            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} downloaded successfully.")
             return model_path
         except Exception as e:
-            logger.error(f"Failed to download model {model_name}: {e}")
+            logger.error(f"Failed to download model {repo_id}: {e}")
             raise
 
-    def model_exists(self, model_name: str, source: str = "huggingface", filename: Optional[str] = None) -> bool:
-        model_path = os.path.join(self.base_path, source, model_name)
-        if filename:
-            return os.path.exists(os.path.join(model_path, filename))
+    def model_exists(self, repo_id: str, source: str = "huggingface", model_name: Optional[str] = None) -> bool:
+        model_path = os.path.join(self.base_path, source, repo_id)
+        if model_name:
+            return os.path.exists(os.path.join(model_path, model_name))
         return os.path.exists(model_path)
 
-    def delete_model(self, model_name: str, source: str = "huggingface") -> None:
-        model_path = os.path.join(self.base_path, source, model_name)
+    def delete_model(self, repo_id: str, source: str = "huggingface") -> None:
+        model_path = os.path.join(self.base_path, source, repo_id)
         if os.path.exists(model_path):
             shutil.rmtree(model_path)
-            logger.info(f"Model {model_name} deleted successfully.")
+            logger.info(f"Repo ID {repo_id} deleted successfully.")
         else:
-            logger.warning(f"Model {model_name} not found.")
+            logger.warning(f"Repo ID {repo_id} not found.")
 
     def list_models(self, source: Optional[str] = None) -> List[str]:
         models = []
@@ -118,39 +118,39 @@ class ModelManager:
     def add_source(self, source_name: str, downloader: ModelDownloader) -> None:
         self.downloaders[source_name] = downloader
 
-    def get_model_path(self, model_name: str, source: str = "huggingface") -> str:
-        model_path = os.path.join(self.base_path, source, model_name)
+    def get_model_path(self, repo_id: str, source: str = "huggingface") -> str:
+        model_path = os.path.join(self.base_path, source, repo_id)
         if not os.path.exists(model_path):
-            raise FileNotFoundError(f"Model {model_name} from source {source} not found.")
+            raise FileNotFoundError(f"Repo ID {repo_id} from source {source} not found.")
         return model_path
 
-    def get_model_info(self, model_name: str, source: str = "huggingface") -> Dict[str, any]:
-        model_path = self.get_model_path(model_name, source)
+    def get_model_info(self, repo_id: str, source: str = "huggingface") -> Dict[str, any]:
+        model_path = self.get_model_path(repo_id, source)
         return {
-            "name": model_name,
+            "name": repo_id,
             "source": source,
             "path": model_path,
-            "size": self.get_model_size(model_name, source),
+            "size": self.get_model_size(repo_id, source),
             "last_modified": os.path.getmtime(model_path)
         }
 
-    def get_model_size(self, model_name: str, source: str = "huggingface") -> int:
-        model_path = self.get_model_path(model_name, source)
-        return sum(os.path.getsize(os.path.join(dirpath, filename))
-                   for dirpath, _, filenames in os.walk(model_path)
-                   for filename in filenames)
+    def get_model_size(self, repo_id: str, source: str = "huggingface") -> int:
+        model_path = self.get_model_path(repo_id, source)
+        return sum(os.path.getsize(os.path.join(dirpath, model_name))
+                   for dirpath, _, model_names in os.walk(model_path)
+                   for model_name in model_names)
 
     def rename_model(self, old_name: str, new_name: str, source: str = "huggingface") -> None:
         old_path = self.get_model_path(old_name, source)
         new_path = os.path.join(self.base_path, source, new_name)
         os.rename(old_path, new_path)
-        logger.info(f"Model renamed from {old_name} to {new_name}")
+        logger.info(f"Repo ID renamed from {old_name} to {new_name}")
 
-    def copy_model(self, model_name: str, new_name: str, source: str = "huggingface") -> None:
-        src_path = self.get_model_path(model_name, source)
+    def copy_model(self, repo_id: str, new_name: str, source: str = "huggingface") -> None:
+        src_path = self.get_model_path(repo_id, source)
         dst_path = os.path.join(self.base_path, source, new_name)
         shutil.copytree(src_path, dst_path)
-        logger.info(f"Model {model_name} copied to {new_name}")
+        logger.info(f"Repo ID {repo_id} copied to {new_name}")
 
     def clear_cache(self) -> None:
         for source in os.listdir(self.base_path):

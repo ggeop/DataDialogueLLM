@@ -5,10 +5,20 @@ class DatabaseCreationResponse(BaseModel):
     message: str
 
 
-class RegisterSource(BaseModel):
+class RegisterAgent(BaseModel):
+
+    # General
+    modelType: str
+
+    # Register Source
     dbname: str
     sourceType: str
     username: str
     password: str
     host: str
     port: str
+
+    # Register Model
+    repoID: str
+    modelName: str
+    token: str
