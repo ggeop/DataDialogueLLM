@@ -2,7 +2,6 @@ import logging
 from typing import Dict, List
 
 from app.clients.db import PostgresClient
-from app.llm import SQLLlama31Model, GeneralLlama31Model
 from app.schemas import RegisterAgent
 from app.agents.data_dialogue_agent import DataDialogueAgent
 from app.llm.model_manager import ModelManager
@@ -66,17 +65,24 @@ class DataDialogueService:
         # Configure LLM Model
         # =============================
         self.model_manager.download_model(
-            source="huggingface",  # TODO: Support only HuggingFace repository
+            source="huggingface",
             repo_id=register_params.repoID,
             model_name=register_params.modelName
         )
-        self.sql_model_path = self.model_manager.get_model_path(f'{register_params.repoID}/{register_params.modelName}')
-
-        model = SQLLlama31Model(self.sql_model_path)
-        self.registered_agents[model.alias] = DataDialogueAgent(
-            database=db,
-            model=model
+        model = self.model_manager.load_model(
+            source="huggingface",
+            repo_id=register_params.repoID,
+            model_name=register_params.modelName,
+            model_type="gguf",
+            n_ctx=3000,
+            verbose=False
         )
+        sql_agent = DataDialogueAgent(
+            database=db,
+            model=model,
+            model_type=ModelType.SQL.value
+        )
+        self.registered_agents[sql_agent.name] = sql_agent
 
     def _initialize_agents(self):
         # =============================
@@ -87,14 +93,20 @@ class DataDialogueService:
             repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],
             model_name=settings.DEFAULT_GENERAL_LLM["model_name"])
 
-        self.general_model_path = self.model_manager.get_model_path(f'{settings.DEFAULT_GENERAL_LLM["repo_id"]}/{settings.DEFAULT_GENERAL_LLM["model_name"]}')
+        general_model = self.model_manager.load_model(
+            source=settings.DEFAULT_GENERAL_LLM["source"],
+            repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],
+            model_name=settings.DEFAULT_GENERAL_LLM["model_name"],
+            model_type="gguf",
+            verbose=False
+        )
 
-        general_model = GeneralLlama31Model(self.general_model_path)
         general_agent = DataDialogueAgent(
             database=None,
             model=general_model,
+            model_type=ModelType.GENERAL.value
         )
-        self.registered_agents[general_model.alias] = general_agent
+        self.registered_agents[general_agent.name] = general_agent
 
     def _is_registered(self, model) -> bool:
         return model in self.registered_agents

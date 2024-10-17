@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 @router.post("/generate", response_model=DialogueResult)
 async def generate_text(query: Query):
     try:
-        agent = data_dialogue_service.get_agent(query.model)
-        logger.info(f"Selected model {agent.model.alias}")
+        agent = data_dialogue_service.get_agent(query.agent)
+        logger.info(f"Selected Agent: {agent.name}")
         response = agent.generate(query.text)
         return response
     except Exception as e:

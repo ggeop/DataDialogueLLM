@@ -2,15 +2,27 @@ import os
 import shutil
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from huggingface_hub import (
     hf_hub_download,
     HfApi,
     HfFolder
 )
+from llama_cpp import Llama
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
+
+
+class ModelLoader(ABC):
+    @abstractmethod
+    def load_model(self, model_path: str, **kwargs) -> Any:
+        pass
+
+
+class GGUFLoader(ModelLoader):
+    def load_model(self, model_path: str, **kwargs) -> Llama:
+        return Llama(model_path=model_path, **kwargs)
 
 
 class HuggingFaceAuth:
@@ -66,6 +78,10 @@ class ModelManager:
         self.downloaders = {
             "huggingface": HuggingFaceDownloader(self.hf_auth)
         }
+        self.models: Dict[str, Any] = {}
+        self.loaders: Dict[str, ModelLoader] = {
+            "gguf": GGUFLoader()
+        }
 
     def download_model(self, repo_id: str, source: str = "huggingface", force: bool = False, model_name: Optional[str] = None) -> str:
         if source not in self.downloaders:
@@ -87,6 +103,25 @@ class ModelManager:
         except Exception as e:
             logger.error(f"Failed to download model {repo_id}: {e}")
             raise
+
+    def load_model(self, repo_id: str, model_name: str, model_type: str, source: str, **kwargs):
+
+        model_path = self.get_model_path(
+            repo_id=repo_id,
+            model_name=model_name,
+            source=source
+        )
+
+        if model_path in self.models:
+            return self.models[model_path]
+
+        if model_type not in self.loaders:
+            raise ValueError(f"Unsupported model type: {model_type}")
+
+        loader = self.loaders[model_type]
+        loaded_model = loader.load_model(model_path, **kwargs)
+        self.models[model_name] = loaded_model
+        return loaded_model
 
     def model_exists(self, repo_id: str, source: str = "huggingface", model_name: Optional[str] = None) -> bool:
         model_path = os.path.join(self.base_path, source, repo_id)
@@ -118,8 +153,8 @@ class ModelManager:
     def add_source(self, source_name: str, downloader: ModelDownloader) -> None:
         self.downloaders[source_name] = downloader
 
-    def get_model_path(self, repo_id: str, source: str = "huggingface") -> str:
-        model_path = os.path.join(self.base_path, source, repo_id)
+    def get_model_path(self, repo_id: str, model_name: str, source: str = "huggingface") -> str:
+        model_path = os.path.join(self.base_path, source, repo_id, model_name)
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Repo ID {repo_id} from source {source} not found.")
         return model_path

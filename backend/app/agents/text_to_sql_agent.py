@@ -73,9 +73,15 @@ class TextToSQLAgent:
                 db_type=self._database.db_type,
                 question=question
             )
-
         logger.info("SQL Generation Prompt:\n%s", prompt)
-        sql = self._model.generate(prompt, max_tokens=self._max_tokens, stop=[";"], temperature=temperature)
+        response = self._model(
+            prompt,
+            max_tokens=self._max_tokens,
+            temperature=temperature,
+            stop=[";"],
+            echo=False
+        )
+        sql = response['choices'][0]['text'].strip()
         logger.info(f"Generated SQL: {sql}")
         return QueryResult(success=True, data=[sql])
 

@@ -1,15 +1,15 @@
 DataDialogue.handleSubmit = () => {
     const query = DataDialogue.elements.queryInput.value.trim();
-    const model = DataDialogue.elements.dropdownButton.textContent.trim();
-    if (query === '' || model === 'Select an agent') return;
+    const agent = DataDialogue.elements.dropdownButton.textContent.trim();
+    if (query === '' || agent === 'Select an agent') return;
 
     DataDialogue.addMessageToConversation('user-message', query);
     DataDialogue.elements.queryInput.value = '';
     DataDialogue.showLoadingAnimation();
-    DataDialogue.submitQuery(query, model);
+    DataDialogue.submitQuery(query, agent);
 };
 
-DataDialogue.submitQuery = async (query, model) => {
+DataDialogue.submitQuery = async (query, agent) => {
     try {
         DataDialogue.showLoadingAnimation();
 
@@ -18,7 +18,7 @@ DataDialogue.submitQuery = async (query, model) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ text: query, model: model }),
+            body: JSON.stringify({ text: query, agent: agent }),
         });
 
         if (!response.ok) {
