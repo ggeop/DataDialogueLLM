@@ -1,23 +1,57 @@
+
+///////////////////////////////////////////
+// Common
+///////////////////////////////////////////
+DataDialogue.showFormLoadingAnimation = (sourceType) => {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    if (loadingOverlay) {
+        const loadingMessage = loadingOverlay.querySelector('.loading-message');
+        if (loadingMessage) {
+            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
+        }
+        loadingOverlay.classList.add('show');
+    }
+};
+
+DataDialogue.hideFormLoadingAnimation = () => {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    if (loadingOverlay) {
+        loadingOverlay.classList.remove('show');
+    }
+};
+
+
+
+///////////////////////////////////////////
+// Demo Form
+///////////////////////////////////////////
 DataDialogue.handleTryDemo = () => {
     DataDialogue.openDemoForm();
 };
 
 DataDialogue.openDemoForm = () => {
-    const demoFormOverlay = document.getElementById('demoFormOverlay');
-    const demoFormContainer = document.getElementById('demoFormContainer');
+    const { demoFormOverlay, demoFormContainer, menuIcon, tryDemoContainer } = DataDialogue.elements;
 
-    demoFormOverlay.style.display = 'block';
-    demoFormContainer.classList.add('show');
-    document.body.style.overflow = 'hidden';
+    if (demoFormOverlay && demoFormContainer) {
+        demoFormOverlay.style.display = 'block';
+        demoFormContainer.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Hide menu icon and try demo button
+        if (menuIcon) menuIcon.style.display = 'none';
+        if (tryDemoContainer) tryDemoContainer.style.display = 'none';
+    }
 };
 
 DataDialogue.closeDemoForm = () => {
-    const demoFormOverlay = document.getElementById('demoFormOverlay');
-    const demoFormContainer = document.getElementById('demoFormContainer');
-
-    demoFormOverlay.style.display = 'none';
-    demoFormContainer.classList.remove('show');
+    const { demoFormContainer, demoFormOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
+    if (demoFormContainer) demoFormContainer.classList.remove('show');
+    if (demoFormOverlay) demoFormOverlay.style.display = 'none';
     document.body.style.overflow = 'auto';
+    
+    // Show menu icon and try demo button
+    if (menuIcon) menuIcon.style.display = 'block';
+    if (tryDemoContainer) tryDemoContainer.style.display = 'block';
 };
 
 DataDialogue.submitDemoForm = async () => {
@@ -64,34 +98,34 @@ DataDialogue.submitDemoForm = async () => {
     }
 };
 
-DataDialogue.toggleForm = () => {
-    const { formContainer, pageOverlay, menuIcon } = DataDialogue.elements;
+
+
+///////////////////////////////////////////
+// Register Form
+///////////////////////////////////////////
+DataDialogue.openRegisterForm = () => {
+    const { formContainer, pageOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
     
-    if (formContainer && pageOverlay && menuIcon) {
-        const isFormShown = formContainer.classList.toggle('show');
-        pageOverlay.style.display = isFormShown ? 'block' : 'none';
-        document.body.style.overflow = isFormShown ? 'hidden' : 'auto';
+    if (formContainer && pageOverlay) {
+        formContainer.classList.add('show');
+        pageOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
         
-        // Hide menu container
-        DataDialogue.elements.menuContainer.classList.remove('active');
-
-        // Hide menu icon when form is shown, show it when form is hidden
-        menuIcon.style.display = isFormShown ? 'none' : 'block';
-
-        if (!isFormShown) {
-            DataDialogue.clearFormFields();
-        }
+        // Hide menu icon and try demo button
+        if (menuIcon) menuIcon.style.display = 'none';
+        if (tryDemoContainer) tryDemoContainer.style.display = 'none';
     }
 };
 
-DataDialogue.clearFormFields = () => {
-    const sourceType = document.getElementById('sourceType');
-    const username = document.getElementById('username');
-    const password = document.getElementById('password');
-    
-    if (sourceType) sourceType.value = 'postgresql';
-    if (username) username.value = '';
-    if (password) password.value = '';
+DataDialogue.closeRegisterForm = () => {
+    const { formContainer, pageOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
+    if (formContainer) formContainer.classList.remove('show');
+    if (pageOverlay) pageOverlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+
+    // Show menu icon and try demo button
+    if (menuIcon) menuIcon.style.display = 'block';
+    if (tryDemoContainer) tryDemoContainer.style.display = 'block';
 };
 
 DataDialogue.submitForm = async () => {
@@ -137,29 +171,34 @@ DataDialogue.submitForm = async () => {
     }
 };
 
-DataDialogue.showFormLoadingAnimation = (sourceType) => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
-    if (loadingOverlay) {
-        const loadingMessage = loadingOverlay.querySelector('.loading-message');
-        if (loadingMessage) {
-            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
+
+DataDialogue.toggleForm = () => {
+    const { formContainer, pageOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
+    
+    if (formContainer && pageOverlay) {
+        const isFormShown = formContainer.classList.toggle('show');
+        pageOverlay.style.display = isFormShown ? 'block' : 'none';
+        document.body.style.overflow = isFormShown ? 'hidden' : 'auto';
+        
+        // Hide menu container
+        DataDialogue.elements.menuContainer.classList.remove('active');
+
+        // Hide or show menu icon and try demo button
+        if (menuIcon) menuIcon.style.display = isFormShown ? 'none' : 'block';
+        if (tryDemoContainer) tryDemoContainer.style.display = isFormShown ? 'none' : 'block';
+
+        if (!isFormShown) {
+            DataDialogue.clearFormFields();
         }
-        loadingOverlay.classList.add('show');
     }
 };
 
-DataDialogue.hideFormLoadingAnimation = () => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
-    if (loadingOverlay) {
-        loadingOverlay.classList.remove('show');
-    }
+DataDialogue.clearFormFields = () => {
+    const sourceType = document.getElementById('sourceType');
+    const username = document.getElementById('username');
+    const password = document.getElementById('password');
+    
+    if (sourceType) sourceType.value = 'postgresql';
+    if (username) username.value = '';
+    if (password) password.value = '';
 };
-
-DataDialogue.handleOverlayClick = function(event) {
-    if (event.target === DataDialogue.elements.pageOverlay) {
-        DataDialogue.toggleForm();
-    }
-};
-
-
-

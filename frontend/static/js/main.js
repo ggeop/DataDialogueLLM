@@ -29,7 +29,10 @@ DataDialogue.cacheElements = () => {
         pageOverlay: document.getElementById('pageOverlay'),
         formContainer: document.getElementById('formContainer'),
         tryDemoButton: document.getElementById('tryDemoButton'),
-        messageBox: document.getElementById('messageBox')
+        tryDemoContainer: document.getElementById('try-demo-container'),
+        messageBox: document.getElementById('messageBox'),
+        demoFormOverlay: document.getElementById('demoFormOverlay'),
+        demoFormContainer: document.getElementById('demoFormContainer')
     };
 };
 
@@ -49,6 +52,8 @@ DataDialogue.attachEventListeners = () => {
     if (dropdownList) dropdownList.addEventListener('click', DataDialogue.handleOptionClick);
     if (tryDemoButton) tryDemoButton.addEventListener('click', DataDialogue.handleTryDemo);
 
+    // Global event handlers
+    document.addEventListener('click', DataDialogue.handleOutsideClick);
     document.addEventListener('click', DataDialogue.closeDropdownOutside);
 };
 
