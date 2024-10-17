@@ -112,10 +112,12 @@ img, video, iframe {
 }
 
 footer {
+    background-color: var(--card-background);
     flex-shrink: 0;
     width: 100%;
-    color: #45b393;
-    padding: 0.5rem 0;
+    color: #C6C2C2;
+    padding: 0.1rem 0;
+    font-size: 0.8rem;
 }
 
 footer .container {

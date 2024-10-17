@@ -1,6 +1,5 @@
 .demo-form {
     background: linear-gradient(135deg, var(--card-background), var(--background-color));
-    border: 1px solid var(--primary-color);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
