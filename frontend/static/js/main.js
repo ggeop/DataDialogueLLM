@@ -16,6 +16,7 @@ DataDialogue.init = () => {
 DataDialogue.cacheElements = () => {
     DataDialogue.elements = {
         queryInput: document.getElementById('queryInput'),
+        visibleInput: document.getElementById('visibleInput'),
         askButton: document.getElementById('askButton'),
         modelSelect: document.getElementById('modelSelect'),
         customDropdown: document.getElementById('customDropdown'),
@@ -45,6 +46,10 @@ DataDialogue.attachEventListeners = () => {
 
     if (askButton) askButton.addEventListener('click', DataDialogue.handleSubmit);
     if (queryInput) queryInput.addEventListener('keypress', DataDialogue.handleEnterKey);
+    if (visibleInput) {
+        visibleInput.addEventListener('input', DataDialogue.syncInputs);
+        visibleInput.addEventListener('keypress', DataDialogue.handleEnterKey);
+    }
     if (menuIcon) menuIcon.addEventListener('click', DataDialogue.toggleMenu);
     if (cancelCloseBtn) cancelCloseBtn.addEventListener('click', DataDialogue.toggleForm);
     if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
@@ -58,7 +63,16 @@ DataDialogue.attachEventListeners = () => {
 };
 
 DataDialogue.handleEnterKey = (e) => {
-    if (e.key === 'Enter') DataDialogue.handleSubmit();
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent default to avoid newline in textarea
+        DataDialogue.handleSubmit();
+    }
+};
+
+// Add this new function
+DataDialogue.syncInputs = () => {
+    const { queryInput, visibleInput } = DataDialogue.elements;
+    queryInput.value = visibleInput.value;
 };
 
 // Initialize when components are ready

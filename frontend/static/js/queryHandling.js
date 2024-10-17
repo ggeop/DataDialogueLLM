@@ -1,9 +1,10 @@
 DataDialogue.handleSubmit = () => {
-    const query = DataDialogue.elements.queryInput.value.trim();
+    const query = DataDialogue.elements.visibleInput.value.trim();
     const agent = DataDialogue.elements.dropdownButton.textContent.trim();
     if (query === '' || agent === 'Select an agent') return;
 
     DataDialogue.addMessageToConversation('user-message', query);
+    DataDialogue.elements.visibleInput.value = '';
     DataDialogue.elements.queryInput.value = '';
     DataDialogue.showLoadingAnimation();
     DataDialogue.submitQuery(query, agent);
