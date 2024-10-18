@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.endpoints import generate, agents
+from app.api.endpoints import agents, api
 from app.core.config import settings
 
 app = FastAPI()
@@ -13,7 +13,7 @@ app.include_router(
     tags=["agents"]
 )
 app.include_router(
-    generate.router,
+    api.router,
     prefix="/api",
     tags=["generate"]
 )
