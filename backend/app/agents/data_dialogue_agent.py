@@ -1,6 +1,6 @@
 from app.agents.text_to_sql_agent import TextToSQLAgent
 from app.clients.db import DatabaseClient
-from app.llm.model_type import ModelType
+from app.core.model_type import ModelType
 from app.schemas import (
     SQLResponse,
     GeneralResponse,
