@@ -51,7 +51,7 @@ DataDialogue.closeDropdownOutside = (event) => {
 
 DataDialogue.fetchAgentList = async () => {
     try {
-        const response = await fetch('http://localhost:8000/agents/list');
+        const response = await fetch('http://localhost:8000/api/v1/agents/list');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }

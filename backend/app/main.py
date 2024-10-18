@@ -2,21 +2,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.endpoints import agents, api
+from app.api.v1.api import api_router
 from app.core.config import settings
 
 app = FastAPI()
 
-app.include_router(
-    agents.router,
-    prefix="/agents",
-    tags=["agents"]
-)
-app.include_router(
-    api.router,
-    prefix="/api",
-    tags=["generate"]
-)
+app.include_router(api_router, prefix="/api/v1")
 
 app.add_middleware(
     CORSMiddleware,
