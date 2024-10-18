@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.8'
 
 services:
   postgres:
@@ -54,6 +54,7 @@ services:
     volumes:
       - ./frontend:/app
     depends_on:
+      - postgres
       - backend
 
 volumes:
