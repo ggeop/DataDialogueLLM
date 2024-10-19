@@ -13,18 +13,16 @@ jobs:
     runs-on: ubuntu-latest
     # if: github.event.pull_request.merged == true
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
     
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
