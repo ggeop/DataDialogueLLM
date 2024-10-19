@@ -3,6 +3,7 @@ version: '3.8'
 services:
   postgres:
     build: ./database/postgres
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-postgres:${TAG:-latest}
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
@@ -34,6 +35,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-backend:${TAG:-latest}
     env_file:
       - .env
     ports:
@@ -46,6 +48,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-frontend:${TAG:-latest}
     environment:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
