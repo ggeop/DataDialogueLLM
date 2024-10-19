@@ -32,36 +32,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Generate short SHA
-        id: vars
-        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Build and push Docker images
+      - name: Build and push Docker Compose services
         run: |
-          # Define image names
-          BACKEND_IMAGE="${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:${{ steps.vars.outputs.SHORT_SHA }}"
-          FRONTEND_IMAGE="${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:${{ steps.vars.outputs.SHORT_SHA }}"
-          
-          # Build images
-          docker-compose build \
-            --build-arg BACKEND_IMAGE=${BACKEND_IMAGE} \
-            --build-arg FRONTEND_IMAGE=${FRONTEND_IMAGE}
-          
-          # Push images
-          docker push ${BACKEND_IMAGE}
-          docker push ${FRONTEND_IMAGE}
-          
-          # Tag and push latest for master branch
-          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
-            docker tag ${BACKEND_IMAGE} "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:latest"
-            docker tag ${FRONTEND_IMAGE} "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:latest"
-            docker push "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:latest"
-            docker push "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:latest"
-          fi
+          # Build all services
+          docker-compose build
+
+          # Tag and push each service with 'latest'
+          for service in $(docker-compose config --services); do
+            echo "Pushing service: $service"
+            docker tag ${service}:latest ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
+            docker push ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
+          done
 
       - name: Print debug information
         run: |
           echo "Docker Registry: ${{ secrets.DOCKER_REGISTRY }}"
-          echo "Short SHA: ${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "Backend Image: ${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:${{ steps.vars.outputs.SHORT_SHA }}"
-          echo "Frontend Image: ${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:${{ steps.vars.outputs.SHORT_SHA }}"
+          echo "Services:"
+          docker-compose config --services
