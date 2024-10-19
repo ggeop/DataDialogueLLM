@@ -4,7 +4,7 @@ from typing import Dict, List
 from app.clients.db import PostgresClient
 from app.schemas import RegisterAgent
 from app.agents.data_dialogue_agent import DataDialogueAgent
-from app.services.model_manager import ModelManager
+from app.services.model_management import ModelManager
 from app.core.config import settings
 from app.core.model_type import ModelType
 

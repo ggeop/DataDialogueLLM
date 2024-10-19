@@ -42,6 +42,7 @@ class TextToSQLAgent:
                 return "", None, "Failed to generate SQL query"
 
             sql = sql_result.data[0]
+            logger.info(f"Attempt {attempt} - Raw SQL: {sql}")
             cleaned_sql = self._clean_sql_query(sql)
             logger.info(f"Attempt {attempt} - Cleaned SQL: {cleaned_sql}")
 
