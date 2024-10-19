@@ -33,11 +33,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker Compose services
+        env:
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          TAG: ${{ github.sha }}
         run: |
-          # Build all services & Push in Docker Hub
           docker-compose build
           docker-compose push
-
 
       - name: Print debug information
         run: |
