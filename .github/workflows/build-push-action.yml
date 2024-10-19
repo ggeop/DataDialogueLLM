@@ -36,30 +36,32 @@ jobs:
         id: vars
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Set environment variables
+      - name: Build and push Docker images
         run: |
-          echo "DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}" >> $GITHUB_ENV
-          echo "TAG=${{ steps.vars.outputs.SHORT_SHA }}" >> $GITHUB_ENV
+          # Define image names
+          BACKEND_IMAGE="${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:${{ steps.vars.outputs.SHORT_SHA }}"
+          FRONTEND_IMAGE="${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:${{ steps.vars.outputs.SHORT_SHA }}"
+          
+          # Build images
+          docker-compose build \
+            --build-arg BACKEND_IMAGE=${BACKEND_IMAGE} \
+            --build-arg FRONTEND_IMAGE=${FRONTEND_IMAGE}
+          
+          # Push images
+          docker push ${BACKEND_IMAGE}
+          docker push ${FRONTEND_IMAGE}
+          
+          # Tag and push latest for master branch
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            docker tag ${BACKEND_IMAGE} "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:latest"
+            docker tag ${FRONTEND_IMAGE} "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:latest"
+            docker push "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:latest"
+            docker push "${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:latest"
+          fi
 
-      - name: Debug Docker Compose configuration
+      - name: Print debug information
         run: |
           echo "Docker Registry: ${{ secrets.DOCKER_REGISTRY }}"
-          echo "Tag: ${{ steps.vars.outputs.SHORT_SHA }}"
-          docker-compose config
-
-      - name: Build and push Docker Compose services
-        run: |
-          docker-compose build
-          for service in $(docker-compose config --services); do
-            echo "Pushing service: $service"
-            docker-compose push $service
-          done
-
-      - name: Tag and push latest for master branch
-        if: github.ref == 'refs/heads/master'
-        run: |
-          for service in $(docker-compose config --services); do
-            echo "Tagging and pushing latest for service: $service"
-            docker tag ${{ secrets.DOCKER_REGISTRY }}/${service}:${{ steps.vars.outputs.SHORT_SHA }} ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
-            docker push ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
-          done
+          echo "Short SHA: ${{ steps.vars.outputs.SHORT_SHA }}"
+          echo "Backend Image: ${{ secrets.DOCKER_REGISTRY }}/data-dialogue-backend:${{ steps.vars.outputs.SHORT_SHA }}"
+          echo "Frontend Image: ${{ secrets.DOCKER_REGISTRY }}/data-dialogue-frontend:${{ steps.vars.outputs.SHORT_SHA }}"
