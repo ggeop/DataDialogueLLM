@@ -64,11 +64,6 @@ class DataDialogueService:
         # =============================
         # Configure LLM Model
         # =============================
-        self.model_manager.download_model(
-            source="huggingface",
-            repo_id=register_params.repoID,
-            model_name=register_params.modelName
-        )
         model = self.model_manager.load_model(
             source="huggingface",
             repo_id=register_params.repoID,
@@ -88,11 +83,6 @@ class DataDialogueService:
         # =============================
         # General Agent Setup
         # =============================
-        self.model_manager.download_model(
-            source=settings.DEFAULT_GENERAL_LLM["source"],
-            repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],
-            model_name=settings.DEFAULT_GENERAL_LLM["model_name"])
-
         general_model = self.model_manager.load_model(
             source=settings.DEFAULT_GENERAL_LLM["source"],
             repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],

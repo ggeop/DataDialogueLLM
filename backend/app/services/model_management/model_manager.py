@@ -9,7 +9,7 @@ from .utils import logger
 
 class ModelManager:
     """
-    A class to manage the downloading, loading, and caching of machine learning models.
+    A class to manage the downloading, loading, and file management of machine learning models.
     """
 
     def __init__(self, base_path: str, hf_token: Optional[str] = None):
@@ -29,6 +29,60 @@ class ModelManager:
         self.loaders: Dict[str, ModelLoader] = {
             "gguf": GGUFLoader()
         }
+
+    def load_model(self, repo_id: str, model_name: str, model_type: str, source: str = "huggingface", force_download: bool = False, **kwargs) -> Any:
+        """
+        Load a model, downloading it first if necessary.
+
+        Args:
+            repo_id (str): Repository ID.
+            model_name (str): Model name.
+            model_type (str): Type of the model.
+            source (str): Source of the model (default is "huggingface").
+            force_download (bool): Force download even if the model exists locally.
+            **kwargs: Additional keyword arguments for model loading.
+
+        Returns:
+            Any: Loaded model object.
+
+        Raises:
+            ValueError: If the model type is not supported or the source is invalid.
+        """
+        # Check if the model is already loaded
+        model_key = f"{source}/{repo_id}/{model_name}"
+        if model_key in self.models and not force_download:
+            logger.info(f"Model {model_key} is already loaded. Returning cached model.")
+            return self.models[model_key]
+
+        # Check if the model exists locally, if not, download it
+        if not self.file_manager.model_exists(repo_id, source, model_name) or force_download:
+            logger.info(f"Model {model_key} not found locally or force_download is True. Downloading...")
+            try:
+                self.download_model(repo_id, source, force_download, model_name)
+            except Exception as e:
+                logger.error(f"Failed to download model {model_key}: {e}")
+                raise
+
+        # Get the path to the model file
+        try:
+            model_path = self.file_manager.get_model_path(repo_id, model_name, source)
+        except FileNotFoundError:
+            logger.error(f"Model file for {model_key} not found after download attempt.")
+            raise
+
+        # Load the model
+        if model_type not in self.loaders:
+            raise ValueError(f"Unsupported model type: {model_type}")
+
+        loader = self.loaders[model_type]
+        try:
+            loaded_model = loader.load_model(model_path, **kwargs)
+            self.models[model_key] = loaded_model
+            logger.info(f"Model {model_key} loaded successfully.")
+            return loaded_model
+        except Exception as e:
+            logger.error(f"Failed to load model {model_key}: {e}")
+            raise
 
     def download_model(self, repo_id: str, source: str = "huggingface", force: bool = False, model_name: Optional[str] = None) -> str:
         """
@@ -54,48 +108,18 @@ class ModelManager:
         os.makedirs(save_path, exist_ok=True)
 
         if not force and self.file_manager.model_exists(repo_id, source, model_name):
-            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} already exists. Use force=True to re-download.")
+            logger.info(f"Model {repo_id} {'file ' + model_name if model_name else ''} already exists. Use force=True to re-download.")
             return os.path.join(save_path, model_name) if model_name else save_path
 
         downloader = self.downloaders[source]
         try:
-            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} downloading")
+            logger.info(f"Downloading model {repo_id} {'file ' + model_name if model_name else ''}")
             model_path = downloader.download(repo_id, save_path, force, model_name)
-            logger.info(f"Repo ID {repo_id} {'file ' + model_name if model_name else ''} downloaded successfully.")
+            logger.info(f"Model {repo_id} {'file ' + model_name if model_name else ''} downloaded successfully.")
             return model_path
         except Exception as e:
             logger.error(f"Failed to download model {repo_id}: {e}")
             raise
-
-    def load_model(self, repo_id: str, model_name: str, model_type: str, source: str, **kwargs) -> Any:
-        """
-        Load a model.
-
-        Args:
-            repo_id (str): Repository ID.
-            model_name (str): Model name.
-            model_type (str): Type of the model.
-            source (str): Source of the model.
-            **kwargs: Additional keyword arguments for model loading.
-
-        Returns:
-            Any: Loaded model object.
-
-        Raises:
-            ValueError: If the model type is not supported.
-        """
-        model_path = self.file_manager.get_model_path(repo_id, model_name, source)
-
-        if model_path in self.models:
-            return self.models[model_path]
-
-        if model_type not in self.loaders:
-            raise ValueError(f"Unsupported model type: {model_type}")
-
-        loader = self.loaders[model_type]
-        loaded_model = loader.load_model(model_path, **kwargs)
-        self.models[model_name] = loaded_model
-        return loaded_model
 
     def delete_model(self, repo_id: str, source: str = "huggingface") -> None:
         """
