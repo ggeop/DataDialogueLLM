@@ -6,6 +6,7 @@ on:
     branches:
       - develop
       - master
+  workflow_dispatch: # For testing and debugging
 
 jobs:
   docker:
