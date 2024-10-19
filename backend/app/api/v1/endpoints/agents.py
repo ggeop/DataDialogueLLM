@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
 from app.schemas import RegisterAgent
-from app.services.data_dialogue import data_dialogue_service
+from app.services.agent_manager import agent_manager_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 
 @router.get("/list")
 async def get_agents():
-    return data_dialogue_service.get_agents()
+    return agent_manager_service.get_agents()
 
 
 @router.post("/register")
 async def register(register_agent: RegisterAgent):
     try:
         logger.info(f"Starting Register {register_agent.sourceType} source and model type {register_agent.modelType}")
-        data_dialogue_service.register_agent(register_agent)
+        agent_manager_service.register_agent(register_agent)
         logger.info(f"Register {register_agent.sourceType} successful!")
         return JSONResponse(
             content={"message": "Registration successful"},
@@ -37,7 +37,7 @@ async def register(register_agent: RegisterAgent):
 async def delete_agent(agent_name: str):
     try:
         logger.info(f"Attempting to delete agent: {agent_name}")
-        data_dialogue_service.delete_agent(agent_name)
+        agent_manager_service.delete_agent(agent_name)
         logger.info(f"Successfully deleted agent: {agent_name}")
         return JSONResponse(
             content={"message": f"Agent '{agent_name}' successfully deleted"},

@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     DEFAULT_GENERAL_LLM: Dict[str, str] = {
         "source": "huggingface",
         "repo_id": "lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-        "model_name": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"
+        "model_name": "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "model_format": "gguf"
     }
 
     class Config:

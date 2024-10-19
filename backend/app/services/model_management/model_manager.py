@@ -30,14 +30,14 @@ class ModelManager:
             "gguf": GGUFLoader()
         }
 
-    def load_model(self, repo_id: str, model_name: str, model_type: str, source: str = "huggingface", force_download: bool = False, **kwargs) -> Any:
+    def load_model(self, repo_id: str, model_name: str, model_format: str, source: str = "huggingface", force_download: bool = False, **kwargs) -> Any:
         """
         Load a model, downloading it first if necessary.
 
         Args:
             repo_id (str): Repository ID.
             model_name (str): Model name.
-            model_type (str): Type of the model.
+            model_format (str): Model format e.g GGUF
             source (str): Source of the model (default is "huggingface").
             force_download (bool): Force download even if the model exists locally.
             **kwargs: Additional keyword arguments for model loading.
@@ -71,10 +71,10 @@ class ModelManager:
             raise
 
         # Load the model
-        if model_type not in self.loaders:
-            raise ValueError(f"Unsupported model type: {model_type}")
+        if model_format not in self.loaders:
+            raise ValueError(f"Unsupported model type: {model_format}")
 
-        loader = self.loaders[model_type]
+        loader = self.loaders[model_format]
         try:
             loaded_model = loader.load_model(model_path, **kwargs)
             self.models[model_key] = loaded_model

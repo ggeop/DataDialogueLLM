@@ -19,6 +19,8 @@ class RegisterAgent(BaseModel):
     port: str
 
     # Register Model
+    modelSource: str
     repoID: str
+    modelFormat: str
     modelName: str
     token: str

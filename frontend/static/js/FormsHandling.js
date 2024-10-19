@@ -66,7 +66,9 @@ DataDialogue.submitDemoForm = async () => {
         host: document.getElementById('demoHost').value,
         port: document.getElementById('demoPort').value,
         // LLM Model
+        modelSource: "huggingface",
         repoID : document.getElementById('demoRepoId').value,
+        modelFormat: "gguf",
         modelName: document.getElementById('demoModelName').value,
         token: document.getElementById('demoToken').value
     };
@@ -140,7 +142,9 @@ DataDialogue.submitForm = async () => {
         host: document.getElementById('host').value,
         port: document.getElementById('port').value,
         // LLM Model
+        modelSource: "huggingface",
         repoID: document.getElementById('repoId').value,
+        modelFormat: "gguf",
         modelName: document.getElementById('modelName').value,
         token: document.getElementById('token').value
     };
