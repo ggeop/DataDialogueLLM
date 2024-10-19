@@ -32,15 +32,19 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Generate short SHA
+        id: vars
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Set environment variables
         run: |
           echo "DOCKER_REGISTRY=${{ secrets.DOCKER_REGISTRY }}" >> $GITHUB_ENV
-          echo "TAG=${{ github.sha }}" >> $GITHUB_ENV
+          echo "TAG=${{ steps.vars.outputs.SHORT_SHA }}" >> $GITHUB_ENV
 
       - name: Debug Docker Compose configuration
         run: |
           echo "Docker Registry: ${{ secrets.DOCKER_REGISTRY }}"
-          echo "Tag: ${{ github.sha }}"
+          echo "Tag: ${{ steps.vars.outputs.SHORT_SHA }}"
           docker-compose config
 
       - name: Build and push Docker Compose services
@@ -56,6 +60,6 @@ jobs:
         run: |
           for service in $(docker-compose config --services); do
             echo "Tagging and pushing latest for service: $service"
-            docker tag ${{ secrets.DOCKER_REGISTRY }}/${service}:${{ github.sha }} ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
+            docker tag ${{ secrets.DOCKER_REGISTRY }}/${service}:${{ steps.vars.outputs.SHORT_SHA }} ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
             docker push ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
           done
