@@ -1,0 +1,183 @@
+.form-title {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.page-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+
+.form-container {
+    display: none;
+    background-color: var(--card-background);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    max-width: 400px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.form-container.show {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-section {
+    margin-bottom: 1rem;
+}
+
+.form-section-title {
+    color: var(--font-color);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+select, input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+select:focus, input[type="text"]:focus, input[type="password"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.submit-btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.cancel-close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #e04a48;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-close-btn:hover {
+    background-color: #ff9999;
+}
+
+.loading-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 26, 46, 0.9);
+    border-radius: 12px;
+    z-index: 10;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+.loading-message {
+    color: var(--text-color);
+    font-size: 14px;
+    text-align: center;
+    max-width: 80%;
+    line-height: 1.4;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+/* Custom scrollbar styles */
+.form-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.form-container::-webkit-scrollbar-track {
+    background: var(--card-background);
+}
+
+.form-container::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    border: 2px solid var(--card-background);
+}
+
+.form-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-dark);
+}

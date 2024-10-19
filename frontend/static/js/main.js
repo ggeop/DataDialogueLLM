@@ -1,70 +1,99 @@
 // Create a global object to store our app's functions and variables
 window.DataDialogue = window.DataDialogue || {};
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Initialize the application
-    DataDialogue.init();
-});
-
+// Main initialization function
 DataDialogue.init = () => {
-    const queryInput = document.getElementById('queryInput');
-    const askButton = document.getElementById('askButton');
-    const conversationsDiv = document.getElementById('conversations');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const menuIcon = document.querySelector('.menu-icon');
-    const menuContainer = document.querySelector('.menu-container');
-
-    // Store these elements in the DataDialogue object so they're accessible in other files
-    DataDialogue.elements = {
-        queryInput,
-        askButton,
-        conversationsDiv,
-        loadingIndicator,
-        menuIcon,
-        menuContainer
-    };
-
-    // Set up event listeners
-    askButton.addEventListener('click', DataDialogue.handleSubmit);
-    queryInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            DataDialogue.handleSubmit();
-        }
-    });
-
-    menuIcon.addEventListener('click', toggleMenu);
-
-    document.addEventListener('click', (event) => {
-        if (!menuContainer.contains(event.target) && !menuIcon.contains(event.target)) {
-            closeMenu();
-        }
-    });
-
-    // Render the ExampleSection component
+    console.log('Initializing Data Dialogue');
+    DataDialogue.cacheElements();
+    DataDialogue.attachEventListeners();
     DataDialogue.renderExampleSection();
-
+    DataDialogue.fetchAgentList();
+    DataDialogue.hideExampleSection();
     console.log('Data Dialogue initialized successfully');
 };
 
-DataDialogue.handleSubmit = () => {
-    const query = DataDialogue.elements.queryInput.value.trim();
-    if (query === '') return;
-
-    DataDialogue.addMessageToConversation('user-message', query);
-    DataDialogue.elements.queryInput.value = '';
-    DataDialogue.showLoadingAnimation();
-    DataDialogue.submitQuery(query);
+// Cache DOM elements
+DataDialogue.cacheElements = () => {
+    DataDialogue.elements = {
+        queryInput: document.getElementById('queryInput'),
+        visibleInput: document.getElementById('visibleInput'),
+        askButton: document.getElementById('askButton'),
+        modelSelect: document.getElementById('modelSelect'),
+        customDropdown: document.getElementById('customDropdown'),
+        dropdownButton: document.getElementById('dropdownButton'),
+        dropdownList: document.getElementById('dropdownList'),
+        conversationsDiv: document.getElementById('conversations'),
+        loadingIndicator: document.getElementById('loadingIndicator'),
+        menuIcon: document.querySelector('.menu-icon'),
+        menuContainer: document.querySelector('.menu-container'),
+        cancelCloseBtn: document.querySelector('.cancel-close-btn'),
+        pageOverlay: document.getElementById('pageOverlay'),
+        formContainer: document.getElementById('formContainer'),
+        tryDemoButton: document.getElementById('tryDemoButton'),
+        tryDemoContainer: document.getElementById('try-demo-container'),
+        messageBox: document.getElementById('messageBox'),
+        demoFormOverlay: document.getElementById('demoFormOverlay'),
+        demoFormContainer: document.getElementById('demoFormContainer')
+    };
 };
 
-function toggleMenu() {
-    const menuContainer = document.querySelector('.menu-container');
-    menuContainer.classList.toggle('active');
+DataDialogue.isFetching = false;
+DataDialogue.isDropdownOpen = false;
+
+// Attach event listeners
+DataDialogue.attachEventListeners = () => {
+    const { askButton, queryInput, menuIcon, cancelCloseBtn, pageOverlay, dropdownButton, dropdownList, tryDemoButton } = DataDialogue.elements;
+
+    if (askButton) askButton.addEventListener('click', DataDialogue.handleSubmit);
+    if (queryInput) queryInput.addEventListener('keypress', DataDialogue.handleEnterKey);
+    if (visibleInput) {
+        visibleInput.addEventListener('input', DataDialogue.syncInputs);
+        visibleInput.addEventListener('keypress', DataDialogue.handleEnterKey);
+    }
+    if (menuIcon) menuIcon.addEventListener('click', DataDialogue.toggleMenu);
+    if (cancelCloseBtn) cancelCloseBtn.addEventListener('click', DataDialogue.toggleForm);
+    if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
+    if (dropdownButton) dropdownButton.addEventListener('click', DataDialogue.toggleDropdown);
+    if (dropdownList) dropdownList.addEventListener('click', DataDialogue.handleOptionClick);
+    if (tryDemoButton) tryDemoButton.addEventListener('click', DataDialogue.handleTryDemo);
+
+    // Global event handlers
+    document.addEventListener('click', DataDialogue.handleOutsideClick);
+    document.addEventListener('click', DataDialogue.closeDropdownOutside);
+};
+
+DataDialogue.handleEnterKey = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault(); // Prevent default to avoid newline in textarea
+        DataDialogue.handleSubmit();
+    }
+};
+
+// Add this new function
+DataDialogue.syncInputs = () => {
+    const { queryInput, visibleInput } = DataDialogue.elements;
+    queryInput.value = visibleInput.value;
+};
+
+// Initialize when components are ready
+function initializeWhenReady() {
+    console.log('Main.js: Checking if components are loaded');
+    if (window.DataDialogue.componentsLoaded) {
+        console.log('Main.js: Components are loaded, initializing');
+        DataDialogue.init();
+    } else {
+        console.log('Main.js: Components not loaded yet, waiting');
+        window.addEventListener('componentsLoaded', () => {
+            console.log('Main.js: Received componentsLoaded event, initializing');
+            DataDialogue.init();
+        }, { once: true });
+    }
 }
 
-function closeMenu() {
-    const menuContainer = document.querySelector('.menu-container');
-    menuContainer.classList.remove('active');
-}
+// Attach the initializer to DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', initializeWhenReady);
 
-// Make sure copyToClipboard is available globally
-window.copyToClipboard = DataDialogue.copyToClipboard;
+// Make necessary functions globally accessible
+window.DataDialogue = DataDialogue;
+window.toggleForm = DataDialogue.toggleForm;
+window.submitForm = DataDialogue.submitForm;

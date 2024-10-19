@@ -1,39 +1,54 @@
-version: '1.0'
+version: '3.8'
 
 services:
   postgres:
     build: ./database/postgres
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-postgres:${TAG:-latest}
     environment:
-      POSTGRES_DB: dvd_db
+      POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
       POSTGRES_PASSWORD: 123456
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    command: >
+      bash -c "
+        echo 'Starting PostgreSQL and initialization script...';
+        docker-entrypoint.sh postgres &
+        until pg_isready -U demo -d dvdrental; do
+          echo 'Waiting for PostgreSQL to start...';
+          sleep 2;
+        done;
+        echo 'PostgreSQL is ready. Running initialization script...';
+        bash /docker-entrypoint-initdb.d/load-dvd-rental-db.sh;
+        echo 'Initialization complete. Keeping container running...';
+        wait
+      "
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d dvdrental"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        - MODEL_REPO=${MODEL_REPO}
-        - MODEL_FILE=${MODEL_FILE}
-        - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-backend:${TAG:-latest}
     env_file:
       - .env
-    environment:
-      - MODEL_REPO=${MODEL_REPO}
-      - MODEL_FILE=${MODEL_FILE}
-      - MODEL_LOCAL_DIR=${MODEL_LOCAL_DIR}
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
-    image: data-dialogue-backend:latest
+      - models:/data/models
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-frontend:${TAG:-latest}
     environment:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
@@ -42,8 +57,14 @@ services:
     volumes:
       - ./frontend:/app
     depends_on:
+      - postgres
       - backend
-    image: data-dialogue-frontend:latest
 
 volumes:
   postgres_data:
+  models:
+
+networks:
+  default:
+    name: data-dialogue-network
+    driver: bridge

@@ -1,32 +1,13 @@
 import re
 import sqlite3
 from contextlib import contextmanager
-from abc import ABC, abstractmethod
 from typing import Tuple, Any, Optional
 
+from app.clients.db.base import DatabaseClient
 from app.utils.query_result import QueryResult
 
 
-class Database(ABC):
-    @property
-    @abstractmethod
-    def db_type(self) -> str:
-        pass
-
-    @abstractmethod
-    def get_tablenames(self) -> str:
-        pass
-
-    @abstractmethod
-    def get_schema(self) -> str:
-        pass
-
-    @abstractmethod
-    def execute_query(self, sql: str, parameters: Optional[Tuple[Any, ...]] = None) -> QueryResult:
-        pass
-
-
-class SQLiteDatabase(Database):
+class SQLiteClient(DatabaseClient):
     def __init__(self, db_path: str):
         self.db_path = db_path
         self.connection = None

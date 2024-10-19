@@ -1,54 +1,15 @@
 import logging
 import re
-from typing import Any, Tuple, Optional, Callable
-from functools import wraps
+from typing import Any, Tuple, Optional
 
 from app.utils.query_result import QueryResult
+from app.agents.prompt_templates import (
+    SQL_GENERATION_TEMPLATE,
+    SQL_CORRECTION_TEMPLATE
+)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# Constants for query templates
-SQL_GENERATION_TEMPLATE = """Given the following {db_type} database schema:
-
-{schema}
-
-Generate a SQL query to answer the following question:
-{question}
-
-Important: 
-1. Return ONLY the SQL query, without any markdown formatting, backticks, or explanations.
-2. The query should be compatible with {db_type}.
-3. Do not use LIMIT unless specifically asked for a limited number of results.
-4. Ensure the query retrieves all relevant information to answer the question completely.
-
-SQL query:"""
-
-SQL_CORRECTION_TEMPLATE = """The SQL query you generated resulted in an error: {error}
-Please generate a corrected SQL query to answer the following question:
-{question}
-
-Important: Return ONLY the corrected SQL query, without any markdown formatting, backticks, or explanations.
-
-Corrected SQL query:"""
-
-
-def retry_decorator(max_retries: int):
-    def decorator(func: Callable):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            for attempt in range(1, max_retries + 1):
-                if attempt > 1:
-                    logger.info(f"Attempt {attempt}/{max_retries}")
-                result = func(*args, attempt=attempt, **kwargs)
-                if result.success:
-                    return result
-                if attempt < max_retries:
-                    logger.warning(f"Attempt {attempt} failed. Retrying...")
-            logger.error(f"All {max_retries} attempts failed.")
-            return result
-        return wrapper
-    return decorator
 
 
 class TextToSQLAgent:
@@ -69,56 +30,98 @@ class TextToSQLAgent:
         Generate SQL from a question, execute it, and return the result.
         """
         logger.info("Received question: %s", question)
-        sql_result = self._generate_sql_with_retry(question)
-        if not sql_result.success:
-            return "", None, "Failed to generate SQL query"
-        
-        sql = sql_result.data[0]  # Extract the SQL string from the QueryResult
-        cleaned_sql = self._clean_sql_query(sql)
-        logger.info("Cleaned SQL: %s", cleaned_sql)
-        
-        result = self._execute_query_with_retry(cleaned_sql)
-        if result.success:
-            return cleaned_sql, result.data, None
-        return cleaned_sql, None, result.error_message
+        for attempt in range(1, self._max_retries + 1):
+            temperature = self._initial_temperature + (attempt - 1) * self._temperature_increase
 
-    @retry_decorator(max_retries=3)
-    def _generate_sql_with_retry(self, question: str, attempt: int = 1) -> QueryResult:
-        """Generate SQL query from a natural language question with retry logic."""
-        logger.info(f"Generating SQL (Attempt {attempt})")
+            if attempt == 1:
+                sql_result = self._generate_sql(question, temperature)
+            else:
+                sql_result = self._generate_sql(question, temperature, previous_error)
+
+            if not sql_result.success:
+                return "", None, "Failed to generate SQL query"
+
+            sql = sql_result.data[0]
+            logger.info(f"Attempt {attempt} - Raw SQL: {sql}")
+            cleaned_sql = self._clean_sql_query(sql)
+            logger.info(f"Attempt {attempt} - Cleaned SQL: {cleaned_sql}")
+
+            result = self._execute_query(cleaned_sql)
+            if result.success:
+                return cleaned_sql, result.data, None
+
+            previous_error = result.error_message
+            logger.warning(f"Attempt {attempt} failed. Error: {previous_error}")
+
+            if attempt == self._max_retries:
+                logger.error(f"All {self._max_retries} attempts failed.")
+                return cleaned_sql, None, previous_error
+
+    def _generate_sql(self, question: str, temperature: float, previous_error: str = None) -> QueryResult:
+        """
+        Generate SQL query from a natural language question.
+        """
         schema = self._database.get_schema()
-        prompt = SQL_GENERATION_TEMPLATE.format(
-            db_type=self._database.db_type,
-            schema=schema,
-            question=question
+        if previous_error is None:
+            prompt = SQL_GENERATION_TEMPLATE.format(
+                db_type=self._database.db_type,
+                schema=schema,
+                question=question
+            )
+        else:
+            prompt = SQL_CORRECTION_TEMPLATE.format(
+                error=previous_error,
+                db_type=self._database.db_type,
+                question=question
+            )
+        logger.info("SQL Generation Prompt:\n%s", prompt)
+        response = self._model(
+            prompt,
+            max_tokens=self._max_tokens,
+            temperature=temperature,
+            stop=[";"],
+            echo=False
         )
-        if attempt > 1:
-            prompt = SQL_CORRECTION_TEMPLATE.format(error="Previous attempt failed", question=question)
-
-        temperature = self._initial_temperature + (attempt - 1) * self._temperature_increase
-        logger.debug(f"Using temperature: {temperature}")
-
-        logger.debug("SQL Generation Prompt:\n%s", prompt)
-        sql = self._model.generate(prompt, max_tokens=self._max_tokens, stop=[";"], temperature=temperature)
+        sql = response['choices'][0]['text'].strip()
         logger.info(f"Generated SQL: {sql}")
         return QueryResult(success=True, data=[sql])
 
     def _clean_sql_query(self, sql: str) -> str:
-        """Clean and format the generated SQL query."""
-        sql = re.sub(r'\s*(.+?)\s*(?=\1|\Z)', r'\1', sql)
-        sql = re.sub(r'```\w*\n?|\n?```', '', sql)
+        """
+        Clean and format the generated SQL query.
+        """
+        # Remove any leading special characters, whitespace, or unwanted tags
+        sql = re.sub(r'^[\s\W]*', '', sql)
+
+        # Remove any trailing special characters or whitespace
+        sql = re.sub(r'[\s\W]*$', '', sql)
+
+        # Remove any backticks
         sql = sql.replace('`', '')
+
+        # Ensure the query starts with a SQL keyword
+        sql_keywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP', 'TRUNCATE', 'WITH']
+        if not any(sql.upper().startswith(keyword) for keyword in sql_keywords):
+            # If it doesn't start with a SQL keyword, try to find the first occurrence
+            for keyword in sql_keywords:
+                keyword_index = sql.upper().find(keyword)
+                if keyword_index != -1:
+                    sql = sql[keyword_index:]
+                    break
+
         return sql.strip()
 
-    @retry_decorator(max_retries=3)
-    def _execute_query_with_retry(self, sql: str, attempt: int = 1) -> QueryResult:
-        """Execute the SQL query with retry logic."""
-        logger.info(f"Executing query (Attempt {attempt}): {sql}")
+    def _execute_query(self, sql: str) -> QueryResult:
+        """
+        Execute the SQL query.
+        """
+        logger.info(f"Executing query: {sql}")
         try:
             result = self._database.execute_query(sql)
             if result.success:
-                logger.info(f"Query executed successfully on attempt {attempt}")
+                logger.info("Query executed successfully")
             return result
         except Exception as e:
-            logger.error(f"Unexpected error during query execution: {str(e)}")
-            return QueryResult(success=False, data=[], error_message=str(e))
+            error_message = str(e)
+            logger.error(f"Unexpected error during query execution: {error_message}")
+            return QueryResult(success=False, data=[], error_message=error_message)

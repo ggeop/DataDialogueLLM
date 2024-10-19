@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,27 +16,53 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/question-input.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/conversations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/example-section.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/demo-examples.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/response-styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register-source.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/demo-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register-form.css') }}">
 </head>
 <body>
-    <div id="header-component"></div>
-    
-    <div class="container">
+    <div class="content-wrapper">
+
+        <div id="header-component"></div>
         <div id="register-form-component"></div>
-        <div id="question-input-component"></div>
-        <div id="example-section-component"></div>
-        <div id="loading-indicator-component"></div>
-        <div id="conversations-component"></div>
+
+        <div id="try-demo-container">
+            <div id="demo-form-component"></div>
+                <button id="tryDemoButton" class="try-demo-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                        <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                        <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                    Try demo!
+                </button>
+        </div>
+
+        <div class="container">
+            <div id="example-section-component"></div>
+            <div id="conversations-component"></div>
+            <div id="loading-indicator-component"></div>
+            <div id="question-input-component"></div>
+        </div>
+
     </div>
 
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/queryHandling.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/uiInteractions.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/responseRendering.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/exampleSection.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/register-source.js') }}"></script>
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Data Dialogue. All rights reserved.</p>
+        </div>
+    </footer>
+
     <script src="{{ url_for('static', filename='js/componentLoader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/queryHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/responseRendering.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/demoExamplesHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/formsHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/agentsDropdownHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/menuHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/uiHandlers.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
 </body>
 </html>

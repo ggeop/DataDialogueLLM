@@ -1,4 +1,5 @@
 .question-container {
+    width: 100%; 
     background-color: var(--input-background);
     border-radius: 20px;
     padding: 1rem;
@@ -6,7 +7,11 @@
     margin-bottom: 2rem;
     transition: all 0.3s ease;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    max-width: 1200px;
+    max-height: 600px; /* Set a maximum height */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .question-container:focus-within {
@@ -14,15 +19,78 @@
     transform: translateY(-2px);
 }
 
+.agent-select-wrapper {
+    position: relative;
+    margin-right: 0.75rem;
+}
+.agent-select {
+    appearance: none;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.agent-select:hover {
+    background-color: var(--hover-color);
+}
+
+.agent-select:focus {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.agent-select option {
+    background-color: var(--card-background);
+    color: var(--text-color);
+    padding: 10px;
+}
+
+.agent-select-wrapper::after {
+    content: '▼';
+    font-size: 0.7rem;
+    color: var(--primary-color);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
 .input-wrapper {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    margin-right: 10px;
     background-color: var(--card-background);
-    border-radius: 15px;
-    overflow: hidden;
+    border-radius: 8px;
+    overflow: visible; /* Changed from hidden to visible */
     flex-grow: 1;
-    margin-right: 1rem;
+    flex-shrink: 1;
     transition: all 0.3s ease;
+    max-height: none; /* Remove max-height constraint */
+    height: auto; /* Allow it to grow with content */
+}
+textarea#visibleInput {
+    flex-grow: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--text-color);
+    width: 100%;
+    min-height: 40px;
+    max-height: 400px; /* Keep the desired max height */
+    resize: vertical; /* Allow vertical resizing */
+    overflow-y: auto;
+    line-height: 1.5;
+    font-family: inherit;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-color) var(--input-background);
 }
 
 .input-wrapper:focus-within {
@@ -37,6 +105,13 @@ input[type="text"] {
     outline: none;
     background-color: transparent;
     color: var(--text-color);
+    width: 100%;
+    min-height: 20px; /* Minimum height */
+    max-height: 150px; /* Maximum height, same as input-wrapper */
+    overflow-y: auto; /* Add scroll for overflow */
+    resize: none; /* Disable manual resizing */
+    word-wrap: break-word; /* Ensure words wrap */
+    white-space: pre-wrap; /* Preserve line breaks and wrap text */
 }
 
 input[type="text"]::placeholder {
@@ -44,6 +119,7 @@ input[type="text"]::placeholder {
 }
 
 .ask-button {
+    flex-shrink: 0;
     background-color: var(--primary-color);
     border: none;
     color: var(--background-color);
@@ -58,6 +134,9 @@ input[type="text"]::placeholder {
     gap: 0.5rem;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    white-space: nowrap;
+    align-self: center; /* Align to the top */
+    height: auto; /* Allow natural height */
 }
 
 .ask-button:hover {
@@ -74,4 +153,175 @@ input[type="text"]::placeholder {
 .ask-button svg {
     width: 20px;
     height: 20px;
+}
+
+/* ----------------------------*/
+/* Agents Custom DropDown menu */
+/* ----------------------------*/
+
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 0.75rem;
+    width: 230px;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.dropdown-button {
+    width: 100%;
+    appearance: none;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    text-align: left;
+}
+
+.dropdown-button:hover {
+    background-color: var(--hover-color);
+}
+
+.dropdown-button:focus {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.dropdown-list.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+.dropdown-list li {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-list li:hover {
+    background-color: var(--input-background);
+}
+
+.dropdown-list li.selected {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+/* Scrollbar styles for webkit browsers */
+.dropdown-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+    background: var(--input-background);
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+/* Styles for the scrollbar */
+.input-wrapper::-webkit-scrollbar,
+input[type="text"]::-webkit-scrollbar {
+    width: 8px;
+}
+
+.input-wrapper::-webkit-scrollbar-track,
+input[type="text"]::-webkit-scrollbar-track {
+    background: var(--input-background);
+}
+
+.input-wrapper::-webkit-scrollbar-thumb,
+input[type="text"]::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+
+/* Dropdown arrow */
+.custom-dropdown::after {
+    content: '▼';
+    font-size: 0.7rem;
+    color: var(--primary-color);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Adjusting the question container for the new dropdown */
+.question-container {
+    background-color: var(--input-background);
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    max-height: none; /* Remove max-height constraint */
+    height: auto; /* Allow it to grow with content */
+}
+
+.question-container:focus-within {
+    box-shadow: 0 0 0 3px rgba(78, 204, 163, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .question-container {
+        flex-direction: column;
+        align-items: stretch;
+        max-height: none;
+        height: auto;
+    }
+
+    .input-wrapper {
+        max-height: none;
+        height: auto;
+    }
+
+    .custom-dropdown,
+    .input-wrapper,
+    .ask-button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .ask-button {
+        margin-bottom: 0;
+    }
 }

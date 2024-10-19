@@ -14,6 +14,11 @@
     --user-message-bg: #2c3e50;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: var(--background-color);
@@ -21,12 +26,42 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+
+.content-wrapper {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 100vw;
+    max-height: none;
+    height: auto;
+}
+
+
 .container {
-    max-width: 1000px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: none;
+    height: auto;
     margin: 0 auto;
     padding: 2rem;
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+img, video, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
 }
 
 @keyframes fadeInUp {
@@ -78,4 +113,20 @@ body {
 @keyframes fadeDot {
     0%, 100% { opacity: 0; }
     50% { opacity: 1; }
+}
+
+footer {
+    background-color: var(--card-background);
+    flex-shrink: 0;
+    width: 100%;
+    color: #C6C2C2;
+    padding: 0.1rem 0;
+    font-size: 0.8rem;
+}
+
+footer .container {
+    text-align: left;
+    padding: 0 1rem;
+    max-width: none;
+    box-sizing: border-box;
 }
