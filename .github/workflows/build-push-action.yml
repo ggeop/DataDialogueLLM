@@ -42,6 +42,9 @@ jobs:
           for service in $(docker-compose config --services); do
             docker-compose push $service
           done
+        env:
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          TAG: ${{ github.sha }}
 
       - name: Tag latest for master branch
         if: github.ref == 'refs/heads/master'
