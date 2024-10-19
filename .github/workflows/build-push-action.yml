@@ -34,15 +34,10 @@ jobs:
 
       - name: Build and push Docker Compose services
         run: |
-          # Build all services
+          # Build all services & Push in Docker Hub
           docker-compose build
+          docker-compose push
 
-          # Tag and push each service with 'latest'
-          for service in $(docker-compose config --services); do
-            echo "Pushing service: $service"
-            docker tag ${service}:latest ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
-            docker push ${{ secrets.DOCKER_REGISTRY }}/${service}:latest
-          done
 
       - name: Print debug information
         run: |
