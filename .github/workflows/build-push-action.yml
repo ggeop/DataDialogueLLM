@@ -16,28 +16,55 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: Login to Docker Registry
         uses: docker/login-action@v2
         with:
+          registry: ${{ secrets.DOCKER_REGISTRY }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set environment variable
+        run: |
+          if [[ ${{ github.base_ref }} == "master" ]]; then
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+          elif [[ ${{ github.base_ref }} == "develop" ]]; then
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+          fi
+
       - name: Build and push Docker Compose services
         env:
-          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-          TAG: latest
+          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          GITHUB_SHA_SHORT: ${{ github.sha }}
         run: |
-          docker-compose --profile production build
+          # Get the short SHA
+          SHORT_SHA=$(echo $GITHUB_SHA_SHORT | cut -c1-7)
+          
+          # Build the images
+          docker-compose --profile production build \
+            --build-arg GITHUB_SHA=$GITHUB_SHA_SHORT \
+            --build-arg ENVIRONMENT=$ENVIRONMENT
+          
+          # Tag the images
+          docker-compose --profile production config --format json | jq -r '.services | to_entries[] | select(.value.image) | .value.image' | while read -r image; do
+            docker tag $image ${image}:$SHORT_SHA
+            docker tag $image ${image}:latest
+            docker tag $image ${image}:$ENVIRONMENT
+          done
+          
+          # Push all tags
           docker-compose --profile production push
+          
+          # Push additional tags
+          docker-compose --profile production config --format json | jq -r '.services | to_entries[] | select(.value.image) | .value.image' | while read -r image; do
+            docker push ${image}:$SHORT_SHA
+            docker push ${image}:latest
+            docker push ${image}:$ENVIRONMENT
+          done
 
       - name: Clean up
         if: always()
