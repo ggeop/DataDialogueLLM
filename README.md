@@ -126,10 +126,3 @@ Pull Requests (PRs) are welcome ☺️
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-
-## Acknowledgments
-
-- [Choose an Open Source License](https://choosealicense.com)
-- [Img Shields](https://shields.io)
-- [GitHub Pages](https://pages.github.com)
