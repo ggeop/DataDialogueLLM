@@ -11,7 +11,6 @@
       We're excited to have you here! 🌟 Data Dialogue is currently in its preview phase, 
       which means you're getting an early look at our innovative AI-powered data interaction tool.
 
-
       💡 Your feedback is golden! If you spot anything unusual or have ideas for improvement, 
          please don't hesitate to let us know. Together, we're building something amazing!
 
