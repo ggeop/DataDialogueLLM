@@ -6,7 +6,7 @@ services:
 # ============================
   try-demo-db:
     build: ./database/postgres
-    image: ${DOCKER_REGISTRY}/data-dialogue-try-demo-db:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-try-demo-db
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
@@ -53,7 +53,7 @@ services:
 
   backend-dev:
     extends: backend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend
     volumes:
       - ./backend:/app
       - models:/data/models
@@ -61,7 +61,7 @@ services:
 
   backend-prod:
     extends: backend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend
     volumes:
       - models:/data/models
     profiles: ["production"]
@@ -83,7 +83,7 @@ services:
 
   frontend-dev:
     extends: frontend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-frontend
     depends_on:
       - try-demo-db
       - backend-dev
@@ -93,7 +93,7 @@ services:
       
   frontend-prod:
     extends: frontend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-frontend
     depends_on:
       - try-demo-db
       - backend-prod
