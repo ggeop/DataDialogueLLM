@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
 # ============================
 # Data Services
 # ============================
-  try-demo-db:
+  try-demo-db-local:
     build: ./database/postgres
-    image: ${DOCKER_REGISTRY}/data-dialogue-try-demo-db:${TAG:-latest}
+    image: localhost/data-dialogue-try-demo-db:latest
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
@@ -33,7 +31,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles: ["local", "production", "development"]
+    profiles: ["local"]
+
+  try-demo-db-dev:
+    extends: try-demo-db-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    profiles: ["development"]
+
+  try-demo-db-prod:
+    extends: try-demo-db-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    profiles: ["production"]
 
 # ============================
 # Backend Services
@@ -48,6 +56,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./backend:/app
       - models:/data/models
     profiles: ["local"]
 
@@ -79,13 +88,15 @@ services:
       - FLASK_DEBUG=1
     ports:
       - "5000:5000"
+    volumes:
+      - ./frontend:/app
     profiles: ["local"]
 
   frontend-dev:
     extends: frontend-local
     image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
     depends_on:
-      - try-demo-db
+      - try-demo-db-dev
       - backend-dev
     volumes:
       - ./frontend:/app
@@ -95,7 +106,7 @@ services:
     extends: frontend-local
     image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
     depends_on:
-      - try-demo-db
+      - try-demo-db-prod
       - backend-prod
     profiles: ["production"]
 

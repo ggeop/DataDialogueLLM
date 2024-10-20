@@ -1,121 +1,135 @@
-# Data Dialogue
-Data Dialogue is an application that creates prompts, retrieves data from various sources, and generates responses using an LLM backend. The application runs in Docker and consists of two main services: the LLM backend and the UI.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CD Pipeline](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml/badge.svg?branch=main)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml)
 
-<img src="imgs\data_dialogue_agent_responses.png" alt="alt text" title="UI Screenshot">
+# Data Dialogue
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+
+Data Dialogue is an advanced application that leverages AI to create prompts, retrieve data from various sources, and generate responses using an LLM backend. It's designed to run in Docker and consists of two main services: the LLM backend and the UI.
+
+![UI Screenshot](imgs/data_dialogue_agent_responses.png)
+
+## Features
+
+- Natural language querying of databases
+- Integration with multiple language models
+- Flexible architecture for extending to different data sources
+- RESTful API for easy integration
+- Secure query execution with protection against harmful SQL commands
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Installation
+
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Quick Start
+
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/data-dialogue.git
+   cd data-dialogue
+   ```
+
+2. Run Data Dialogue services:
+
+   **Linux**
+   ```sh
+   docker-compose --profile production pull && docker-compose --profile production up
+   ```
+
+   **Windows**
+   ```powershell
+   docker-compose --profile production pull; if ($?) { docker-compose --profile production up}
+   ```
+
+## Usage
+
+After starting the services:
+
+1. Access the frontend at `http://localhost:5000` in your web browser.
+2. Start interacting with the system using natural language queries.
+3. View the generated SQL and results from your queries.
 
 ## Project Structure
 
 ```
 data-dialogue/
-   ├── backend/
-   │   ├── app/
-   │   │   ├── api/
-   │   │   │   ├── __init__.py
-   │   │   │   ├── endpoints.py
-   │   │   │   └── ...
-   │   │   ├── core/
-   │   │   │   ├── __init__.py
-   │   │   │   ├── config.py
-   │   │   │   └── logging.py
-   │   │   ├── services/
-   │   │   │   ├── __init__.py
-   │   │   │   └── ...
-   │   │   └── main.py
-   │   ├── Dockerfile
-   │   └── requirements.txt
-   ├── frontend/
-   │   ├── static/
-   │   │   ├── css/
-   │   |   |    └── style.css
-   │   │   ├── images/
-   │   |   |    └── ...
-   │   │   ├── js/
-   │   |   |    └── script.js
-   │   │   ├── templates/
-   │   |   |    └── index.html
-   │   │   └── app.py
-   │   └── Dockerfile
-   ├── docker-compose.yml
-   ├── .gitignore
-   ├── .env.example
-   └── README.md
+├── backend/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── services/
+│   │   └── main.py
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/
+│   ├── static/
+│   │   ├── css/
+│   │   ├── images/
+│   │   ├── js/
+│   │   └── templates/
+│   ├── app.py
+│   └── Dockerfile
+├── docker-compose.yml
+├── .gitignore
+├── .env.example
+└── README.md
 ```
 
-## Installation and Setup
-
-1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/data-dialogue.git
-   cd data-dialogue
-   ```
-
-3. Build and run the Docker containers:
-   ```
-   docker-compose up --build
-   ```
-
-4. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-
---- 
 ## Development
 
-This document provides instructions for building the Data Dialogue project.\
-It covers building the backend and frontend separately, as well as building the entire project using docker-compose.
+### Building the Backend
 
-## Table of Contents
-1. [Prerequisites](#prerequisites)
-2. [Building the Backend](#building-the-backend)
-3. [Building the Frontend](#building-the-frontend)
-4. [Building with Docker Compose](#building-with-docker-compose)
-5. [Running the Application](#running-the-application)
-6. [Troubleshooting](#troubleshooting)
+TODO: Add instructions for building and running the backend locally.
 
-## Prerequisites
+### Building the Frontend
 
-Ensure you have the following installed:
-- Docker
-- Docker Compose
-- Node.js and npm (for local frontend development)
-- Python 3.9 (for local backend development)
+TODO: Add instructions for building and running the frontend locally.
 
-## Building the Backend
+### Building with Docker Compose
 
-## Building with Docker Compose
+For local development with volume mounting:
 
-Docker Compose allows you to build and run both the backend and frontend together.
-
-1. Ensure you're in the project root directory where the `docker-compose.yml` file is located.
-
-2. Build and Run
-```
-docker-compose up --build
+```sh
+docker-compose up try-demo-db-local backend-local frontend-local --build
 ```
 
-This will start both the backend and frontend services. The frontend will be available at `http://localhost:3000`, and the backend at `http://localhost:8000`.
+This will start:
+- try-demo-db
+- backend-local
+- frontend-local
 
-## Running the Application
+The frontend will be available at `http://localhost:3000`, and the backend at `http://localhost:8000`.
 
-After building with Docker Compose:
+## Contributing
 
-1. Access the frontend at `http://localhost:5000` in your web browser.
-2. The frontend will communicate with the backend at `http://localhost:8000`.
+Pull Requests (PRs) are welcome ☺️
 
-For local development:
-- Run the backend and frontend in separate terminal windows using the local development instructions above.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+6. Wait for review and approval
 
-## Troubleshooting
+## License
 
-1. **Backend build fails**: 
-   - Ensure the `.env` file exists and contains the correct `MODEL_REPO` and `MODEL_FILE` values.
-   - Check internet connection for model download.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-3. **Docker Compose issues**:
-   - Ensure Docker and Docker Compose are up to date.
-   - Check if ports 3000 and 8000 are free on your machine.
 
-4. **Backend and Frontend can't communicate**:
-   - Ensure your firewall isn't blocking the communication.
+## Acknowledgments
 
-For any other issues, check the application logs using `docker-compose logs` or the individual service logs.
+- [Choose an Open Source License](https://choosealicense.com)
+- [Img Shields](https://shields.io)
+- [GitHub Pages](https://pages.github.com)
