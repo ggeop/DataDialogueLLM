@@ -36,11 +36,9 @@ jobs:
           DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
           TAG: latest
         run: |
-          docker-compose build
-          docker-compose push
+          docker-compose --profile production build
+          docker-compose --profile production push
 
-      - name: Print debug information
-        run: |
-          echo "Docker Registry: ${{ secrets.DOCKER_REGISTRY }}"
-          echo "Services:"
-          docker-compose config --services
+      - name: Clean up
+        if: always()
+        run: docker system prune -af

@@ -1,10 +1,12 @@
 version: '3.8'
 
 services:
-
+# ============================
+# Data Services
+# ============================
   try-demo-db:
     build: ./database/postgres
-    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-try-demo-db:${TAG:-latest}
+    image: ${DOCKER_REGISTRY}/data-dialogue-try-demo-db:${TAG:-latest}
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
@@ -31,35 +33,75 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    profiles: ["local", "production", "development"]
 
-  backend:
+# ============================
+# Backend Services
+# ============================
+  backend-local:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-backend:${TAG:-latest}
+    image: localhost/data-dialogue-backend:latest
     env_file:
       - .env
     ports:
       - "8000:8000"
     volumes:
+      - models:/data/models
+    profiles: ["local"]
+
+  backend-dev:
+    extends: backend-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    volumes:
       - ./backend:/app
       - models:/data/models
+    profiles: ["development"]
 
-  frontend:
+  backend-prod:
+    extends: backend-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
+    volumes:
+      - models:/data/models
+    profiles: ["production"]
+
+# ============================
+# Frontend Services
+# ============================
+  frontend-local:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-frontend:${TAG:-latest}
+    image: localhost/data-dialogue-frontend:latest
     environment:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
     ports:
       - "5000:5000"
-    volumes:
-      - ./frontend:/app
+    profiles: ["local"]
+
+  frontend-dev:
+    extends: frontend-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
     depends_on:
       - try-demo-db
-      - backend
+      - backend-dev
+    volumes:
+      - ./frontend:/app
+    profiles: ["development"]
+      
+  frontend-prod:
+    extends: frontend-local
+    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
+    depends_on:
+      - try-demo-db
+      - backend-prod
+    profiles: ["production"]
+
+# ============================
+# Other
+# ============================
 
 volumes:
   try_on_data:
