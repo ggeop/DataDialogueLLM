@@ -20,6 +20,7 @@ data-dialogue/
    │   │   ├── services/
    │   │   │   ├── __init__.py
    │   │   │   └── ...
+   │   │   └── ...
    │   │   └── main.py
    │   ├── Dockerfile
    │   └── requirements.txt
@@ -41,22 +42,25 @@ data-dialogue/
    └── README.md
 ```
 
-## Installation and Setup
+## Getting started
 
 1. Clone the repository:
-   ```
-   git clone https://github.com/yourusername/data-dialogue.git
-   cd data-dialogue
-   ```
+      ```
+      git clone https://github.com/yourusername/data-dialogue.git
+      cd data-dialogue
+      ```
 
-3. Build and run the Docker containers:
-   ```
-   docker-compose up --build
-   ```
+2. Run DataDialogue Services
 
-4. Access the application:
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
+      **Linux**
+      ```
+      docker-compose --profile production pull && docker-compose --profile production up
+      ```
+
+      **Windows**
+      ```
+      docker-compose --profile production pull; if ($?) { docker-compose --profile production up}
+      ```
 
 --- 
 ## Development
@@ -88,10 +92,21 @@ Docker Compose allows you to build and run both the backend and frontend togethe
 
 1. Ensure you're in the project root directory where the `docker-compose.yml` file is located.
 
-2. Build and Run
-```
-docker-compose up --build
-```
+2. Build and run the Docker containers
+
+   ## Local Development (with volume mounting)
+   
+   **Linux/Windows**
+   ```
+   docker-compose up try-demo-db-local backend-local frontend-local --build
+   ```
+   *NOTE: I don't know why `docker-compose --profile local up --build`  is not working as expected, so I run explicitly the services...* 
+
+   This will start:
+
+      - try-demo-db
+      - backend-local
+      - frontend-local
 
 This will start both the backend and frontend services. The frontend will be available at `http://localhost:3000`, and the backend at `http://localhost:8000`.
 
@@ -107,15 +122,11 @@ For local development:
 
 ## Troubleshooting
 
-1. **Backend build fails**: 
-   - Ensure the `.env` file exists and contains the correct `MODEL_REPO` and `MODEL_FILE` values.
-   - Check internet connection for model download.
-
-3. **Docker Compose issues**:
+1. **Docker Compose issues**:
    - Ensure Docker and Docker Compose are up to date.
    - Check if ports 3000 and 8000 are free on your machine.
 
-4. **Backend and Frontend can't communicate**:
+2. **Backend and Frontend can't communicate**:
    - Ensure your firewall isn't blocking the communication.
 
 For any other issues, check the application logs using `docker-compose logs` or the individual service logs.
