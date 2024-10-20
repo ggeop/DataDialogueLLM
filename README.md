@@ -5,6 +5,17 @@
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
 
+
+      🎉 Welcome to the Data Dialogue Preview! 🚀
+
+      We're excited to have you here! 🌟 Data Dialogue is currently in its preview phase, 
+      which means you're getting an early look at our innovative AI-powered data interaction tool.
+
+
+      💡 Your feedback is golden! If you spot anything unusual or have ideas for improvement, 
+         please don't hesitate to let us know. Together, we're building something amazing!
+
+
 Data Dialogue is an advanced application that leverages AI to create prompts, retrieve data from various sources, and generate responses using an LLM backend. It's designed to run in Docker and consists of two main services: the LLM backend and the UI.
 
 ![UI Screenshot](imgs/data_dialogue_agent_responses.png)
@@ -126,10 +137,3 @@ Pull Requests (PRs) are welcome ☺️
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-
-## Acknowledgments
-
-- [Choose an Open Source License](https://choosealicense.com)
-- [Img Shields](https://shields.io)
-- [GitHub Pages](https://pages.github.com)

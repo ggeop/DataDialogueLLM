@@ -53,3 +53,15 @@ jobs:
       - name: Clean up
         if: always()
         run: docker system prune -af
+
+      - name: Create Release
+        if: github.event.pull_request.merged == true && github.base_ref == 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(date +%Y.%m.%d-%H%M)
+          changelog=$(git log --pretty=format:"%h - %s (%an)" $(git describe --tags --abbrev=0)..HEAD)
+          gh release create v$version \
+            --title "Release $version" \
+            --notes "$changelog" \
+            --target ${{ github.sha }}
