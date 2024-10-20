@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for all tags and branches
 
       - name: Install Docker Compose
         run: |
@@ -31,6 +33,22 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Generate version
+        id: version
+        run: |
+          if [[ "${{ github.base_ref }}" == "main" ]]; then
+            # Get the latest tag
+            latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+            # Increment the patch version
+            new_tag=$(echo $latest_tag | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+            echo "VERSION=$new_tag" >> $GITHUB_OUTPUT
+          else
+            # For non-main branches, use a development version
+            short_sha=$(git rev-parse --short HEAD)
+            echo "VERSION=dev-$short_sha" >> $GITHUB_OUTPUT
+          fi
+
+
       - name: Set Docker tag
         run: |
           if [[ -z "${{ github.base_ref }}" ]]; then
@@ -46,26 +64,38 @@ jobs:
       - name: Build and push Docker Compose services
         env:
           DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+          VERSION: ${{ steps.version.outputs.VERSION }}
         run: |
           docker-compose --profile production build
           docker-compose --profile production push
+          # Tag and push with version
+          docker tag $DOCKER_REGISTRY/app:$TAG $DOCKER_REGISTRY/app:$VERSION
+          docker push $DOCKER_REGISTRY/app:$VERSION
 
       - name: Clean up
         if: always()
         run: docker system prune -af
 
   github-release:
+    needs: docker-hub-push
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.base_ref == 'main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get_version
+        run: |
+          echo "VERSION=${{ needs.docker-hub-push.outputs.version }}" >> $GITHUB_OUTPUT
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
