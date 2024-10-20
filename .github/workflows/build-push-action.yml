@@ -35,7 +35,7 @@ jobs:
       - name: Build and push Docker Compose services
         env:
           DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
-          TAG: ${{ github.sha }}
+          TAG: latest
         run: |
           docker-compose build
           docker-compose push
