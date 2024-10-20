@@ -1,4 +1,4 @@
-name: Docker Compose Build and Push
+name: CD Pipeline
 
 on:
   pull_request:
