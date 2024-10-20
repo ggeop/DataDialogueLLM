@@ -5,7 +5,7 @@ on:
     types: [closed]
     branches:
       - develop
-      - master
+      - main
   workflow_dispatch:  # For manual triggering
 
 jobs:
