@@ -4,7 +4,7 @@ services:
 
   try-demo-db:
     build: ./database/postgres
-    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-postgres:${TAG:-latest}
+    image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-try-demo-db:${TAG:-latest}
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
