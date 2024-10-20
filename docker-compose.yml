@@ -1,7 +1,8 @@
 version: '3.8'
 
 services:
-  postgres:
+
+  try-demo-db:
     build: ./database/postgres
     image: ${DOCKER_REGISTRY:-localhost}/data-dialogue-postgres:${TAG:-latest}
     environment:
