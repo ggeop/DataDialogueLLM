@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # Fetch all history for all tags and branches
 
       - name: Install Docker Compose
         run: |
@@ -64,13 +62,9 @@ jobs:
       - name: Build and push Docker Compose services
         env:
           DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-          VERSION: ${{ steps.version.outputs.VERSION }}
         run: |
           docker-compose --profile production build
           docker-compose --profile production push
-          # Tag and push with version
-          docker tag $DOCKER_REGISTRY/app:$TAG $DOCKER_REGISTRY/app:$VERSION
-          docker push $DOCKER_REGISTRY/app:$VERSION
 
       - name: Clean up
         if: always()
