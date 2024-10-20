@@ -9,7 +9,7 @@ on:
   workflow_dispatch:  # For manual triggering
 
 jobs:
-  docker-hub-push:
+  docker:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     steps:
@@ -31,52 +31,24 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set environment variable
+      - name: Set Docker tag
         run: |
           if [[ -z "${{ github.base_ref }}" ]]; then
-            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "TAG=dev" >> $GITHUB_ENV
           elif [[ "${{ github.base_ref }}" == "main" ]]; then
-            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "TAG=latest" >> $GITHUB_ENV
           elif [[ "${{ github.base_ref }}" == "develop" ]]; then
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            echo "TAG=staging" >> $GITHUB_ENV
           else
-            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "TAG=dev" >> $GITHUB_ENV
           fi
 
       - name: Build and push Docker Compose services
         env:
           DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-          GITHUB_SHA_SHORT: ${{ github.sha }}
         run: |
-          # Get the short SHA
-          SHORT_SHA=$(echo $GITHUB_SHA_SHORT | cut -c1-7)
-          
-          # Build the images
-          echo "--- Build the images with Docker Compose ---"
           docker-compose --profile production build
-          
-          # Tag the images
-          echo "--- Tagging Docker Compose Images ---"
-          docker-compose --profile production config --format json | jq -r '.services | to_entries[] | select(.value.image) | .value.image' | while read -r image; do
-            echo "Tagging ${image} with tag: ${SHORT_SHA}"
-            docker tag $image ${image}:$SHORT_SHA
-            echo "Tagging ${image} with tag: latest"
-            docker tag $image ${image}:latest
-            echo "Tagging ${image} with tag: ${ENVIRONMENT}"
-            docker tag $image ${image}:$ENVIRONMENT
-          done
-          echo "Image Tagging finished Successfully!!"
-          
-          # Push all tags
-          echo "--- Docker Compose push images ---"
           docker-compose --profile production push
-          
-          # Push additional tags
-          docker-compose --profile production config --format json | jq -r '.services | to_entries[] | select(.value.image) | .value.image' | while read -r image; do
-            docker push ${image}:$SHORT_SHA
-            docker push ${image}:latest
-            docker push ${image}:$ENVIRONMENT
-          done
 
       - name: Clean up
         if: always()
