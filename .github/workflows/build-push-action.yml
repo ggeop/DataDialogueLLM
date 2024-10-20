@@ -33,7 +33,7 @@ jobs:
 
       - name: Build and push Docker Compose services
         env:
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
           TAG: latest
         run: |
           docker-compose build
