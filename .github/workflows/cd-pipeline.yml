@@ -9,7 +9,7 @@ on:
   workflow_dispatch:  # For manual triggering
 
 jobs:
-  docker:
+  docker-hub-push:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     steps:
@@ -54,6 +54,9 @@ jobs:
         if: always()
         run: docker system prune -af
 
+  github-release:
+    runs-on: ubuntu-latest
+    steps:
       - name: Create Release
         if: github.event.pull_request.merged == true && github.base_ref == 'main'
         env:
