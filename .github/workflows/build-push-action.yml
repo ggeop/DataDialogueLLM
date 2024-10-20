@@ -46,16 +46,14 @@ jobs:
 
       - name: Build and push Docker Compose services
         env:
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
           GITHUB_SHA_SHORT: ${{ github.sha }}
         run: |
           # Get the short SHA
           SHORT_SHA=$(echo $GITHUB_SHA_SHORT | cut -c1-7)
           
           # Build the images
-          docker-compose --profile production build \
-            --build-arg GITHUB_SHA=$GITHUB_SHA_SHORT \
-            --build-arg ENVIRONMENT=$ENVIRONMENT
+          docker-compose --profile production build
           
           # Tag the images
           docker-compose --profile production config --format json | jq -r '.services | to_entries[] | select(.value.image) | .value.image' | while read -r image; do
