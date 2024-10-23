@@ -63,8 +63,8 @@ class TextToSQLAgent:
         Generate SQL query from a natural language question.
         """
         schema = self._database.get_schema()
+        model_name = self._model.metadata.get('general.name')
         if previous_error is None:
-            model_name = self._model.metadata.get('general.name')
             # TODO: Dirty solution.
             #       Models should be matched with specific templates, if not the general will be used.
             if "hrida" in model_name.lower():
