@@ -7,7 +7,16 @@ DataDialogue.ExampleSection = () => {
     ];
 
     const handleExampleClick = (example) => {
-        document.getElementById('queryInput').value = example;
+        const visibleInput = document.getElementById('visibleInput');
+        if (visibleInput) {
+            visibleInput.value = example;
+            visibleInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        const queryInput = document.getElementById('queryInput');
+        if (queryInput) {
+            queryInput.value = example;
+            queryInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
     };
 
     const toggleVisibility = () => {
@@ -37,7 +46,11 @@ DataDialogue.ExampleSection = () => {
                 examples.map((example, index) =>
                     React.createElement(
                         'li',
-                        { key: index, onClick: () => handleExampleClick(example) },
+                        { 
+                            key: index, 
+                            onClick: () => handleExampleClick(example),
+                            style: { cursor: 'pointer' } 
+                        },
                         example
                     )
                 )
@@ -45,7 +58,6 @@ DataDialogue.ExampleSection = () => {
         )
     );
 };
-
 DataDialogue.renderExampleSection = () => {
     ReactDOM.render(React.createElement(DataDialogue.ExampleSection), document.getElementById('exampleSection'));
 };
