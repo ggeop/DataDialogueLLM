@@ -1,10 +1,9 @@
 DataDialogue.ExampleSection = () => {
     const [isVisible, setIsVisible] = React.useState(true);
     const examples = [
-        "Give me the most popular DVD titles",
-        "Give me the top 3 customers the last 3 months",
-        "Give me the top 5 stores per year",
-    ];
+        "Give me a list of movies",
+        "Give me the the top 3 actors names with the most movies"
+        ];
 
     const handleExampleClick = (example) => {
         const visibleInput = document.getElementById('visibleInput');
