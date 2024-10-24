@@ -1,7 +1,7 @@
 DataDialogue.ExampleSection = () => {
     const [isVisible, setIsVisible] = React.useState(true);
     const examples = [
-        "Give me a list of movies",
+        "Give me a list of 10 movies",
         "Give me the the top 3 actors names with the most movies"
         ];
 

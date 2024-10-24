@@ -82,6 +82,7 @@ class TextToSQLAgent:
         else:
             if "hrida" in model_name.lower():
                 logger.info(f"Model {model_name} is not supported for SQL correction")
+                return QueryResult(success=False, data=[])
             else:
                 prompt = SQL_CORRECTION_TEMPLATE.format(
                     error=previous_error,

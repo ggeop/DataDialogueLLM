@@ -6,7 +6,7 @@ from app.schemas import RegisterAgent
 from app.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.model_management import ModelManager
 from app.core.config import settings
-from app.core.model_type import ModelType
+from app.core.model_type import AgentType
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -117,7 +117,7 @@ class AgentManagerService:
 
         Example:
             params = RegisterAgent(
-                modelType="SQL",
+                agentType="SQL",
                 sourceType="postgresql",
                 dbname="mydb",
                 username="user",
@@ -135,14 +135,14 @@ class AgentManagerService:
         """
         logger.info(f"Attempting to register agent with params: {register_params}")
 
-        self._validate_model_type(register_params.modelType)
+        self._validate_model_type(register_params.agentType)
         database = self._configure_database(register_params)
         model = self._load_model(register_params)
 
         agent = DataDialogueAgent(
             database=database,
             model=model,
-            model_type=register_params.modelType
+            model_type=register_params.agentType
         )
         self.registered_agents[agent.name] = agent
         logger.info(f"Agent '{agent.name}' has been successfully registered.")
@@ -161,7 +161,7 @@ class AgentManagerService:
         general_agent = DataDialogueAgent(
             database=None,
             model=general_model,
-            model_type=ModelType.GENERAL.value
+            model_type=AgentType.GENERAL.value
         )
         self.registered_agents[general_agent.name] = general_agent
         logger.info(f"Default general agent '{general_agent.name}' has been initialized.")
@@ -194,7 +194,7 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
-        supported_model_types = ModelType.values()
+        supported_model_types = AgentType.values()
         if model_type not in supported_model_types:
             raise ValueError(f"'{model_type}' is not a valid model type. Supported types are: {', '.join(supported_model_types)}")
 
@@ -214,7 +214,7 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
-        if register_params.modelType == ModelType.SQL.value:
+        if register_params.agentType == AgentType.SQL.value:
             if register_params.sourceType == 'postgresql':
                 db = PostgresClient(
                     dbname=register_params.dbname,
