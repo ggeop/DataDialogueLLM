@@ -1,6 +1,6 @@
 from app.agents.text_to_sql_agent import TextToSQLAgent
 from app.clients.db import DatabaseClient
-from app.core.model_type import ModelType
+from app.core.model_type import AgentType
 from app.schemas import (
     SQLResponse,
     GeneralResponse,
@@ -19,7 +19,7 @@ class DataDialogueAgent:
         self.model = model
         self.database = database
         self.model_type = model_type
-        self.is_sql_relevant = self.database and (self.model_type == ModelType.SQL.value)
+        self.is_sql_relevant = self.database and (self.model_type == AgentType.SQL.value)
         if self.is_sql_relevant:
             self.sql_agent = TextToSQLAgent(model, database)
         else:

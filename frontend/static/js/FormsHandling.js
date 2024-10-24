@@ -57,7 +57,7 @@ DataDialogue.closeDemoForm = () => {
 DataDialogue.submitDemoForm = async () => {
     const formData = {
         // General
-        modelType: document.getElementById('demoModelType').value,
+        agentType: document.getElementById('demoAgentType').value,
         // Source
         sourceType: document.getElementById('demoSourceType').value,
         dbname: document.getElementById('demoDbname').value,
@@ -133,7 +133,7 @@ DataDialogue.closeRegisterForm = () => {
 DataDialogue.submitForm = async () => {
     const formData = {
         // General
-        modelType: document.getElementById('modelType').value,
+        agentType: document.getElementById('modelType').value,
         // Source
         sourceType: document.getElementById('sourceType').value,
         dbname: document.getElementById('dbname').value,

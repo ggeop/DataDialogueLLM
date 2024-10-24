@@ -20,6 +20,6 @@ class BaseEnum(Enum):
         return [e.value for e in cls]
 
 
-class ModelType(BaseEnum):
+class AgentType(BaseEnum):
     GENERAL = "General"
     SQL = "SQL"

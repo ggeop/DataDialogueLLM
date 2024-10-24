@@ -1,19 +1,19 @@
 <div class="page-overlay" id="pageOverlay"></div>
     <div class="form-container" id="formContainer">
         <button class="cancel-close-btn">&times;</button>
-        <h2 class="form-title">Register Source</h2>
+        <h2 class="form-title">Register Agent</h2>
         <form>
             <div class="form-section">
                 <h3 class="form-section-title">General</h3>
                 <div class="form-group">
-                    <label for="modelType">Model Type:</label>
-                    <select id="modelType" name="modelType">
-                        <option value="">Select a model type</option>
+                    <label for="agentType"></label>
+                    <select id="agentType" name="agentType">
+                        <option value="">Select a agent type</option>
                         <option value="SQL">SQL</option>
                         <option value="General">General</option>
                     </select>
                 </div>
-                <h3 class="form-section-title">Register Source</h3>
+                <h3 class="form-section-title">Source Configuration</h3>
                 <div class="form-group">
                     <label for="sourceType">Source Type:</label>
                     <select id="sourceType" name="sourceType">
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="form-section">
-                <h3 class="form-section-title">LLM Model Configuration</h3>
+                <h3 class="form-section-title">LLM Configuration</h3>
                 <div class="form-group">
                     <label for="repoId">Hugging Face Repo ID:</label>
                     <input type="text" id="repoId" name="repoId">

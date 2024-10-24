@@ -1,7 +1,7 @@
 from app.schemas.database import (
     DatabaseCreationResponse,
-    RegisterAgent
 )
+from app.schemas.agents import RegisterAgent
 from app.schemas.response import (
     SQLResponse,
     GeneralResponse,
