@@ -17,9 +17,11 @@
 
 Data Dialogue is an advanced application that leverages AI to create prompts, retrieve data from various sources, and generate responses using an LLM backend. It's designed to run in Docker and consists of two main services: the LLM backend and the UI.
 
-![UI Screenshot](imgs/data_dialogue_agent_responses.png)
+![UI Screenshot](imgs/data_dialogue_steps.png)
 
 ## Features
+
+![UI Screenshot](imgs/data_dialogue_agent_responses.png)
 
 - Natural language querying of databases
 - Integration with multiple language models
