@@ -27,7 +27,7 @@ jobs:
         id: semantic
         uses: cycjimmy/semantic-release-action@v4
         with:
-          dry_run: ${{ github.base_ref != 'main' }}  # Only create real releases on main branch
+          dry_run: ${{ github.base_ref != 'main' }} # Only create real releases on main branch
           semantic_version: 19
           extra_plugins: |
             @semantic-release/changelog
