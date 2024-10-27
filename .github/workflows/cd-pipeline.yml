@@ -6,56 +6,55 @@ on:
     branches:
       - develop
       - main
-      - semantic-release
   workflow_dispatch:  # For manual triggering
 
 jobs:
-  # docker-hub-push:
-  #     runs-on: ubuntu-latest
-  #     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
-  #     steps:
-  #       - name: Checkout code
-  #         uses: actions/checkout@v3
+  docker-hub-push:
+      runs-on: ubuntu-latest
+      if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
 
-  #       - name: Install Docker Compose
-  #         run: |
-  #           sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  #           sudo chmod +x /usr/local/bin/docker-compose
-  #           docker-compose --version
+        - name: Install Docker Compose
+          run: |
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+            docker-compose --version
 
-  #       - name: Set up Docker Buildx
-  #         uses: docker/setup-buildx-action@v2
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
 
-  #       - name: Login to Docker Registry
-  #         uses: docker/login-action@v2
-  #         with:
-  #           username: ${{ secrets.DOCKER_USERNAME }}
-  #           password: ${{ secrets.DOCKER_PASSWORD }}
+        - name: Login to Docker Registry
+          uses: docker/login-action@v2
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
 
-  #       - name: Set Docker tag
-  #         run: |
-  #           if [[ -z "${{ github.base_ref }}" ]]; then
-  #             echo "TAG=dev" >> $GITHUB_ENV
-  #           elif [[ "${{ github.base_ref }}" == "main" ]]; then
-  #             echo "TAG=latest" >> $GITHUB_ENV
-  #           elif [[ "${{ github.base_ref }}" == "develop" ]]; then
-  #             echo "TAG=staging" >> $GITHUB_ENV
-  #           else
-  #             echo "TAG=dev" >> $GITHUB_ENV
-  #           fi
+        - name: Set Docker tag
+          run: |
+            if [[ -z "${{ github.base_ref }}" ]]; then
+              echo "TAG=dev" >> $GITHUB_ENV
+            elif [[ "${{ github.base_ref }}" == "main" ]]; then
+              echo "TAG=latest" >> $GITHUB_ENV
+            elif [[ "${{ github.base_ref }}" == "develop" ]]; then
+              echo "TAG=staging" >> $GITHUB_ENV
+            else
+              echo "TAG=dev" >> $GITHUB_ENV
+            fi
 
-  #       - name: Build and push Docker Compose services
-  #         env:
-  #           DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
-  #         run: |
-  #           docker-compose --profile production build
-  #           docker-compose --profile production push
+        - name: Build and push Docker Compose services
+          env:
+            DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+          run: |
+            docker-compose --profile production build
+            docker-compose --profile production push
 
-  #       - name: Clean up
-  #         if: always()
-  #         run: docker system prune -af
+        - name: Clean up
+          if: always()
+          run: docker system prune -af
   github-release:
-    # needs: docker-hub-push
+    needs: docker-hub-push
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     
