@@ -9,7 +9,41 @@ on:
   workflow_dispatch:  # For manual triggering
 
 jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+    outputs:
+      new_version: ${{ steps.semantic.outputs.new_release_version }}
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          dry_run: ${{ github.base_ref != 'main' }}  # Only create real releases on main branch
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print Version Info
+        run: |
+          echo "New Release Version: ${{ steps.semantic.outputs.new_release_version }}"
+          echo "New Release Notes: ${{ steps.semantic.outputs.new_release_notes }}"
+          echo "New Release Published: ${{ steps.semantic.outputs.new_release_published }}"
+          echo "Last Release Version: ${{ steps.semantic.outputs.last_release_version }}"
+
   docker-hub-push:
+      needs: github-release
       runs-on: ubuntu-latest
       if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
       steps:
@@ -36,7 +70,12 @@ jobs:
             if [[ -z "${{ github.base_ref }}" ]]; then
               echo "TAG=dev" >> $GITHUB_ENV
             elif [[ "${{ github.base_ref }}" == "main" ]]; then
-              echo "TAG=latest" >> $GITHUB_ENV
+              if [[ "${{ needs.github-release.outputs.new_release_published }}" == "true" ]]; then
+                echo "TAG=${{ needs.github-release.outputs.new_version }}" >> $GITHUB_ENV
+                echo "LATEST_TAG=latest" >> $GITHUB_ENV
+              else
+                echo "TAG=latest" >> $GITHUB_ENV
+              fi
             elif [[ "${{ github.base_ref }}" == "develop" ]]; then
               echo "TAG=staging" >> $GITHUB_ENV
             else
@@ -46,40 +85,19 @@ jobs:
         - name: Build and push Docker Compose services
           env:
             DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+            VERSION: ${{ needs.github-release.outputs.new_version }}
+            TAG: ${{ env.TAG }}
           run: |
+            # Build and push with appropriate profile
             docker-compose --profile production build
             docker-compose --profile production push
+            
+            # If this is a release, also tag as latest
+            if [ "${{ needs.github-release.outputs.new_release_published }}" == "true" ]; then
+              TAG=latest docker-compose --profile production build
+              TAG=latest docker-compose --profile production push
+            fi
 
         - name: Clean up
           if: always()
           run: docker system prune -af
-  github-release:
-    needs: docker-hub-push
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Semantic Release
-        id: semantic
-        uses: cycjimmy/semantic-release-action@v4
-        with:
-          dry_run: ${{ github.ref_name != 'main' }}  # Only create real releases on main branch
-          semantic_version: 19
-          extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Print Version Info
-        run: |
-          echo "New Release Version: ${{ steps.semantic.outputs.new_release_version }}"
-          echo "New Release Notes: ${{ steps.semantic.outputs.new_release_notes }}"
-          echo "New Release Published: ${{ steps.semantic.outputs.new_release_published }}"
-          echo "Last Release Version: ${{ steps.semantic.outputs.last_release_version }}"
