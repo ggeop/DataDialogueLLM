@@ -18,7 +18,7 @@ async def get_agents():
 @router.post("/register")
 async def register(register_agent: RegisterAgent):
     try:
-        logger.info(f"Starting Register {register_agent.sourceType} source and model type {register_agent.modelType}")
+        logger.info(f"Starting Register {register_agent.sourceType} source and model type {register_agent.agentType}")
         agent_manager_service.register_agent(register_agent)
         logger.info(f"Register {register_agent.sourceType} successful!")
         return JSONResponse(
