@@ -9,16 +9,16 @@ on:
       - main
 
 jobs:
-  verify:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
       - name: Run Tests
-        run: echo "Running tests..."
+        run: echo "[PLACEHOLDER] Running tests..."
 
   github-release:
-    needs: verify
+    needs: run-tests
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     outputs:
