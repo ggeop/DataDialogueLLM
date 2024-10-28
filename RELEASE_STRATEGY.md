@@ -61,19 +61,18 @@ feat!: redesign API response format
 Releases are handled by GitHub Actions workflow:
 
 ```yaml
-name: Release
+name: Release Workflow
+
 on:
-  pull_request:
-    types: [closed]
-    branches: [main]
+  push:
+    branches:
+      - main
+
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cycjimmy/semantic-release-action@v4
+  github-release: ...
+  docker-release: ...
 ```
 
 For more details, see:
-- [Changelog](../../CHANGELOG.md)
-- [Contributing Guidelines](../CONTRIBUTING.md)
+- [Changelog](./CHANGELOG.md)
+- [Contributing Guidelines](./CONTRIBUTING.md)
