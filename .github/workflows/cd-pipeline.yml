@@ -1,6 +1,9 @@
 name: CD Pipeline
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types: [closed]
     branches:
@@ -10,6 +13,8 @@ on:
 
 jobs:
   github-release:
+    # Only run this job on main branch pushes or when manually triggered
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     outputs:
       new_version: ${{ steps.semantic.outputs.new_release_version }}
@@ -20,13 +25,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Semantic Release
         id: semantic
         uses: cycjimmy/semantic-release-action@v4
         with:
-          dry_run: ${{ github.base_ref != 'main' }} # Only create real releases on main branch
           semantic_version: 19
           extra_plugins: |
             @semantic-release/changelog
@@ -44,7 +48,7 @@ jobs:
   docker-hub-push:
       needs: github-release
       runs-on: ubuntu-latest
-      if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
+      if: (github.ref == 'refs/heads/main' && needs.github-release.outputs.new_release_published == 'true') || github.event_name == 'workflow_dispatch'
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
