@@ -1,5 +1,5 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![CD Pipeline](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml/badge.svg?branch=main)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml)
+[![Release Workflow](https://github.com/ggeop/DataDialogueLLM/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/release.yml)
 
 # Data Dialogue
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/datadialogue)
