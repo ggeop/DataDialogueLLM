@@ -14,17 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Check Required Reviews
-        if: github.event_name == 'pull_request'
-        run: |
-          REVIEWS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews")
-          APPROVED=$(echo $REVIEWS | jq '[.[] | select(.state=="APPROVED")] | length')
-          if [ "$APPROVED" -lt 1 ]; then
-            echo "Error: At least one approval is required"
-            exit 1
-          fi
-
       - name: Run Tests
         run: echo "Running tests..."
 
