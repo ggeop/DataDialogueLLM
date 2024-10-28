@@ -5,7 +5,8 @@ from typing import Any, Tuple, Optional
 from app.utils.query_result import QueryResult
 from app.agents.prompt_templates import (
     SQL_GENERATION_TEMPLATE,
-    SQL_CORRECTION_TEMPLATE
+    SQL_CORRECTION_TEMPLATE,
+    SQL_GENERATION_TEMPLATE_HRIDA
 )
 
 logger = logging.getLogger(__name__)
@@ -62,18 +63,32 @@ class TextToSQLAgent:
         Generate SQL query from a natural language question.
         """
         schema = self._database.get_schema()
+        model_name = self._model.metadata.get('general.name')
         if previous_error is None:
-            prompt = SQL_GENERATION_TEMPLATE.format(
-                db_type=self._database.db_type,
-                schema=schema,
-                question=question
-            )
+            # TODO: Dirty solution.
+            #       Models should be matched with specific templates, if not the general will be used.
+            if "hrida" in model_name.lower():
+                prompt = SQL_GENERATION_TEMPLATE_HRIDA.format(
+                    db_type=self._database.db_type,
+                    schema=schema,
+                    question=question
+                )
+            else:
+                prompt = SQL_GENERATION_TEMPLATE.format(
+                    db_type=self._database.db_type,
+                    schema=schema,
+                    question=question
+                )
         else:
-            prompt = SQL_CORRECTION_TEMPLATE.format(
-                error=previous_error,
-                db_type=self._database.db_type,
-                question=question
-            )
+            if "hrida" in model_name.lower():
+                logger.info(f"Model {model_name} is not supported for SQL correction")
+                return QueryResult(success=False, data=[])
+            else:
+                prompt = SQL_CORRECTION_TEMPLATE.format(
+                    error=previous_error,
+                    db_type=self._database.db_type,
+                    question=question
+                )
         logger.info("SQL Generation Prompt:\n%s", prompt)
         response = self._model(
             prompt,

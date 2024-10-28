@@ -1,13 +1,21 @@
 DataDialogue.ExampleSection = () => {
     const [isVisible, setIsVisible] = React.useState(true);
     const examples = [
-        "Give me the most popular DVD titles",
-        "Give me the top 3 customers the last 3 months",
-        "Give me the top 5 stores per year",
-    ];
+        "Give me a list of 10 movies",
+        "Give me the the top 3 actors names with the most movies"
+        ];
 
     const handleExampleClick = (example) => {
-        document.getElementById('queryInput').value = example;
+        const visibleInput = document.getElementById('visibleInput');
+        if (visibleInput) {
+            visibleInput.value = example;
+            visibleInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        const queryInput = document.getElementById('queryInput');
+        if (queryInput) {
+            queryInput.value = example;
+            queryInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
     };
 
     const toggleVisibility = () => {
@@ -37,7 +45,11 @@ DataDialogue.ExampleSection = () => {
                 examples.map((example, index) =>
                     React.createElement(
                         'li',
-                        { key: index, onClick: () => handleExampleClick(example) },
+                        { 
+                            key: index, 
+                            onClick: () => handleExampleClick(example),
+                            style: { cursor: 'pointer' } 
+                        },
                         example
                     )
                 )
@@ -45,7 +57,6 @@ DataDialogue.ExampleSection = () => {
         )
     );
 };
-
 DataDialogue.renderExampleSection = () => {
     ReactDOM.render(React.createElement(DataDialogue.ExampleSection), document.getElementById('exampleSection'));
 };

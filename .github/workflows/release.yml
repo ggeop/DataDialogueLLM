@@ -1,0 +1,83 @@
+name: Release Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  github-release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_version: ${{ steps.semantic.outputs.new_release_version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/changelog
+            @semantic-release/git
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+
+      - name: Print Version Info
+        run: |
+          echo "New Release Version: ${{ steps.semantic.outputs.new_release_version }}"
+          echo "New Release Notes: ${{ steps.semantic.outputs.new_release_notes }}"
+          echo "New Release Published: ${{ steps.semantic.outputs.new_release_published }}"
+          echo "Last Release Version: ${{ steps.semantic.outputs.last_release_version }}"
+
+  docker-release:
+    needs: github-release
+    runs-on: ubuntu-latest
+    if: needs.github-release.outputs.new_release_published == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.17.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Set Docker tag
+        run: |
+          echo "TAG=${{ needs.github-release.outputs.new_version }}" >> $GITHUB_ENV
+          echo "LATEST_TAG=latest" >> $GITHUB_ENV
+
+      - name: Build and push Docker images
+        env:
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
+          VERSION: ${{ needs.github-release.outputs.new_version }}
+        run: |
+          # Build and push with version tag
+          docker-compose --profile production build
+          docker-compose --profile production push
+
+          # Tag and push as latest
+          TAG=latest docker-compose --profile production build
+          TAG=latest docker-compose --profile production push
+
+      - name: Clean up
+        if: always()
+        run: docker system prune -af

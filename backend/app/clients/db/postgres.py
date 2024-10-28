@@ -106,39 +106,64 @@ class PostgresClient(DatabaseClient):
                 """)
                 tables = cursor.fetchall()
 
-                schema = []
+                create_statements = []
+                
                 for table in tables:
                     table_name = table[0]
-                    schema.append(f"Table: {table_name}")
-
+                    
                     # Get column information
                     cursor.execute("""
-                        SELECT column_name, data_type, is_nullable, column_default,
-                               (SELECT EXISTS (
-                                   SELECT 1
-                                   FROM information_schema.table_constraints tc
-                                   JOIN information_schema.key_column_usage kcu
-                                     ON tc.constraint_name = kcu.constraint_name
+                        SELECT 
+                            column_name, 
+                            data_type,
+                            character_maximum_length,
+                            numeric_precision,
+                            numeric_scale,
+                            is_nullable,
+                            column_default,
+                            (SELECT EXISTS (
+                                SELECT 1
+                                FROM information_schema.table_constraints tc
+                                JOIN information_schema.key_column_usage kcu
+                                    ON tc.constraint_name = kcu.constraint_name
                                     AND tc.table_schema = kcu.table_schema
                                     AND tc.table_name = kcu.table_name
-                                   WHERE tc.constraint_type = 'PRIMARY KEY'
-                                     AND tc.table_name = c.table_name
-                                     AND kcu.column_name = c.column_name
-                               )) as is_primary_key
+                                WHERE tc.constraint_type = 'PRIMARY KEY'
+                                    AND tc.table_name = c.table_name
+                                    AND kcu.column_name = c.column_name
+                            )) as is_primary_key
                         FROM information_schema.columns c
                         WHERE table_name = %s
+                        ORDER BY ordinal_position
                     """, (table_name,))
                     columns = cursor.fetchall()
 
-                    schema.append("Columns:")
-                    for col in columns:
-                        col_name, col_type, is_nullable, default, is_pk = col
-                        is_nullable = "NULL" if is_nullable == "YES" else "NOT NULL"
-                        is_pk = "PRIMARY KEY" if is_pk else ""
-                        default = f"DEFAULT {default}" if default else ""
-                        schema.append(f"  - {col_name} ({col_type}) {is_nullable} {default} {is_pk}".strip())
+                    # Start building CREATE TABLE statement
+                    create_statement = [f"CREATE TABLE {table_name} ("]
+                    column_definitions = []
 
-                    # Get foreign key information
+                    for col in columns:
+                        (col_name, col_type, char_max_length, num_precision, 
+                         num_scale, is_nullable, default, is_pk) = col
+                        
+                        # Format the data type
+                        formatted_type = self._format_data_type(
+                            col_type, char_max_length, num_precision, num_scale
+                        )
+                        
+                        # Build column definition
+                        parts = [f"{col_name} {formatted_type}"]
+                        
+                        if not is_nullable == 'YES':
+                            parts.append("NOT NULL")
+                        if default is not None:
+                            parts.append(f"DEFAULT {default}")
+                        if is_pk:
+                            parts.append("PRIMARY KEY")
+                            
+                        column_definitions.append("    " + " ".join(parts))
+
+                    # Get foreign key constraints
                     cursor.execute("""
                         SELECT
                             kcu.column_name,
@@ -156,15 +181,31 @@ class PostgresClient(DatabaseClient):
                     """, (table_name,))
                     foreign_keys = cursor.fetchall()
 
-                    if foreign_keys:
-                        schema.append("Foreign Keys:")
-                        for fk in foreign_keys:
-                            from_col, to_table, to_col = fk
-                            schema.append(f"  - {from_col} -> {to_table}({to_col})")
+                    # Add foreign key constraints
+                    for fk in foreign_keys:
+                        from_col, to_table, to_col = fk
+                        column_definitions.append(
+                            f"    FOREIGN KEY ({from_col}) REFERENCES {to_table}({to_col})"
+                        )
 
-                    schema.append("")  # Empty line between tables
+                    create_statement.extend([",\n".join(column_definitions), ");"])
+                    create_statements.append("\n".join(create_statement))
 
-                return "\n".join(schema)
+                return "\n\n".join(create_statements)
+
+    def _format_data_type(self, col_type: str, char_max_length: Optional[int],
+                          num_precision: Optional[int], num_scale: Optional[int]) -> str:
+        """Helper method to format data type with proper precision/scale"""
+        if col_type == 'character varying':
+            return f"VARCHAR({char_max_length})" if char_max_length else "VARCHAR"
+        elif col_type == 'character':
+            return f"CHAR({char_max_length})" if char_max_length else "CHAR"
+        elif col_type in ['numeric', 'decimal']:
+            if num_precision is not None:
+                if num_scale is not None:
+                    return f"{col_type.upper()}({num_precision},{num_scale})"
+                return f"{col_type.upper()}({num_precision})"
+        return col_type.upper()
 
     def execute_query(self, sql: str, parameters: Optional[Tuple[Any, ...]] = None) -> QueryResult:
         if self._check_blacklist(sql):

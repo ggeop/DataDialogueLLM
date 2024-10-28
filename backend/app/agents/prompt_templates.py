@@ -19,3 +19,17 @@ SQL_CORRECTION_TEMPLATE = """The SQL query you generated resulted in an error: {
 Please generate a corrected SQL query to answer the following question:
 {question}
 """
+
+# Source: https://huggingface.co/HridaAI/Hrida-T2SQL-3B-128k-V0.1
+SQL_GENERATION_TEMPLATE_HRIDA = """
+### Instruction:
+Answer to the query will be in the form of an SQL query.
+
+### Dialect: {db_type}
+
+### Context: {schema}
+
+### Input: {question}
+
+### Response:
+"""

@@ -2,8 +2,8 @@
 [![CD Pipeline](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml/badge.svg?branch=main)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/cd-pipeline.yml)
 
 # Data Dialogue
-[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/datadialogue)
+[![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)]()
 
 
       🎉 Welcome to the Data Dialogue Preview! 🚀
@@ -49,7 +49,7 @@ Data Dialogue is an advanced application that leverages AI to create prompts, re
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/data-dialogue.git
+   git clone https://github.com/ggeop/data-dialogue.git
    cd data-dialogue
    ```
 
@@ -126,15 +126,8 @@ The frontend will be available at `http://localhost:3000`, and the backend at `h
 
 ## Contributing
 
-Pull Requests (PRs) are welcome ☺️
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-6. Wait for review and approval
+👉 [Contributing Guidelines](./CONTRIBUTING.md)
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
