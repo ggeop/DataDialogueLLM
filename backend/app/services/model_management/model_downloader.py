@@ -54,7 +54,7 @@ class HuggingFaceDownloader(ModelDownloader):
         try:
             return hf_hub_download(
                 repo_id=repo_id,
-                model_name=model_name,
+                filename=model_name,
                 local_dir=save_path,
                 force_download=force,
                 token=token
