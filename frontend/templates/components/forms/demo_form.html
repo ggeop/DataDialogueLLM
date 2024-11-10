@@ -1,5 +1,10 @@
 <div id="demoFormOverlay" class="page-overlay">
     <div id="demoFormContainer" class="form-container demo-form">
+      <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-message">dfdfd
+        </div>
+      </div>
       <button class="cancel-close-btn" onclick="DataDialogue.closeDemoForm()">&times;</button>
       <div class="demo-header">
         <h2 class="form-title">Get Started with Demo Data</h2>
@@ -17,7 +22,22 @@
       </div>
       <form id="demoForm">
         <div class="form-section">
-            <h3 class="form-section-title">General</h3>
+          <div class="form-section">
+            <h3 class="form-section-title">LLM Configuration</h3>
+            <div class="form-group">
+                <label for="demoRepoId">Hugging Face Repo ID:</label>
+                <input type="text" id="demoRepoId" value=mradermacher/Hrida-T2SQL-3B-128k-V0.1-GGUF name="repoId">
+            </div>
+            <div class="form-group">
+                <label for="demoModelName">Model Name:</label>
+                <input type="text" id="demoModelName" value=Hrida-T2SQL-3B-128k-V0.1.Q4_K_S.gguf name="modelName">
+            </div>
+            <div class="form-group">
+                <label for="demoToken">Hugging Face Token (optional):</label>
+                <input type="text" id="demoToken" name="token">
+            </div>
+          </div>
+            <h3 class="form-section-title">Source</h3>
                 <div class="form-group">
                   <label for="demoAgentType">Agent Type:</label>
                   <input type="text" id="demoAgentType" value="SQL" readonly>
@@ -48,21 +68,6 @@
                     <input type="text" id="demoPort" value=5432 name="port" readonly>
                 </div>
             </div>
-        <div class="form-section">
-            <h3 class="form-section-title">LLM Configuration</h3>
-            <div class="form-group">
-                <label for="demoRepoId">Hugging Face Repo ID:</label>
-                <input type="text" id="demoRepoId" value=mradermacher/Hrida-T2SQL-3B-128k-V0.1-GGUF name="repoId">
-            </div>
-            <div class="form-group">
-                <label for="demoModelName">Model Name:</label>
-                <input type="text" id="demoModelName" value=Hrida-T2SQL-3B-128k-V0.1.Q4_K_S.gguf name="modelName">
-            </div>
-            <div class="form-group">
-                <label for="demoToken">Hugging Face Token (optional):</label>
-                <input type="text" id="demoToken" name="token">
-            </div>
-        </div>
         <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">
           <span>Launch Demo Experience</span>
           <i class="btn-icon rocket-icon"></i>

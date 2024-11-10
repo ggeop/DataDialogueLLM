@@ -1,5 +1,3 @@
-
-
 DataDialogue.toggleDropdown = async (event) => {
     event.stopPropagation();
     if (!DataDialogue.isDropdownOpen) {
@@ -22,7 +20,8 @@ DataDialogue.openDropdown = async () => {
         DataDialogue.isDropdownOpen = true;
     } catch (error) {
         console.error('Error fetching agent list:', error);
-        DataDialogue.elements.dropdownButton.textContent = 'Error loading agents';
+        DataDialogue.elements.dropdownButton.textContent = 'Select an agent';
+        DataDialogue.populateAgentList([]);
     } finally {
         DataDialogue.isFetching = false;
     }
@@ -36,7 +35,15 @@ DataDialogue.closeDropdown = () => {
 
 DataDialogue.handleOptionClick = (event) => {
     if (event.target.tagName === 'LI') {
-        DataDialogue.elements.dropdownButton.textContent = event.target.textContent;
+        const optionText = event.target.textContent;
+        
+        if (optionText === '+ Register Agent') {
+            DataDialogue.closeDropdown();
+            DataDialogue.openRegisterForm();
+            return;
+        }
+        
+        DataDialogue.elements.dropdownButton.textContent = optionText;
         DataDialogue.elements.dropdownList.querySelectorAll('li').forEach(li => li.classList.remove('selected'));
         event.target.classList.add('selected');
         DataDialogue.closeDropdown();
@@ -59,7 +66,7 @@ DataDialogue.fetchAgentList = async () => {
         DataDialogue.populateAgentList(agents);
     } catch (error) {
         console.error('Error fetching agent list:', error);
-        DataDialogue.elements.dropdownButton.textContent = 'Error loading agents';
+        DataDialogue.populateAgentList([]);
     }
 };
 
@@ -67,13 +74,27 @@ DataDialogue.populateAgentList = (agents) => {
     const { dropdownList, dropdownButton } = DataDialogue.elements;
     dropdownList.innerHTML = ''; // Clear existing options
 
-    agents.forEach(agent => {
-        const option = document.createElement('li');
-        option.textContent = agent;
-        dropdownList.appendChild(option);
-    });
+    // Always add the "Add Agent" option
+    const addAgentOption = document.createElement('li');
+    addAgentOption.textContent = '+ Register Agent';
+    addAgentOption.classList.add('add-agent-option');
+    dropdownList.appendChild(addAgentOption);
 
     if (agents.length > 0) {
-        dropdownButton.textContent = agents[0]; // Select the first option by default
+        // Add a separator after "Add Agent" option
+        const separator = document.createElement('li');
+        separator.classList.add('dropdown-separator');
+        dropdownList.appendChild(separator);
+
+        // Add the rest of the agents
+        agents.forEach(agent => {
+            const option = document.createElement('li');
+            option.textContent = agent;
+            dropdownList.appendChild(option);
+        });
+
+        dropdownButton.textContent = agents[0]; // Select the first agent by default
+    } else {
+        dropdownButton.textContent = 'Select an agent';
     }
 };

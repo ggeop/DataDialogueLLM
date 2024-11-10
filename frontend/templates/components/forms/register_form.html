@@ -1,0 +1,73 @@
+<div id="pageOverlay" class="page-overlay"></div>
+
+<div id="formContainer" class="form-container">
+
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-message"></div>
+    </div>
+
+    <button class="cancel-close-btn">&times;</button>
+
+    <h2 id="register-agent" class="form-title">Register Agent</h2>
+
+    <div class="form-section">
+        <h3 id="general" class="form-section-title">General</h3>
+        <div class="form-group">
+            <label for="agentType">Select an agent type:</label>
+            <select id="agentType" name="agentType">
+                <option value="">Select type...</option>
+                <option value="SQL">SQL</option>
+                <option value="General">General</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="llmConfigSection" class="form-section initially-hidden">
+        <h3 id="llm-configuration" class="form-section-title">LLM Configuration</h3>
+        <div class="form-group">
+            <label for="repoId">Hugging Face Repo ID:</label>
+            <input type="text" id="repoId" name="repoId">
+        </div>
+        <div class="form-group">
+            <label for="modelName">Model Name:</label>
+            <input type="text" id="modelName" name="modelName">
+        </div>
+        <div class="form-group">
+            <label for="token">Hugging Face Token (optional):</label>
+            <input type="text" id="token" name="token">
+        </div>
+    </div>
+
+    <div id="sourceConfigSection" class="form-section initially-hidden">
+        <h3 id="source-configuration" class="form-section-title">Source Configuration</h3>
+        <div class="form-group">
+            <label for="sourceType">Source Type:</label>
+            <select id="sourceType" name="sourceType">
+                <option value="postgresql">PostgreSQL</option>
+            </select>
+        </div>
+        <div class="form-group">
+                    <label for="database">Database:</label>
+                    <input type="text" id="database" name="database">
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div class="form-group">
+            <label for="host">Host:</label>
+            <input type="text" id="host" name="host">
+        </div>
+        <div class="form-group">
+            <label for="port">Port:</label>
+            <input type="text" id="port" name="port">
+        </div>
+    </div>
+    <button type="submit" class="submit-btn" onclick="DataDialogue.submitForm()">Connect</button>
+</form>
+</div>
