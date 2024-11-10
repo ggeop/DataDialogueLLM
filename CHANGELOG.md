@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.0.0...v1.1.0) (2024-11-10)
+
+
+### Bug Fixes
+
+* **frontend:** Forms loading animation and message ([f0aed9b](https://github.com/ggeop/DataDialogueLLM/commit/f0aed9b334eb41b14d843b55efd895ddf94d525b))
+
+
+### Features
+
+* Add register agent button in agents dropdown menu ([0ce2f44](https://github.com/ggeop/DataDialogueLLM/commit/0ce2f443f7a00fb84568fdc104bdc0747a77cc49))
+
 # 1.0.0 (2024-10-28)
 
 
