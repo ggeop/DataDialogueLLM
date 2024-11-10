@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('ComponentLoader: DOMContentLoaded event fired');
     const componentPromises = [
         loadComponent('header-component', 'header'),
-        loadComponent('register-form-component', 'register_form'),
-        loadComponent('demo-form-component', 'demo_form'),
+        loadComponent('register-form-component', 'register_form', 'forms'),
+        loadComponent('demo-form-component', 'demo_form', 'forms'),
         loadComponent('question-input-component', 'question_input'),
         loadComponent('loading-indicator-component', 'loading_indicator'),
         loadComponent('conversations-component', 'conversations'),
@@ -22,8 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading components:', error));
 });
 
-function loadComponent(elementId, componentName) {
-    return fetch(`/component/${componentName}`)
+function loadComponent(elementId, componentName, subFolder) {
+    const path = subFolder ? `${subFolder}/${componentName}` : componentName;
+    return fetch(`/component/${path}`)
         .then(response => response.text())
         .then(data => {
             document.getElementById(elementId).innerHTML = data;
