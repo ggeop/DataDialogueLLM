@@ -20,6 +20,23 @@ DataDialogue.hideFormLoadingAnimation = () => {
     }
 };
 
+DataDialogue.handleAgentTypeChange = () => {
+    const agentType = document.getElementById('agentType').value;
+    const sourceConfigSection = document.getElementById('sourceConfigSection');
+    const llmConfigSection = document.getElementById('llmConfigSection');
+    
+    // First hide both sections
+    sourceConfigSection.classList.add('initially-hidden');
+    llmConfigSection.classList.add('initially-hidden');
+    
+    // Then show appropriate sections based on selection
+    if (agentType === 'SQL') {
+        sourceConfigSection.classList.remove('initially-hidden');
+        llmConfigSection.classList.remove('initially-hidden');
+    } else if (agentType === 'General') {
+        llmConfigSection.classList.remove('initially-hidden');
+    }
+};
 
 
 ///////////////////////////////////////////
@@ -105,10 +122,35 @@ DataDialogue.submitDemoForm = async () => {
 ///////////////////////////////////////////
 // Register Form
 ///////////////////////////////////////////
+DataDialogue.handleAgentTypeChange = () => {
+    const agentType = document.getElementById('agentType').value;
+    const sourceConfigSection = document.getElementById('sourceConfigSection');
+    const llmConfigSection = document.getElementById('llmConfigSection');
+    
+    // First hide both sections
+    sourceConfigSection.classList.add('initially-hidden');
+    llmConfigSection.classList.add('initially-hidden');
+    
+    // Then show appropriate sections based on selection
+    if (agentType === 'SQL') {
+        sourceConfigSection.classList.remove('initially-hidden');
+        llmConfigSection.classList.remove('initially-hidden');
+    } else if (agentType === 'General') {
+        llmConfigSection.classList.remove('initially-hidden');
+    }
+};
+
 DataDialogue.openRegisterForm = () => {
     const { formContainer, pageOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
     
     if (formContainer && pageOverlay) {
+        // Reset the form when opening
+        const agentTypeSelect = document.getElementById('agentType');
+        if (agentTypeSelect) {
+            agentTypeSelect.value = '';
+            DataDialogue.handleAgentTypeChange(); // This will hide the sections
+        }
+        
         formContainer.classList.add('show');
         pageOverlay.style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -116,6 +158,14 @@ DataDialogue.openRegisterForm = () => {
         // Hide menu icon and try demo button
         if (menuIcon) menuIcon.style.display = 'none';
         if (tryDemoContainer) tryDemoContainer.style.display = 'none';
+        
+        // Add event listener for agent type changes
+        if (agentTypeSelect) {
+            // Remove existing listener to prevent duplicates
+            agentTypeSelect.removeEventListener('change', DataDialogue.handleAgentTypeChange);
+            // Add new listener
+            agentTypeSelect.addEventListener('change', DataDialogue.handleAgentTypeChange);
+        }
     }
 };
 
@@ -131,23 +181,43 @@ DataDialogue.closeRegisterForm = () => {
 };
 
 DataDialogue.submitForm = async () => {
+    const agentType = document.getElementById('agentType').value;
+    
+    if (!agentType) {
+        alert('Please select an agent type');
+        return;
+    }
+
     const formData = {
         // General
-        agentType: document.getElementById('modelType').value,
+        agentType: agentType,
         // Source
-        sourceType: document.getElementById('sourceType').value,
-        dbname: document.getElementById('dbname').value,
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value,
-        host: document.getElementById('host').value,
-        port: document.getElementById('port').value,
+        sourceType: document.getElementById('sourceType')?.value || 'postgresql',
+        dbname: document.getElementById('dbname')?.value || '',
+        username: document.getElementById('username')?.value || '',
+        password: document.getElementById('password')?.value || '',
+        host: document.getElementById('host')?.value || '',
+        port: document.getElementById('port')?.value || '',
         // LLM Model
         modelSource: "huggingface",
-        repoID: document.getElementById('repoId').value,
+        repoID: document.getElementById('repoId')?.value || '',
         modelFormat: "gguf",
-        modelName: document.getElementById('modelName').value,
-        token: document.getElementById('token').value
+        modelName: document.getElementById('modelName')?.value || '',
+        token: document.getElementById('token')?.value || ''
     };
+
+    // Validate required fields based on agent type
+    if (agentType === 'SQL') {
+        if (!formData.dbname || !formData.username || !formData.host || !formData.port) {
+            alert('Please fill in all required database fields');
+            return;
+        }
+    }
+    
+    if (!formData.repoID || !formData.modelName) {
+        alert('Please fill in all required LLM fields');
+        return;
+    }
 
     DataDialogue.showFormLoadingAnimation(formData.sourceType);
 

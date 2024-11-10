@@ -155,130 +155,6 @@ input[type="text"]::placeholder {
     height: 20px;
 }
 
-/* ----------------------------*/
-/* Agents Custom DropDown menu */
-/* ----------------------------*/
-
-
-.custom-dropdown {
-    position: relative;
-    display: inline-block;
-    margin-right: 0.75rem;
-    width: 230px;
-    flex-shrink: 0; /* Prevent shrinking */
-}
-
-.dropdown-button {
-    width: 100%;
-    appearance: none;
-    background-color: var(--card-background);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    outline: none;
-    text-align: left;
-}
-
-.dropdown-button:hover {
-    background-color: var(--hover-color);
-}
-
-.dropdown-button:focus {
-    box-shadow: 0 0 0 2px var(--primary-color);
-}
-
-.dropdown-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--card-background);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
-    display: none;
-}
-
-.dropdown-list.show {
-    opacity: 1;
-    transform: translateY(0);
-    display: block;
-}
-
-.dropdown-list li {
-    padding: 0.75rem 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.dropdown-list li:hover {
-    background-color: var(--input-background);
-}
-
-.dropdown-list li.selected {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-}
-
-/* Scrollbar styles for webkit browsers */
-.dropdown-list::-webkit-scrollbar {
-    width: 8px;
-}
-
-.dropdown-list::-webkit-scrollbar-track {
-    background: var(--input-background);
-}
-
-.dropdown-list::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color);
-    border-radius: 4px;
-}
-
-/* Styles for the scrollbar */
-.input-wrapper::-webkit-scrollbar,
-input[type="text"]::-webkit-scrollbar {
-    width: 8px;
-}
-
-.input-wrapper::-webkit-scrollbar-track,
-input[type="text"]::-webkit-scrollbar-track {
-    background: var(--input-background);
-}
-
-.input-wrapper::-webkit-scrollbar-thumb,
-input[type="text"]::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color);
-    border-radius: 4px;
-}
-
-
-/* Dropdown arrow */
-.custom-dropdown::after {
-    content: '▼';
-    font-size: 0.7rem;
-    color: var(--primary-color);
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-    transition: transform 0.3s ease;
-}
-
-.custom-dropdown.open::after {
-    transform: translateY(-50%) rotate(180deg);
-}
-
 /* Adjusting the question container for the new dropdown */
 .question-container {
     background-color: var(--input-background);
@@ -313,7 +189,6 @@ input[type="text"]::-webkit-scrollbar-thumb {
         height: auto;
     }
 
-    .custom-dropdown,
     .input-wrapper,
     .ask-button {
         width: 100%;
@@ -323,5 +198,261 @@ input[type="text"]::-webkit-scrollbar-thumb {
 
     .ask-button {
         margin-bottom: 0;
+    }
+}
+
+/* ----------------------------*/
+/* Custom Dropdown Core Styles */
+/* ----------------------------*/
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 0.75rem;
+    width: 230px;
+    flex-shrink: 0;
+}
+
+.dropdown-button {
+    width: 100%;
+    appearance: none;
+    background-color: var(--card-background);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    text-align: left;
+    position: relative;
+}
+
+/* Dropdown List Container */
+.dropdown-list {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in width calculation */
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    display: none;
+    padding: 8px;
+}
+
+/* Add Agent Button Styling */
+.add-agent-option {
+    background-color: transparent;
+    color: var(--primary-color) !important;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 8px 12px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 8px 0 !important;
+    transition: all 0.2s ease;
+    border: 1px solid var(--primary-color);
+}
+
+.add-agent-option::before {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.add-agent-option:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1) !important;
+}
+
+.add-agent-option:active {
+    background-color: rgba(var(--primary-color-rgb), 0.2) !important;
+}
+
+/* Section Title */
+.dropdown-section-title {
+    padding: 8px 12px 4px;
+    color: var(--text-color);
+    opacity: 0.7;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Agents List Styling */
+.dropdown-list li:not(.add-agent-option) {
+    list-style: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+    margin: 2px 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-list li:not(.add-agent-option)::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    margin-right: 8px;
+    opacity: 0;
+    transition: all 0.2s ease;
+}
+
+.dropdown-list li:not(.add-agent-option):hover::before {
+    opacity: 1;
+}
+
+.dropdown-list li:not(.add-agent-option):hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    padding-left: 14px;
+}
+
+.dropdown-list li.selected:not(.add-agent-option) {
+    background-color: rgba(var(--primary-color-rgb), 0.15);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.dropdown-list li.selected:not(.add-agent-option)::before {
+    opacity: 1;
+}
+
+/* Show/Hide and Animation */
+.dropdown-list.show {
+    opacity: 1;
+    transform: translateY(0);
+    display: block;
+}
+
+/* States and Interactions */
+.dropdown-button:hover {
+    background-color: var(--hover-color);
+}
+
+.dropdown-button:focus {
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+/* Dropdown Arrow */
+.custom-dropdown::after {
+    content: '▼';
+    font-size: 0.7rem;
+    color: var(--primary-color);
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.custom-dropdown.open::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Scrollbar Styling */
+.dropdown-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dropdown-list::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--primary-color-rgb), 0.3);
+    border-radius: 3px;
+}
+
+.dropdown-list::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.5);
+}
+
+/* Animation classes */
+.custom-dropdown.open .dropdown-list {
+    animation: dropdownFadeIn 0.2s ease forwards;
+}
+
+.dropdown-list li,
+.dropdown-list .dropdown-separator,
+.dropdown-list .add-agent-option {
+    list-style: none;
+}
+
+
+/* Ensure consistent padding and margins for all list items */
+.dropdown-list li {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Make sure the separator is styled correctly */
+.dropdown-list .dropdown-separator {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.custom-dropdown .add-agent-option {
+    border: 1px solid var(--primary-color);
+    background-color: transparent;
+    color: var(--primary-color) !important;
+    font-weight: 500;
+    border-radius: 6px;
+    margin: 4px 1px !important;
+    transition: all 0.2s ease;
+}
+
+.custom-dropdown .add-agent-option:hover {
+    background-color: var(--primary-color) !important;
+    color: var(--background-color) !important;
+}
+
+.custom-dropdown .add-agent-option::before {
+    display: inline-block;
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .custom-dropdown {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.75rem;
+    }
+    
+    .dropdown-list {
+        max-height: 200px;
     }
 }

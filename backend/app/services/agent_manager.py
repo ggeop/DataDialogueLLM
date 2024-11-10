@@ -39,7 +39,6 @@ class AgentManagerService:
         """
         self.registered_agents: Dict[str, DataDialogueAgent] = {}
         self.model_manager = ModelManager(base_path=settings.MODELS_BASE_PATH)
-        self._initialize_agents()
 
     def get_agents(self) -> List[str]:
         """
@@ -146,25 +145,6 @@ class AgentManagerService:
         )
         self.registered_agents[agent.name] = agent
         logger.info(f"Agent '{agent.name}' has been successfully registered.")
-
-    def _initialize_agents(self):
-        """
-        Initialize the default general agent.
-
-        This private method is called during the service initialization to set up
-        any default agents, such as a general-purpose dialogue agent.
-
-        Note:
-            This method is not intended to be called directly.
-        """
-        general_model = self._load_default_model()
-        general_agent = DataDialogueAgent(
-            database=None,
-            model=general_model,
-            model_type=AgentType.GENERAL.value
-        )
-        self.registered_agents[general_agent.name] = general_agent
-        logger.info(f"Default general agent '{general_agent.name}' has been initialized.")
 
     def _is_registered(self, agent_name: str) -> bool:
         """
