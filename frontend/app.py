@@ -13,7 +13,8 @@ app = Flask(__name__, static_folder='static')
 def index():
     return render_template('index.html')
 
-@app.route('/component/<name>')
+
+@app.route('/component/<path:name>')
 def component(name):
     return render_template(f'components/{name}.html')
 

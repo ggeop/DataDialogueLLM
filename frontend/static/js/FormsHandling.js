@@ -111,7 +111,7 @@ DataDialogue.submitDemoForm = async () => {
         console.error('Error submitting demo form:', error);
         const loadingMessage = document.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.textContent = "Error connecting to demo database. Please try again.";
+            loadingMessage.textContent = "Error registering Demo Agent. Please try again.";
         }
         setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
     }
@@ -239,7 +239,7 @@ DataDialogue.submitForm = async () => {
         console.error('Error submitting form:', error);
         const loadingMessage = document.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.textContent = "Error connecting to database. Please try again.";
+            loadingMessage.textContent = "Error registering new Agent. Please try again.";
         }
         setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
     }
