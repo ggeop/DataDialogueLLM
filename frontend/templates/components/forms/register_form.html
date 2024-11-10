@@ -1,6 +1,12 @@
 <div id="pageOverlay" class="page-overlay"></div>
 
 <div id="formContainer" class="form-container">
+
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-message"></div>
+    </div>
+
     <button class="cancel-close-btn">&times;</button>
 
     <h2 id="register-agent" class="form-title">Register Agent</h2>
@@ -14,6 +20,22 @@
                 <option value="SQL">SQL</option>
                 <option value="General">General</option>
             </select>
+        </div>
+    </div>
+
+    <div id="llmConfigSection" class="form-section initially-hidden">
+        <h3 id="llm-configuration" class="form-section-title">LLM Configuration</h3>
+        <div class="form-group">
+            <label for="repoId">Hugging Face Repo ID:</label>
+            <input type="text" id="repoId" name="repoId">
+        </div>
+        <div class="form-group">
+            <label for="modelName">Model Name:</label>
+            <input type="text" id="modelName" name="modelName">
+        </div>
+        <div class="form-group">
+            <label for="token">Hugging Face Token (optional):</label>
+            <input type="text" id="token" name="token">
         </div>
     </div>
 
@@ -44,22 +66,6 @@
         <div class="form-group">
             <label for="port">Port:</label>
             <input type="text" id="port" name="port">
-        </div>
-    </div>
-
-    <div id="llmConfigSection" class="form-section initially-hidden">
-        <h3 id="llm-configuration" class="form-section-title">LLM Configuration</h3>
-        <div class="form-group">
-            <label for="repoId">Hugging Face Repo ID:</label>
-            <input type="text" id="repoId" name="repoId">
-        </div>
-        <div class="form-group">
-            <label for="modelName">Model Name:</label>
-            <input type="text" id="modelName" name="modelName">
-        </div>
-        <div class="form-group">
-            <label for="token">Hugging Face Token (optional):</label>
-            <input type="text" id="token" name="token">
         </div>
     </div>
     <button type="submit" class="submit-btn" onclick="DataDialogue.submitForm()">Connect</button>

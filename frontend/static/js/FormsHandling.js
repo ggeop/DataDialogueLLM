@@ -2,12 +2,12 @@
 ///////////////////////////////////////////
 // Common
 ///////////////////////////////////////////
-DataDialogue.showFormLoadingAnimation = (sourceType) => {
+DataDialogue.showFormLoadingAnimation = (agentType, modelName) => {
     const loadingOverlay = document.querySelector('.loading-overlay');
     if (loadingOverlay) {
         const loadingMessage = loadingOverlay.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.innerHTML = `Connecting to ${sourceType}.<br>Adding database schema in SQLAgent context`;
+            loadingMessage.innerHTML = `Creating new ${agentType} Agent.<br>⚠️ This might take a few minutes as we download and set up the ${modelName} model`;
         }
         loadingOverlay.classList.add('show');
     }
@@ -90,7 +90,7 @@ DataDialogue.submitDemoForm = async () => {
         token: document.getElementById('demoToken').value
     };
 
-    DataDialogue.showFormLoadingAnimation(formData.sourceType);
+    DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
 
     try {
         const response = await fetch('http://localhost:8000/api/v1/agents/register', {
@@ -219,7 +219,7 @@ DataDialogue.submitForm = async () => {
         return;
     }
 
-    DataDialogue.showFormLoadingAnimation(formData.sourceType);
+    DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
 
     try {
         const response = await fetch('http://localhost:8000/api/v1/agents/register', {
