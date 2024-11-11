@@ -1,7 +1,20 @@
 DataDialogue.handleSubmit = () => {
     const query = DataDialogue.elements.visibleInput.value.trim();
     const agent = DataDialogue.elements.dropdownButton.textContent.trim();
-    if (query === '' || agent === 'Select an agent') return;
+    
+    // Check for empty query
+    if (query === '') return;
+
+    // Check for agent selection
+    if (agent === 'Select an agent') {
+        DataDialogue.addMessageToConversation('app-response error-response', `
+            <div class="warning-message">
+                <h3>Agent Selection Required</h3>
+                <p>Please select an agent from the dropdown menu before submitting your query.</p>
+            </div>
+        `);
+        return;
+    }
 
     DataDialogue.addMessageToConversation('user-message', query);
     DataDialogue.elements.visibleInput.value = '';

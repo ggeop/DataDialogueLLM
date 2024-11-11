@@ -227,8 +227,7 @@ class AgentManagerService:
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
             model_format=register_params.modelFormat,
-            n_ctx=3000,
-            verbose=False
+            auth_token=register_params.token
         )
 
     def _load_default_model(self):

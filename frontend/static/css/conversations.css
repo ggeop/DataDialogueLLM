@@ -94,3 +94,9 @@ code {
     font-weight: bold;
     margin-top: 1rem;
 }
+
+.warning-message {
+    color: var(--warning-color);
+    font-weight: bold;
+    margin-top: 1rem;
+}

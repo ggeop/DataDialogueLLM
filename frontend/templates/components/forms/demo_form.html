@@ -23,18 +23,22 @@
       <form id="demoForm">
         <div class="form-section">
           <div class="form-section">
-            <h3 class="form-section-title">LLM Configuration</h3>
+            <h3 class="form-section-title">Model Configuration</h3>
             <div class="form-group">
-                <label for="demoRepoId">Hugging Face Repo ID:</label>
-                <input type="text" id="demoRepoId" value=mradermacher/Hrida-T2SQL-3B-128k-V0.1-GGUF name="repoId">
+              <label for="demoModelSource">Model Source:</label>
+              <input type="text" id="demoModelSource" value='google' name="modelSource">
+            </div>
+            <div class="form-group">
+                <label for="demoRepoId">Repo ID (optional):</label>
+                <input type="text" id="demoRepoId" value="" name="repoId">
             </div>
             <div class="form-group">
                 <label for="demoModelName">Model Name:</label>
-                <input type="text" id="demoModelName" value=Hrida-T2SQL-3B-128k-V0.1.Q4_K_S.gguf name="modelName">
+                <input type="text" id="demoModelName" value="gemini-1.5-pro" name="modelName">
             </div>
             <div class="form-group">
-                <label for="demoToken">Hugging Face Token (optional):</label>
-                <input type="text" id="demoToken" name="token">
+                <label for="demoToken">Token (optional):</label>
+                <input type="password" id="demoToken" name="token">
             </div>
           </div>
             <h3 class="form-section-title">Source</h3>

@@ -10,6 +10,7 @@
     --sql-agent-color: #4ecca3;
     --general-agent-color: #3498db;
     --error-color: #e74c3c;
+    --warning-color: #ffc107;
     --input-background: #2a2a4a;
     --user-message-bg: #2c3e50;
 }

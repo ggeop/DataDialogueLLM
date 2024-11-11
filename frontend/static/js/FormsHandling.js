@@ -20,6 +20,28 @@ DataDialogue.hideFormLoadingAnimation = () => {
     }
 };
 
+DataDialogue.handleModelSourceChange = () => {
+    const modelSource = document.getElementById('modelSource').value;
+    const repoIdGroup = document.getElementById('repoIdGroup');
+    const modelNameGroup = document.getElementById('modelNameGroup');
+    const tokenGroup = document.getElementById('tokenGroup');
+    
+    // First hide all model-related fields
+    repoIdGroup.classList.add('initially-hidden');
+    modelNameGroup.classList.add('initially-hidden');
+    tokenGroup.classList.add('initially-hidden');
+    
+    // Show appropriate fields based on model source
+    if (modelSource === 'huggingface') {
+        repoIdGroup.classList.remove('initially-hidden');
+        modelNameGroup.classList.remove('initially-hidden');
+        tokenGroup.classList.remove('initially-hidden');
+    } else if (modelSource === 'google') {
+        modelNameGroup.classList.remove('initially-hidden');
+        tokenGroup.classList.remove('initially-hidden');
+    }
+};
+
 DataDialogue.handleAgentTypeChange = () => {
     const agentType = document.getElementById('agentType').value;
     const sourceConfigSection = document.getElementById('sourceConfigSection');
@@ -28,6 +50,13 @@ DataDialogue.handleAgentTypeChange = () => {
     // First hide both sections
     sourceConfigSection.classList.add('initially-hidden');
     llmConfigSection.classList.add('initially-hidden');
+    
+    // Reset model source fields when agent type changes
+    const modelSource = document.getElementById('modelSource');
+    if (modelSource) {
+        modelSource.value = '';
+        DataDialogue.handleModelSourceChange(); // This will hide all model-specific fields
+    }
     
     // Then show appropriate sections based on selection
     if (agentType === 'SQL') {
@@ -83,9 +112,9 @@ DataDialogue.submitDemoForm = async () => {
         host: document.getElementById('demoHost').value,
         port: document.getElementById('demoPort').value,
         // LLM Model
-        modelSource: "huggingface",
+        modelSource: document.getElementById('demoModelSource')?.value || '', // e.g huggingface, google
         repoID : document.getElementById('demoRepoId').value,
-        modelFormat: "gguf",
+        modelFormat: document.getElementById('demoModelFormat')?.value || '', // e.g gguf
         modelName: document.getElementById('demoModelName').value,
         token: document.getElementById('demoToken').value
     };
@@ -182,9 +211,15 @@ DataDialogue.closeRegisterForm = () => {
 
 DataDialogue.submitForm = async () => {
     const agentType = document.getElementById('agentType').value;
+    const modelSource = document.getElementById('modelSource').value;
     
     if (!agentType) {
         alert('Please select an agent type');
+        return;
+    }
+
+    if (!modelSource) {
+        alert('Please select a model source');
         return;
     }
 
@@ -199,14 +234,14 @@ DataDialogue.submitForm = async () => {
         host: document.getElementById('host')?.value || '',
         port: document.getElementById('port')?.value || '',
         // LLM Model
-        modelSource: "huggingface",
+        modelSource: modelSource,
         repoID: document.getElementById('repoId')?.value || '',
-        modelFormat: "gguf",
+        modelFormat: document.getElementById('ModelFormat')?.value || '', // e.g gguf
         modelName: document.getElementById('modelName')?.value || '',
         token: document.getElementById('token')?.value || ''
     };
 
-    // Validate required fields based on agent type
+    // Validate required fields based on agent type and model source
     if (agentType === 'SQL') {
         if (!formData.dbname || !formData.username || !formData.host || !formData.port) {
             alert('Please fill in all required database fields');
@@ -214,8 +249,13 @@ DataDialogue.submitForm = async () => {
         }
     }
     
-    if (!formData.repoID || !formData.modelName) {
-        alert('Please fill in all required LLM fields');
+    if (!formData.modelName) {
+        alert('Please enter a model name');
+        return;
+    }
+
+    if (modelSource === 'huggingface' && !formData.repoID) {
+        alert('Please enter a repository ID');
         return;
     }
 
@@ -228,18 +268,21 @@ DataDialogue.submitForm = async () => {
             body: JSON.stringify(formData)
         });
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+        }
 
         const result = await response.json();
         console.log('Form submitted successfully:', result);
 
         DataDialogue.hideFormLoadingAnimation();
-        DataDialogue.toggleForm();
+        DataDialogue.closeRegisterForm();
     } catch (error) {
         console.error('Error submitting form:', error);
         const loadingMessage = document.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.textContent = "Error registering new Agent. Please try again.";
+            loadingMessage.textContent = `Error registering new Agent: ${error.message}`;
         }
         setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
     }

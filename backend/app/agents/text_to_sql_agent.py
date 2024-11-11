@@ -89,7 +89,7 @@ class TextToSQLAgent:
                     db_type=self._database.db_type,
                     question=question
                 )
-        logger.info("SQL Generation Prompt:\n%s", prompt)
+        logger.debug("SQL Generation Prompt:\n%s", prompt)
         response = self._model(
             prompt,
             max_tokens=self._max_tokens,
