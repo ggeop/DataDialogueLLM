@@ -76,6 +76,22 @@ DataDialogue.addMessageToConversation = (className, content) => {
     if (className.includes('user-message') || !lastConversation || !lastConversation.classList.contains('conversation')) {
         conversationDiv = document.createElement('div');
         conversationDiv.className = 'conversation';
+        
+        // Create remove button
+        const removeButton = document.createElement('button');
+        removeButton.className = 'remove-conversation';
+        removeButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        `;
+        removeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            conversationDiv.remove();
+        });
+        
+        conversationDiv.appendChild(removeButton);
         DataDialogue.elements.conversationsDiv.appendChild(conversationDiv);
     } else {
         conversationDiv = lastConversation;

@@ -10,12 +10,41 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.2);
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
 .conversation:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0,0,0,0.3);
 }
+
+.remove-conversation {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    opacity: 0.6;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+.remove-conversation:hover {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.remove-conversation svg {
+    width: 16px;
+    height: 16px;
+}
+
 
 .user-message {
     background-color: var(--user-message-bg);
