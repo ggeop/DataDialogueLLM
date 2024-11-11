@@ -41,6 +41,9 @@
                 <input type="password" id="demoToken" name="token">
             </div>
           </div>
+
+          <!-- This section will be hidden by default. The demo database info are not user relevant -->
+          <div hidden>
             <h3 class="form-section-title">Source</h3>
                 <div class="form-group">
                   <label for="demoAgentType">Agent Type:</label>
@@ -71,7 +74,7 @@
                     <label for="demoport">Port:</label>
                     <input type="text" id="demoPort" value=5432 name="port" readonly>
                 </div>
-            </div>
+          </div>
         <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">
           <span>Launch Demo Experience</span>
           <i class="btn-icon rocket-icon"></i>
