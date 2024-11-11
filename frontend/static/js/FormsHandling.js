@@ -20,52 +20,28 @@ DataDialogue.hideFormLoadingAnimation = () => {
     }
 };
 
-DataDialogue.handleModelSourceChange = () => {
-    const modelSource = document.getElementById('modelSource').value;
-    const repoIdGroup = document.getElementById('repoIdGroup');
-    const modelNameGroup = document.getElementById('modelNameGroup');
-    const tokenGroup = document.getElementById('tokenGroup');
+DataDialogue.handleModelSourceChange = (formPrefix = '') => {
+    const modelSource = document.getElementById(`${formPrefix}ModelSource`).value;
+    const repoIdGroup = document.getElementById(`${formPrefix}RepoIdGroup`);
+    const modelNameGroup = document.getElementById(`${formPrefix}ModelNameGroup`);
+    const tokenGroup = document.getElementById(`${formPrefix}TokenGroup`);
     
     // First hide all model-related fields
-    repoIdGroup.classList.add('initially-hidden');
-    modelNameGroup.classList.add('initially-hidden');
-    tokenGroup.classList.add('initially-hidden');
+    repoIdGroup?.classList.add('initially-hidden');
+    modelNameGroup?.classList.add('initially-hidden');
+    tokenGroup?.classList.add('initially-hidden');
     
     // Show appropriate fields based on model source
     if (modelSource === 'huggingface') {
-        repoIdGroup.classList.remove('initially-hidden');
-        modelNameGroup.classList.remove('initially-hidden');
-        tokenGroup.classList.remove('initially-hidden');
+        repoIdGroup?.classList.remove('initially-hidden');
+        modelNameGroup?.classList.remove('initially-hidden');
+        tokenGroup?.classList.remove('initially-hidden');
     } else if (modelSource === 'google') {
-        modelNameGroup.classList.remove('initially-hidden');
-        tokenGroup.classList.remove('initially-hidden');
+        modelNameGroup?.classList.remove('initially-hidden');
+        tokenGroup?.classList.remove('initially-hidden');
     }
 };
 
-DataDialogue.handleAgentTypeChange = () => {
-    const agentType = document.getElementById('agentType').value;
-    const sourceConfigSection = document.getElementById('sourceConfigSection');
-    const llmConfigSection = document.getElementById('llmConfigSection');
-    
-    // First hide both sections
-    sourceConfigSection.classList.add('initially-hidden');
-    llmConfigSection.classList.add('initially-hidden');
-    
-    // Reset model source fields when agent type changes
-    const modelSource = document.getElementById('modelSource');
-    if (modelSource) {
-        modelSource.value = '';
-        DataDialogue.handleModelSourceChange(); // This will hide all model-specific fields
-    }
-    
-    // Then show appropriate sections based on selection
-    if (agentType === 'SQL') {
-        sourceConfigSection.classList.remove('initially-hidden');
-        llmConfigSection.classList.remove('initially-hidden');
-    } else if (agentType === 'General') {
-        llmConfigSection.classList.remove('initially-hidden');
-    }
-};
 
 
 ///////////////////////////////////////////
@@ -79,6 +55,13 @@ DataDialogue.openDemoForm = () => {
     const { demoFormOverlay, demoFormContainer, menuIcon, tryDemoContainer } = DataDialogue.elements;
 
     if (demoFormOverlay && demoFormContainer) {
+        // Reset model source fields when opening form
+        const modelSource = document.getElementById('demoModelSource');
+        if (modelSource) {
+            modelSource.value = '';
+            DataDialogue.handleModelSourceChange('demo'); // Reset field visibility
+        }
+
         demoFormOverlay.style.display = 'block';
         demoFormContainer.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -86,6 +69,12 @@ DataDialogue.openDemoForm = () => {
         // Hide menu icon and try demo button
         if (menuIcon) menuIcon.style.display = 'none';
         if (tryDemoContainer) tryDemoContainer.style.display = 'none';
+
+        // Add event listener for model source changes
+        if (modelSource) {
+            modelSource.removeEventListener('change', () => DataDialogue.handleModelSourceChange('demo'));
+            modelSource.addEventListener('change', () => DataDialogue.handleModelSourceChange('demo'));
+        }
     }
 };
 
@@ -101,6 +90,13 @@ DataDialogue.closeDemoForm = () => {
 };
 
 DataDialogue.submitDemoForm = async () => {
+    const modelSource = document.getElementById('demoModelSource').value;
+    
+    if (!modelSource) {
+        alert('Please select a model source');
+        return;
+    }
+
     const formData = {
         // General
         agentType: document.getElementById('demoAgentType').value,
@@ -112,12 +108,23 @@ DataDialogue.submitDemoForm = async () => {
         host: document.getElementById('demoHost').value,
         port: document.getElementById('demoPort').value,
         // LLM Model
-        modelSource: document.getElementById('demoModelSource')?.value || '', // e.g huggingface, google
-        repoID : document.getElementById('demoRepoId').value,
-        modelFormat: document.getElementById('demoModelFormat')?.value || '', // e.g gguf
+        modelSource: modelSource,
+        repoID: document.getElementById('demoRepoId').value,
+        modelFormat: document.getElementById('demoModelFormat')?.value || '',
         modelName: document.getElementById('demoModelName').value,
         token: document.getElementById('demoToken').value
     };
+
+    // Validate required fields based on model source
+    if (!formData.modelName) {
+        alert('Please enter a model name');
+        return;
+    }
+
+    if (modelSource === 'huggingface' && !formData.repoID) {
+        alert('Please enter a repository ID');
+        return;
+    }
 
     DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
 
@@ -135,7 +142,7 @@ DataDialogue.submitDemoForm = async () => {
 
         DataDialogue.hideFormLoadingAnimation();
         DataDialogue.closeDemoForm();
-        DataDialogue.showExampleSection();  // Add this line to show examples after successful submission
+        DataDialogue.showExampleSection();
     } catch (error) {
         console.error('Error submitting demo form:', error);
         const loadingMessage = document.querySelector('.loading-message');
@@ -175,9 +182,39 @@ DataDialogue.openRegisterForm = () => {
     if (formContainer && pageOverlay) {
         // Reset the form when opening
         const agentTypeSelect = document.getElementById('agentType');
+        const modelSource = document.getElementById('modelSource');
+        
         if (agentTypeSelect) {
             agentTypeSelect.value = '';
             DataDialogue.handleAgentTypeChange(); // This will hide the sections
+        }
+        
+        // Add handler for model source changes
+        if (modelSource) {
+            // Remove existing listener to prevent duplicates
+            modelSource.removeEventListener('change', DataDialogue.handleModelSourceChange);
+            // Add new listener
+            modelSource.addEventListener('change', () => {
+                const modelSource = document.getElementById('modelSource').value;
+                const repoIdGroup = document.getElementById('repoIdGroup');
+                const modelNameGroup = document.getElementById('modelNameGroup');
+                const tokenGroup = document.getElementById('tokenGroup');
+                
+                // First hide all model-related fields
+                repoIdGroup.classList.add('initially-hidden');
+                modelNameGroup.classList.add('initially-hidden');
+                tokenGroup.classList.add('initially-hidden');
+                
+                // Show appropriate fields based on model source
+                if (modelSource === 'huggingface') {
+                    repoIdGroup.classList.remove('initially-hidden');
+                    modelNameGroup.classList.remove('initially-hidden');
+                    tokenGroup.classList.remove('initially-hidden');
+                } else if (modelSource === 'google') {
+                    modelNameGroup.classList.remove('initially-hidden');
+                    tokenGroup.classList.remove('initially-hidden');
+                }
+            });
         }
         
         formContainer.classList.add('show');

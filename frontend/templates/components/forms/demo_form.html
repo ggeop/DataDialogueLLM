@@ -25,21 +25,25 @@
           <div class="form-section">
             <h3 class="form-section-title">Model Configuration</h3>
             <div class="form-group">
-              <label for="demoModelSource">Model Source:</label>
-              <input type="text" id="demoModelSource" value='google' name="modelSource">
+              <label for="ModelSource">Model Source:</label>
+              <select id="demoModelSource" class="form-select">
+                <option value="">Select source...</option>
+                <option value="google">🌐 Google Cloud AI</option>
+                <option value="huggingface">🤗 Hugging Face</option>
+            </select>
             </div>
-            <div class="form-group">
-                <label for="demoRepoId">Repo ID (optional):</label>
-                <input type="text" id="demoRepoId" value="" name="repoId">
-            </div>
-            <div class="form-group">
-                <label for="demoModelName">Model Name:</label>
-                <input type="text" id="demoModelName" value="gemini-1.5-pro" name="modelName">
-            </div>
-            <div class="form-group">
-                <label for="demoToken">Token (optional):</label>
-                <input type="password" id="demoToken" name="token">
-            </div>
+              <div id="demoModelNameGroup" class="form-group initially-hidden">
+                Model Name:
+                <input type="text" id="demoModelName" />
+              </div>
+              <div id="demoRepoIdGroup" class="form-group initially-hidden">
+                Repo ID:
+                <input type="text" id="demoRepoId" />
+              </div>
+              <div id="demoTokenGroup" class="form-group initially-hidden">
+                Token:
+                <input type="text" id="demoToken" />
+              </div>
           </div>
 
           <!-- This section will be hidden by default. The demo database info are not user relevant -->
