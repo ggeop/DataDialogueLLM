@@ -1,3 +1,30 @@
+# [1.2.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.1.0...v1.2.0) (2024-11-12)
+
+
+### Bug Fixes
+
+* **backend:** Use static dependency for  google-generativeai ([8e94f92](https://github.com/ggeop/DataDialogueLLM/commit/8e94f92d97b17cd1c780ae4493ebc50986877992))
+* **frontend:** Fix large sql results table ([b8f40c1](https://github.com/ggeop/DataDialogueLLM/commit/b8f40c1d13db67464de2935b4556639c0b882bd9))
+* **frontend:** Remove db details from try demo form ([02e5a90](https://github.com/ggeop/DataDialogueLLM/commit/02e5a90d8468fca1347bc347276f8b98017f3b73))
+* **frontend:** Token type ([e65b1e8](https://github.com/ggeop/DataDialogueLLM/commit/e65b1e85804a821899281fd4c101a05d48ab8584))
+* Sync delete hover styles ([815028a](https://github.com/ggeop/DataDialogueLLM/commit/815028a316d2e732353ea4153a5cfd31fe8e4d12))
+
+
+### Features
+
+* Add delete agent button in dropdown agent list ([2d82401](https://github.com/ggeop/DataDialogueLLM/commit/2d824014d3eceb483c8086148191045f66533d0f))
+* **backend:** Increase default max_tokens in sql agent ([c7ad195](https://github.com/ggeop/DataDialogueLLM/commit/c7ad195794dddc2d52cdefbafdc13ba19969f7fa))
+* **frontend:** Add a export csv functionality ([1554848](https://github.com/ggeop/DataDialogueLLM/commit/1554848b3732998a99326c1d347afc55bc9edfd6))
+* **frontend:** Add Barplot visualization ([5b4e07b](https://github.com/ggeop/DataDialogueLLM/commit/5b4e07b42f1f31a61e08bcd7ee239d26f2015927))
+* **frontend:** Add more examples in try demo ([601b79d](https://github.com/ggeop/DataDialogueLLM/commit/601b79d477aaf1ead73258869c4a06a6cb2e9572))
+* **frontend:** Add remove button in conversation ([b451f0a](https://github.com/ggeop/DataDialogueLLM/commit/b451f0a76949e8352b6bee1b062f033afd86341a))
+* **frontend:** Add remove button in sql results table and plot ([1279614](https://github.com/ggeop/DataDialogueLLM/commit/1279614d78b4c698553ecf7f339b1992c949a978))
+* **frontend:** Improve try demo form ([9e311c2](https://github.com/ggeop/DataDialogueLLM/commit/9e311c24fb4fae5b4810dd32e1688836e651125c))
+* **frontend:** Update agent list markdown after agent registration ([5ea30a6](https://github.com/ggeop/DataDialogueLLM/commit/5ea30a657663e1516842bb0c5eae895fa6823b1e))
+* **frontend:** Update try-demo form with model source selection ([7ed4a93](https://github.com/ggeop/DataDialogueLLM/commit/7ed4a93fc287e87a75ab1b04d9b8efa86a51e647))
+* Integrate Google Gen API models ([a3190ad](https://github.com/ggeop/DataDialogueLLM/commit/a3190ad8cbc2e03eb48256685d9cf5b11b72514e))
+* Use query columns in sql response table ([f39be8d](https://github.com/ggeop/DataDialogueLLM/commit/f39be8da01bf8330a9a0e6c048f4735ac0015a97))
+
 # [1.1.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.0.0...v1.1.0) (2024-11-10)
 
 
