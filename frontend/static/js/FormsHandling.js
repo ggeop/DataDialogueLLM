@@ -55,13 +55,26 @@ DataDialogue.openDemoForm = () => {
     const { demoFormOverlay, demoFormContainer, menuIcon, tryDemoContainer } = DataDialogue.elements;
 
     if (demoFormOverlay && demoFormContainer) {
-        // Reset model source fields when opening form
-        const modelSource = document.getElementById('demoModelSource');
-        if (modelSource) {
-            modelSource.value = '';
-            DataDialogue.handleModelSourceChange('demo'); // Reset field visibility
-        }
+        // Reset form elements
+        document.getElementById('demoModelSource').value = '';
+        
+        // Hide all conditional elements using your CSS class
+        const elementsToHide = [
+            'googleModels',
+            'huggingfaceModels',
+            'googleCustomDiv',
+            'huggingfaceCustomDiv',
+            'tokenGroup'
+        ];
+        
+        elementsToHide.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.classList.add('initially-hidden');
+            }
+        });
 
+        // Show the form
         demoFormOverlay.style.display = 'block';
         demoFormContainer.classList.add('show');
         document.body.style.overflow = 'hidden';
@@ -70,11 +83,8 @@ DataDialogue.openDemoForm = () => {
         if (menuIcon) menuIcon.style.display = 'none';
         if (tryDemoContainer) tryDemoContainer.style.display = 'none';
 
-        // Add event listener for model source changes
-        if (modelSource) {
-            modelSource.removeEventListener('change', () => DataDialogue.handleModelSourceChange('demo'));
-            modelSource.addEventListener('change', () => DataDialogue.handleModelSourceChange('demo'));
-        }
+        // Set up event listeners
+        setupFormListeners();
     }
 };
 
@@ -89,53 +99,119 @@ DataDialogue.closeDemoForm = () => {
     if (tryDemoContainer) tryDemoContainer.style.display = 'block';
 };
 
+function setupFormListeners() {
+    // Model source change handler
+    document.getElementById('demoModelSource').addEventListener('change', function() {
+        const googleModels = document.getElementById('googleModels');
+        const huggingfaceModels = document.getElementById('huggingfaceModels');
+        const repoIdGroup = document.getElementById('demoRepoIdGroup');
+        const tokenGroup = document.getElementById('tokenGroup');
+        
+        // Reset and hide all model sections
+        [googleModels, huggingfaceModels, repoIdGroup].forEach(el => {
+            if (el) el.classList.add('initially-hidden');
+        });
+        
+        // Reset custom inputs
+        document.getElementById('googleCustomDiv')?.classList.add('initially-hidden');
+        document.getElementById('huggingfaceCustomDiv')?.classList.add('initially-hidden');
+
+        // Show relevant sections
+        if (this.value === 'google') {
+            googleModels?.classList.remove('initially-hidden');
+            tokenGroup?.classList.remove('initially-hidden');
+        } else if (this.value === 'huggingface') {
+            huggingfaceModels?.classList.remove('initially-hidden');
+            repoIdGroup?.classList.remove('initially-hidden');
+            tokenGroup?.classList.remove('initially-hidden');
+        }
+    });
+
+    // Google model change handler
+    document.getElementById('googleModelName').addEventListener('change', function() {
+        const customDiv = document.getElementById('googleCustomDiv');
+        if (this.value === 'custom') {
+            customDiv?.classList.remove('initially-hidden');
+        } else {
+            customDiv?.classList.add('initially-hidden');
+        }
+    });
+
+    // Hugging Face model change handler
+    document.getElementById('huggingfaceModelName').addEventListener('change', function() {
+        const customDiv = document.getElementById('huggingfaceCustomDiv');
+        if (this.value === 'custom') {
+            customDiv?.classList.remove('initially-hidden');
+        } else {
+            customDiv?.classList.add('initially-hidden');
+        }
+    });
+}
+
+// Update submitDemoForm to handle the new structure
 DataDialogue.submitDemoForm = async () => {
     const modelSource = document.getElementById('demoModelSource').value;
-    
     if (!modelSource) {
         alert('Please select a model source');
         return;
     }
 
+    let modelName = '';
+    let repoID = '';
+    if (modelSource === 'google') {
+        const googleModel = document.getElementById('googleModelName').value;
+        modelName = googleModel === 'custom' ? 
+            document.getElementById('googleCustomModel').value : 
+            googleModel;
+    } else {
+        const huggingfaceModel = document.getElementById('huggingfaceModelName').value;
+        modelName = huggingfaceModel === 'custom' ? 
+            document.getElementById('huggingfaceCustomModel').value : 
+            huggingfaceModel;
+        repoID = document.getElementById('demoRepoId').value;
+        
+        if (!repoID) {
+            alert('Please enter a repository ID');
+            return;
+        }
+    }
+
+    if (!modelName) {
+        alert('Please select or enter a model name');
+        return;
+    }
+
     const formData = {
-        // General
-        agentType: document.getElementById('demoAgentType').value,
-        // Source
-        sourceType: document.getElementById('demoSourceType').value,
-        dbname: document.getElementById('demoDbname').value,
-        username: document.getElementById('demoUsername').value,
-        password: document.getElementById('demoPassword').value,
-        host: document.getElementById('demoHost').value,
-        port: document.getElementById('demoPort').value,
-        // LLM Model
+        agentType: 'SQL',
+        sourceType: 'postgresql',
+        dbname: 'dvdrental',
+        username: 'demo',
+        password: '123456',
+        host: 'localhost',
+        port: '5432',
         modelSource: modelSource,
-        repoID: document.getElementById('demoRepoId').value,
-        modelFormat: document.getElementById('demoModelFormat')?.value || '',
-        modelName: document.getElementById('demoModelName').value,
-        token: document.getElementById('demoToken').value
+        modelName: modelName,
+        repoID: repoID,
+        token: document.getElementById('demoToken')?.value || '',
+        modelFormat: modelSource === 'huggingface' ? 'gguf' : ''
     };
-
-    // Validate required fields based on model source
-    if (!formData.modelName) {
-        alert('Please enter a model name');
-        return;
-    }
-
-    if (modelSource === 'huggingface' && !formData.repoID) {
-        alert('Please enter a repository ID');
-        return;
-    }
 
     DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
 
     try {
         const response = await fetch('http://localhost:8000/api/v1/agents/register', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify(formData)
         });
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+        }
 
         const result = await response.json();
         console.log('Demo form submitted successfully:', result);
@@ -144,15 +220,14 @@ DataDialogue.submitDemoForm = async () => {
         DataDialogue.closeDemoForm();
         DataDialogue.showExampleSection();
     } catch (error) {
-        console.error('Error submitting demo form:', error);
+        console.error('Error submitting form:', error);
         const loadingMessage = document.querySelector('.loading-message');
         if (loadingMessage) {
-            loadingMessage.textContent = "Error registering Demo Agent. Please try again.";
+            loadingMessage.textContent = `Error registering Demo Agent: ${error.message}`;
         }
         setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
     }
 };
-
 
 
 ///////////////////////////////////////////

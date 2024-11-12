@@ -21,68 +21,58 @@
         </p>
       </div>
       <form id="demoForm">
-        <div class="form-section">
-          <div class="form-section">
-            <h3 class="form-section-title">Model Configuration</h3>
-            <div class="form-group">
-              <label for="ModelSource">Model Source:</label>
-              <select id="demoModelSource" class="form-select">
-                <option value="">Select source...</option>
-                <option value="google">🌐 Google Cloud AI</option>
-                <option value="huggingface">🤗 Hugging Face</option>
-            </select>
-            </div>
-              <div id="demoModelNameGroup" class="form-group initially-hidden">
-                Model Name:
-                <input type="text" id="demoModelName" />
-              </div>
-              <div id="demoRepoIdGroup" class="form-group initially-hidden">
-                Repo ID:
-                <input type="text" id="demoRepoId" />
-              </div>
-              <div id="demoTokenGroup" class="form-group initially-hidden">
-                Token:
-                <input type="password" id="demoToken" />
-              </div>
+        <div class="form-group">
+          <label for="demoModelSource">Model Source</label>
+          <select id="demoModelSource" name="modelSource">
+              <option value="">Select source...</option>
+              <option value="google">🌐 Google Cloud AI</option>
+              <option value="huggingface">🤗 Hugging Face</option>
+          </select>
+      </div>
+      
+      <div id="googleModels" class="form-group initially-hidden">
+          <label for="googleModelName">Google Model</label>
+          <select id="googleModelName" name="googleModelName">
+              <option value="">Select model...</option>
+              <option value="models/gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
+              <option value="models/gemini-pro">gemini-pro</option>
+              <option value="models/gemini-1.5-flash">gemini-1.5-flash</option>
+              <option value="models/gemini-1.5-flash-8b">gemini-1.5-flash-8b</option>
+              <option value="custom">Custom Model...</option>
+          </select>
+          <div id="googleCustomDiv" class="form-group initially-hidden">
+              <input type="text" id="googleCustomModel" placeholder="Enter custom model name">
           </div>
+      </div>
 
-          <!-- This section will be hidden by default. The demo database info are not user relevant -->
-          <div hidden>
-            <h3 class="form-section-title">Source</h3>
-                <div class="form-group">
-                  <label for="demoAgentType">Agent Type:</label>
-                  <input type="text" id="demoAgentType" value="SQL" readonly>
-                </div>
-            <h3 class="form-section-title">Register Agent</h3>
-                <div class="form-group">
-                    <label for="demoSourceType">Source Type:</label>
-                    <input type="text" id="demoSourceType" value="postgresql" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="demoDbname">Database:</label>
-                    <input type="text" id="demoDbname" value=dvdrental name="database"  readonly>
-                </div>
-                <div class="form-group">
-                    <label for="demoUsername">Username:</label>
-                    <input type="text" id="demoUsername" value=demo name="username"  readonly>
-                </div>
-                <div class="form-group">
-                    <label for="demoPassword">Password:</label>
-                    <input type="password" id="demoPassword" value=123456 name="password" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="demoHost">Host:</label>
-                    <input type="text" id="demoHost" value=localhost name="host" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="demoport">Port:</label>
-                    <input type="text" id="demoPort" value=5432 name="port" readonly>
-                </div>
+      <div id="demoRepoIdGroup" class="form-group initially-hidden">
+        <label for="demoRepoId">Repository ID</label>
+        <input type="text" id="demoRepoId" name="repoId" value="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF">
+      </div>
+      
+      <div id="huggingfaceModels" class="form-group initially-hidden">
+          <label for="huggingfaceModelName">Hugging Face Model</label>
+          <select id="huggingfaceModelName" name="huggingfaceModelName">
+              <option value="">Select model...</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-IQ4_XS.gguf">Meta-Llama-3.1-8B-Instruct-IQ4_XS  (4.45GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q3_K_L.gguf">Meta-Llama-3.1-8B-Instruct-Q3_K_L  (4.32GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf ">Meta-Llama-3.1-8B-Instruct-Q4_K_M (4.92GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf">Meta-Llama-3.1-8B-Instruct-Q5_K_M  (5.73GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q6_K.gguf">Meta-Llama-3.1-8B-Instruct-Q6_K      (6.60GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q8_0.gguf">Meta-Llama-3.1-8B-Instruct-Q8_0      (8.54GB)</option>
+              <option value="custom">Custom Model...</option>
+          </select>
+          <div id="huggingfaceCustomDiv" class="form-group initially-hidden">
+              <input type="text" id="huggingfaceCustomModel" placeholder="Enter custom model name">
           </div>
-        <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">
-          <span>Launch Demo Experience</span>
-          <i class="btn-icon rocket-icon"></i>
-        </button>
+      </div>
+      
+      <div id="tokenGroup" class="form-group">
+          <label for="demoToken">Token (Optional)</label>
+          <input type="password" id="demoToken" name="token" placeholder="Enter your API token">
+      </div>
+
+      <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">Launch Demo Experience</button>
       </form>
     </div>
   </div>
