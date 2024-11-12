@@ -216,6 +216,10 @@ DataDialogue.submitDemoForm = async () => {
         const result = await response.json();
         console.log('Demo form submitted successfully:', result);
 
+        // Update dropdown with new agent
+        const agentName = `(${formData.agentType}) ${formData.modelName}`;
+        DataDialogue.elements.dropdownButton.textContent = agentName;
+
         DataDialogue.hideFormLoadingAnimation();
         DataDialogue.closeDemoForm();
         DataDialogue.showExampleSection();
@@ -387,6 +391,10 @@ DataDialogue.submitForm = async () => {
 
         const result = await response.json();
         console.log('Form submitted successfully:', result);
+
+        // Update dropdown with new agent
+        const agentName = `(${formData.agentType}) ${formData.modelName}`;
+        DataDialogue.elements.dropdownButton.textContent = agentName;
 
         DataDialogue.hideFormLoadingAnimation();
         DataDialogue.closeRegisterForm();
