@@ -78,14 +78,22 @@ DataDialogue.createResultsSection = (sqlResponse) => {
         `;
     } else if (sqlResponse.results && sqlResponse.column_names) {
         return `
-            <p>Here are the results of the query:</p>
-            ${DataDialogue.generateTableHTML(sqlResponse.results, sqlResponse.column_names)}
+            <div class="results-section">
+                <button class="remove-element" onclick="DataDialogue.removeElement(this)" title="Remove results">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+                <p>Here are the results of the query:</p>
+                ${DataDialogue.generateTableHTML(sqlResponse.results, sqlResponse.column_names)}
+            </div>
         `;
     } else {
         return '<p>The query was generated but no results were returned.</p>';
     }
 };
-
 DataDialogue.generateTableHTML = (results, columnNames) => {
     if (!Array.isArray(results) || results.length === 0 || !Array.isArray(columnNames) || columnNames.length === 0) {
         return '<p>No results to display.</p>';
@@ -102,16 +110,15 @@ DataDialogue.generateTableHTML = (results, columnNames) => {
     }).join('');
 
     return `
-        <div class="table-container">
-            <div class="table-scroll-container">
-                <table class="result-table">
-                    <thead><tr>${headerRow}</tr></thead>
-                    <tbody>${dataRows}</tbody>
-                </table>
-            </div>
+        <div class="table-scroll-container">
+            <table class="result-table">
+                <thead><tr>${headerRow}</tr></thead>
+                <tbody>${dataRows}</tbody>
+            </table>
         </div>
     `;
 };
+
 DataDialogue.highlightSQL = (sql) => {
     const keywords = [
         'SELECT', 'FROM', 'WHERE', 'JOIN', 'ON', 'GROUP BY', 'ORDER BY', 
@@ -318,6 +325,25 @@ DataDialogue.createVisualization = () => {
         const container = document.createElement('div');
         container.className = 'visualization-container';
         
+        // Add remove button container
+        const headerDiv = document.createElement('div');
+        headerDiv.className = 'visualization-header';
+        headerDiv.innerHTML = `
+            <button class="remove-element" onclick="DataDialogue.removeElement(this)" title="Remove visualization">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        `;
+        container.appendChild(headerDiv);
+
+        // Add chart container
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'chart-container';
+        container.appendChild(chartContainer);
+
         const responseElement = document.querySelector('.app-response.sql-agent');
         responseElement.appendChild(container);
 
@@ -327,7 +353,7 @@ DataDialogue.createVisualization = () => {
                 categoricalColumn: xAxis,
                 numericalColumn: yAxis
             }),
-            container
+            chartContainer
         );
 
         DataDialogue.closeVisualizationModal();
@@ -444,4 +470,17 @@ DataDialogue.BarChart = function({ data, categoricalColumn, numericalColumn }) {
             })
         )
     );
+};
+
+DataDialogue.removeElement = (button) => {
+    const container = button.closest('.results-section') || button.closest('.visualization-container');
+    if (container) {
+        if (container.classList.contains('visualization-container')) {
+            const chartContainer = container.querySelector('.chart-container');
+            if (chartContainer) {
+                ReactDOM.unmountComponentAtNode(chartContainer);
+            }
+        }
+        container.remove();
+    }
 };
