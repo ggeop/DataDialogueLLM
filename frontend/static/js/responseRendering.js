@@ -54,32 +54,38 @@ DataDialogue.createResultsSection = (sqlResponse) => {
                 <pre>${sqlResponse.error}</pre>
             </div>
         `;
-    } else if (sqlResponse.results) {
+    } else if (sqlResponse.results && sqlResponse.column_names) {
         return `
             <p>Here are the results of the query:</p>
-            ${DataDialogue.generateTableHTML(sqlResponse.results)}
+            ${DataDialogue.generateTableHTML(sqlResponse.results, sqlResponse.column_names)}
         `;
     } else {
         return '<p>The query was generated but no results were returned.</p>';
     }
 };
 
-DataDialogue.generateTableHTML = (results) => {
-    if (!Array.isArray(results) || results.length === 0) {
+DataDialogue.generateTableHTML = (results, columnNames) => {
+    if (!Array.isArray(results) || results.length === 0 || !Array.isArray(columnNames) || columnNames.length === 0) {
         return '<p>No results to display.</p>';
     }
 
-    const headers = Object.keys(results[0]);
-    const headerRow = headers.map(header => `<th>${header}</th>`).join('');
-    const dataRows = results.map(row => 
-        `<tr>${headers.map(header => `<td>${row[header]}</td>`).join('')}</tr>`
-    ).join('');
+    // Generate header row using column_names
+    const headerRow = columnNames.map(header => `<th>${header}</th>`).join('');
+
+    // Generate data rows - assuming results is an array of arrays
+    const dataRows = results.map(row => {
+        // Ensure row is treated as an array
+        const rowArray = Array.isArray(row) ? row : Object.values(row);
+        return `<tr>${rowArray.map(cell => `<td>${cell ?? ''}</td>`).join('')}</tr>`;
+    }).join('');
 
     return `
-        <table class="result-table">
-            <thead><tr>${headerRow}</tr></thead>
-            <tbody>${dataRows}</tbody>
-        </table>
+        <div class="table-container">
+            <table class="result-table">
+                <thead><tr>${headerRow}</tr></thead>
+                <tbody>${dataRows}</tbody>
+            </table>
+        </div>
     `;
 };
 

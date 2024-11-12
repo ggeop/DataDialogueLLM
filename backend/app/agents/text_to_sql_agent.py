@@ -40,7 +40,7 @@ class TextToSQLAgent:
                 sql_result = self._generate_sql(question, temperature, previous_error)
 
             if not sql_result.success:
-                return "", None, "Failed to generate SQL query"
+                return "", None, None, "Failed to generate SQL query"
 
             sql = sql_result.data[0]
             logger.info(f"Attempt {attempt} - Raw SQL: {sql}")
@@ -49,14 +49,14 @@ class TextToSQLAgent:
 
             result = self._execute_query(cleaned_sql)
             if result.success:
-                return cleaned_sql, result.data, None
+                return cleaned_sql, result.data, result.column_names, None
 
             previous_error = result.error_message
             logger.warning(f"Attempt {attempt} failed. Error: {previous_error}")
 
             if attempt == self._max_retries:
                 logger.error(f"All {self._max_retries} attempts failed.")
-                return cleaned_sql, None, previous_error
+                return cleaned_sql, None, None, previous_error
 
     def _generate_sql(self, question: str, temperature: float, previous_error: str = None) -> QueryResult:
         """
