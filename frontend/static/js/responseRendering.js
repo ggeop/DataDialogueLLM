@@ -102,14 +102,15 @@ DataDialogue.generateTableHTML = (results, columnNames) => {
 
     return `
         <div class="table-container">
-            <table class="result-table">
-                <thead><tr>${headerRow}</tr></thead>
-                <tbody>${dataRows}</tbody>
-            </table>
+            <div class="table-scroll-container">
+                <table class="result-table">
+                    <thead><tr>${headerRow}</tr></thead>
+                    <tbody>${dataRows}</tbody>
+                </table>
+            </div>
         </div>
     `;
 };
-
 DataDialogue.highlightSQL = (sql) => {
     const keywords = [
         'SELECT', 'FROM', 'WHERE', 'JOIN', 'ON', 'GROUP BY', 'ORDER BY', 
