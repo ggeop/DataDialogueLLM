@@ -227,26 +227,7 @@ class AgentManagerService:
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
             model_format=register_params.modelFormat,
-            n_ctx=3000,
-            verbose=False
-        )
-
-    def _load_default_model(self):
-        """
-        Load and return the default general model.
-
-        Returns:
-            Any: The loaded default model object.
-
-        Note:
-            This is a private method intended for internal use only.
-        """
-        return self.model_manager.load_model(
-            source=settings.DEFAULT_GENERAL_LLM["source"],
-            repo_id=settings.DEFAULT_GENERAL_LLM["repo_id"],
-            model_name=settings.DEFAULT_GENERAL_LLM["model_name"],
-            model_format=settings.DEFAULT_GENERAL_LLM["model_format"],
-            verbose=False
+            auth_token=register_params.token
         )
 
 

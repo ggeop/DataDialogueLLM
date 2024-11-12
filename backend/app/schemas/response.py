@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Union, List
 
 from app.schemas.base import BaseModel
 
@@ -6,6 +6,7 @@ from app.schemas.base import BaseModel
 class SQLResponse(BaseModel):
     sql: str
     results: Any
+    column_names: List[str]
     error: Optional[str] = None
 
 

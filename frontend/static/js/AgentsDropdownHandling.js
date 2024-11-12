@@ -89,12 +89,71 @@ DataDialogue.populateAgentList = (agents) => {
         // Add the rest of the agents
         agents.forEach(agent => {
             const option = document.createElement('li');
-            option.textContent = agent;
+            
+            // Create span for agent name
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = agent;
+            nameSpan.classList.add('agent-name-text');
+            
+            // Create delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.classList.add('agent-delete-btn');
+            deleteBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 18L18 6M6 6l12 12"/>
+            </svg>`;
+            
+            // Add delete functionality
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent dropdown item selection
+                
+                if (confirm(`Are you sure you want to delete agent "${agent}"?`)) {
+                    try {
+                        const encodedAgent = encodeURIComponent(encodeURIComponent(agent));
+                        const response = await fetch(`http://localhost:8000/api/v1/agents/${encodedAgent}`, {
+                            method: 'DELETE'
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        // Refresh the agent list
+                        await DataDialogue.fetchAgentList();
+                    } catch (error) {
+                        console.error('Error deleting agent:', error);
+                        alert('Failed to delete agent. Please try again.');
+                    }
+                }
+            });
+            
+            option.appendChild(nameSpan);
+            option.appendChild(deleteBtn);
             dropdownList.appendChild(option);
         });
 
         dropdownButton.textContent = agents[0]; // Select the first agent by default
     } else {
         dropdownButton.textContent = 'Select an agent';
+    }
+};
+
+
+DataDialogue.handleOptionClick = (event) => {
+    const listItem = event.target.closest('li');
+    if (!listItem) return;
+    
+    if (listItem.classList.contains('add-agent-option')) {
+        DataDialogue.closeDropdown();
+        DataDialogue.openRegisterForm();
+        return;
+    }
+    
+    // Only update selection if clicking on the name text, not the delete button
+    if (event.target.classList.contains('agent-name-text')) {
+        const optionText = event.target.textContent;
+        DataDialogue.elements.dropdownButton.textContent = optionText;
+        DataDialogue.elements.dropdownList.querySelectorAll('li').forEach(li => li.classList.remove('selected'));
+        listItem.classList.add('selected');
+        DataDialogue.closeDropdown();
     }
 };

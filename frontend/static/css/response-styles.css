@@ -83,27 +83,6 @@
     transform: scale(0.98);
 }
 
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-.result-table th, .result-table td {
-    border: 1px solid var(--border-color);
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.result-table th {
-    background-color: var(--card-background);
-    font-weight: bold;
-}
-
-.result-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
 /* New styles for compact layout */
 .user-message + .app-response {
     border-top: none;
@@ -111,4 +90,47 @@
 
 .app-response + .user-message {
     margin-top: 20px;
+}
+
+.agent-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--sql-agent-color);
+    color: var(--background-color);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.export-btn:hover {
+    background-color: #3da88a;
+}
+
+.export-btn:active {
+    transform: scale(0.98);
+}
+
+.export-btn svg {
+    stroke: var(--background-color);
+}
+
+/* Updated copy button to match export button */
+.copy-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.copy-btn svg {
+    stroke: var(--background-color);
 }

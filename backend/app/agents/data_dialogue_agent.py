@@ -33,8 +33,8 @@ class DataDialogueAgent:
 
         if self.sql_agent:
             sql_agent_name = self.sql_agent.__class__.__name__
-            sql, results, error = self.sql_agent.generate(prompt)
-            response = SQLResponse(sql=sql, results=results, error=error)
+            sql, data, column_names, error = self.sql_agent.generate(prompt)
+            response = SQLResponse(sql=sql, results=data, column_names=column_names, error=error)
             agent = sql_agent_name
         else:
             prompt = f"Q: {prompt} A: "
