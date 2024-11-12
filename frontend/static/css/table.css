@@ -11,6 +11,7 @@
     padding: 0.75rem;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-color); /* This ensures header text is white */
 }
 
 .result-table th {

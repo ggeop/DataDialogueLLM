@@ -10,7 +10,7 @@ DataDialogue.displayResponse = (data) => {
 };
 
 DataDialogue.createSQLResponse = (sqlResponse) => {
-    const agentHeader = DataDialogue.createAgentHeader('SQL Agent', true);
+    const agentHeader = DataDialogue.createAgentHeader('SQL Agent', true, sqlResponse);
     const sqlQuery = DataDialogue.createSQLQuerySection(sqlResponse.sql);
     const results = DataDialogue.createResultsSection(sqlResponse);
 
@@ -29,15 +29,36 @@ DataDialogue.createGeneralResponse = (response) => {
     `;
 };
 
-DataDialogue.createAgentHeader = (agentName, isSQLAgent) => {
+DataDialogue.createAgentHeader = (agentName, isSQLAgent, sqlResponse = null) => {
     const agentColor = isSQLAgent ? 'var(--sql-agent-color)' : 'var(--general-agent-color)';
-    const copyButton = isSQLAgent 
-        ? '<button class="copy-btn" onclick="DataDialogue.copyToClipboard(this)">Copy SQL</button>' 
-        : '';
+    const buttons = isSQLAgent ? `
+        <div class="agent-buttons">
+            <button class="export-btn" onclick="DataDialogue.exportToCSV(this)" 
+                    data-results='${JSON.stringify(sqlResponse?.results || [])}' 
+                    data-columns='${JSON.stringify(sqlResponse?.column_names || [])}'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export CSV
+            </button>
+            <button class="copy-btn" onclick="DataDialogue.copyToClipboard(this)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy SQL
+            </button>
+        </div>
+    ` : '';
+    
     return `
         <div class="agent-header">
             <span style="color: ${agentColor};">${agentName}</span>
-            ${copyButton}
+            ${buttons}
         </div>
     `;
 };
@@ -112,4 +133,79 @@ DataDialogue.copyToClipboard = (button) => {
     }).catch(err => {
         console.error('Failed to copy text: ', err);
     });
+};
+
+DataDialogue.exportToCSV = (button) => {
+    try {
+        // Get data from button attributes
+        const results = JSON.parse(button.getAttribute('data-results'));
+        const columnNames = JSON.parse(button.getAttribute('data-columns'));
+        
+        if (!results || !columnNames) {
+            console.error('No data available for export');
+            return;
+        }
+
+        // Create CSV content
+        const csvRows = [];
+        
+        // Add header row
+        csvRows.push(columnNames.join(','));
+        
+        // Add data rows - handle both array and object formats
+        results.forEach(row => {
+            // Convert row to array if it's an object
+            const rowArray = Array.isArray(row) ? row : columnNames.map(col => {
+                const value = row[col];
+                // Handle null/undefined values
+                if (value === null || value === undefined) return '';
+                // Handle special characters
+                const valueStr = String(value);
+                if (valueStr.includes(',') || valueStr.includes('"') || valueStr.includes('\n')) {
+                    return `"${valueStr.replace(/"/g, '""')}"`;
+                }
+                return valueStr;
+            });
+            csvRows.push(rowArray.join(','));
+        });
+
+        const csvContent = csvRows.join('\n');
+
+        // Create blob and download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        // Format timestamp for filename
+        const timestamp = new Date().toISOString()
+            .replace(/[-:]/g, '')  // Remove dashes and colons
+            .replace('T', '_')     // Replace T with underscore
+            .slice(0, 15);         // Get only the date and hour parts
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `data_dialogue_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show feedback
+        const originalText = button.innerHTML;
+        button.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            Exported!
+        `;
+        setTimeout(() => {
+            button.innerHTML = originalText;
+        }, 2000);
+    } catch (error) {
+        console.error('Error exporting CSV:', error);
+        button.textContent = 'Export failed';
+        setTimeout(() => {
+            button.textContent = 'Export CSV';
+        }, 2000);
+    }
 };
