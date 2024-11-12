@@ -1,4 +1,5 @@
 import logging
+from urllib.parse import unquote
 
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -36,6 +37,7 @@ async def register(register_agent: RegisterAgent):
 @router.delete("/{agent_name}")
 async def delete_agent(agent_name: str):
     try:
+        agent_name = unquote(agent_name)
         logger.info(f"Attempting to delete agent: {agent_name}")
         agent_manager_service.delete_agent(agent_name)
         logger.info(f"Successfully deleted agent: {agent_name}")

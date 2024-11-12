@@ -412,6 +412,48 @@ input[type="text"]::placeholder {
     width: 100%;
 }
 
+.dropdown-list li:not(.add-agent-option):not(.dropdown-separator) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 8px; /* Ensure space for the delete icon */
+}
+
+.agent-delete-btn {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    color: var(--text-color);
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.agent-delete-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.dropdown-list li:not(.add-agent-option):not(.dropdown-separator):hover .agent-delete-btn {
+    opacity: 0.6;
+}
+
+.agent-delete-btn:hover {
+    opacity: 1 !important;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #ff4444;
+}
+
+/* Prevent the delete button from triggering the li click event */
+.agent-name-text {
+    flex-grow: 1;
+    padding-right: 8px;
+}
+
 @keyframes dropdownFadeIn {
     from {
         opacity: 0;
