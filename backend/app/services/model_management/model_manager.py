@@ -1,6 +1,10 @@
 import os
 from typing import Dict, List, Any, Optional
-from .model_loader import ModelLoader, GGUFLoader
+from .model_loaders import (
+    ModelLoader,
+    GoogleAILoader,
+    LLAMAGGUFLoader
+)
 from .model_downloader import ModelDownloader, HuggingFaceDownloader
 from .model_file_manager import ModelFileManager
 from .auth import HuggingFaceAuth
@@ -9,52 +13,85 @@ from .utils import logger
 
 class ModelManager:
     """
-    A class to manage the downloading, loading, and file management of machine learning models.
+    A class to manage the API-based models, downloading, loading, and file management of machine learning models.
     """
 
-    def __init__(self, base_path: str, hf_token: Optional[str] = None):
+    def __init__(self, base_path: str):
         """
-        Initialize ModelManager.
+        Initialize ModelManager with support for multiple model sources.
 
         Args:
-            base_path (str): Base path for storing models.
-            hf_token (Optional[str]): HuggingFace API token.
+            base_path (str): Base path for storing downloadable models
         """
         self.file_manager = ModelFileManager(base_path)
-        self.hf_auth = HuggingFaceAuth(hf_token) if hf_token else None
-        self.downloaders = {
-            "huggingface": HuggingFaceDownloader(self.hf_auth)
-        }
+        self.downloaders: Dict[str, ModelDownloader] = {}
         self.models: Dict[str, Any] = {}
         self.loaders: Dict[str, ModelLoader] = {
-            "gguf": GGUFLoader()
+            "gguf": LLAMAGGUFLoader()
         }
 
-    def load_model(self, repo_id: str, model_name: str, model_format: str, source: str = "huggingface", force_download: bool = False, **kwargs) -> Any:
+    def load_model(self,
+                   repo_id: str,
+                   model_name: str,
+                   model_format: str,
+                   source: str = "huggingface",
+                   force_download: bool = False,
+                   auth_token: Optional[str] = None,
+                   **kwargs) -> Any:
         """
-        Load a model, downloading it first if necessary.
+        Load a model, handling both downloadable and API-based models.
 
         Args:
-            repo_id (str): Repository ID.
-            model_name (str): Model name.
-            model_format (str): Model format e.g GGUF
-            source (str): Source of the model (default is "huggingface").
-            force_download (bool): Force download even if the model exists locally.
-            **kwargs: Additional keyword arguments for model loading.
+            repo_id (str): Repository ID or model identifier
+            model_name (str): Model name
+            model_format (str): Model format (e.g., 'gguf', 'google')
+            source (str): Source of the model
+            force_download (bool): Force download for downloadable models
+            auth_token (Optional[str]): Authentication token for the specified source
+            **kwargs: Additional keyword arguments for model loading
 
         Returns:
-            Any: Loaded model object.
+            Any: Loaded model object
 
         Raises:
-            ValueError: If the model type is not supported or the source is invalid.
+            ValueError: If the model format is not supported or the source is invalid
         """
-        # Check if the model is already loaded
         model_key = f"{source}/{repo_id}/{model_name}"
+
+        # Return cached model if available
         if model_key in self.models and not force_download:
             logger.info(f"Model {model_key} is already loaded. Returning cached model.")
             return self.models[model_key]
 
-        # Check if the model exists locally, if not, download it
+        # Initialize or update source-specific configurations based on auth_token
+        if source == "huggingface":
+            if auth_token:
+                hf_auth = HuggingFaceAuth(auth_token)
+                self.downloaders["huggingface"] = HuggingFaceDownloader(hf_auth)
+            else:
+                self.downloaders["huggingface"] = HuggingFaceDownloader(None)
+
+        if source == 'google':
+            if auth_token:
+                self.loaders['google'] = GoogleAILoader(auth_token)
+            else:
+                message = "Missing auth token is not supported for Google API. Please provide auth api. Get API key from: https://aistudio.google.com/app/apikey"
+                logger.error(message)
+                raise Exception(message)
+
+        # Check if this is an API-based model
+        if source == 'google':
+            if 'google' not in self.loaders:
+                raise ValueError("Google AI loader not initialized. Please provide an auth token.")
+            try:
+                loaded_model = self.loaders['google'].load_model(model_name, **kwargs)
+                self.models[model_key] = loaded_model
+                logger.info(f"Google AI model {model_key} loaded successfully.")
+                return loaded_model
+            except Exception as e:
+                logger.error(f"Failed to load Google AI model {model_key}: {e}")
+                raise
+
         if not self.file_manager.model_exists(repo_id, source, model_name) or force_download:
             logger.info(f"Model {model_key} not found locally or force_download is True. Downloading...")
             try:
@@ -63,19 +100,12 @@ class ModelManager:
                 logger.error(f"Failed to download model {model_key}: {e}")
                 raise
 
-        # Get the path to the model file
         try:
             model_path = self.file_manager.get_model_path(repo_id, model_name, source)
-        except FileNotFoundError:
-            logger.error(f"Model file for {model_key} not found after download attempt.")
-            raise
+            if model_format not in self.loaders:
+                raise ValueError(f"Unsupported model format: {model_format}")
 
-        # Load the model
-        if model_format not in self.loaders:
-            raise ValueError(f"Unsupported model type: {model_format}")
-
-        loader = self.loaders[model_format]
-        try:
+            loader = self.loaders[model_format]
             loaded_model = loader.load_model(model_path, **kwargs)
             self.models[model_key] = loaded_model
             logger.info(f"Model {model_key} loaded successfully.")
@@ -84,7 +114,11 @@ class ModelManager:
             logger.error(f"Failed to load model {model_key}: {e}")
             raise
 
-    def download_model(self, repo_id: str, source: str = "huggingface", force: bool = False, model_name: Optional[str] = None) -> str:
+    def download_model(self,
+                       repo_id: str,
+                       source: str = "huggingface",
+                       force: bool = False,
+                       model_name: Optional[str] = None) -> str:
         """
         Download a model.
 

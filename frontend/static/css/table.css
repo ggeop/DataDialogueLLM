@@ -1,32 +1,3 @@
-.result-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    background-color: var(--card-background);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.result-table th, .result-table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.result-table th {
-    background-color: var(--primary-color);
-    color: var(--background-color);
-    font-weight: 600;
-}
-
-.result-table tr:last-child td {
-    border-bottom: none;
-}
-
-.result-table tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
 .sql-code {
     background-color: var(--code-background);
     padding: 1rem;
@@ -37,4 +8,109 @@
 
 .sql-code code {
     font-family: 'Courier New', Courier, monospace;
+}
+
+
+/* Table container with scroll functionality */
+.table-container {
+    position: relative;
+    margin-top: 1rem;
+    border-radius: 8px;
+    background-color: var(--card-background);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Horizontal scroll container */
+.table-container {
+    overflow-x: auto;
+    
+    &::-webkit-scrollbar {
+        height: 4px;
+        width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: var(--card-background);
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 4px;
+        
+        &:hover {
+            background: var(--primary-dark);
+        }
+    }
+}
+
+/* Table styles */
+
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-background);
+}
+
+
+.result-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--primary-color);
+}
+
+.result-table th {
+    padding: 0.75rem;
+    text-align: left;
+    color: var(--background-color);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.result-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.table-scroll-container {
+    max-height: 600px;
+    overflow-y: auto;
+    
+    /* Custom scrollbar styling for webkit browsers */
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: var(--card-background);
+        border-radius: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 4px;
+        
+        &:hover {
+            background: var(--primary-dark);
+        }
+    }
+}
+
+/* Alternating row colors */
+.result-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Hover effect on rows */
+.result-table tbody tr:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+}
+
+/* Ensure last row doesn't have a border */
+.result-table tr:last-child td {
+    border-bottom: none;
 }

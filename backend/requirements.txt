@@ -30,3 +30,4 @@ urllib3==2.2.3
 uvicorn==0.30.6
 psycopg2==2.9.9
 nltk==3.9.1
+google-generativeai==0.8.3

@@ -1,7 +1,6 @@
 <div id="pageOverlay" class="page-overlay"></div>
 
 <div id="formContainer" class="form-container">
-
     <div class="loading-overlay">
         <div class="loading-spinner"></div>
         <div class="loading-message"></div>
@@ -15,7 +14,7 @@
         <h3 id="general" class="form-section-title">General</h3>
         <div class="form-group">
             <label for="agentType">Select an agent type:</label>
-            <select id="agentType" name="agentType">
+            <select id="agentType" onchange="DataDialogue.handleAgentTypeChange()">
                 <option value="">Select type...</option>
                 <option value="SQL">SQL</option>
                 <option value="General">General</option>
@@ -24,50 +23,68 @@
     </div>
 
     <div id="llmConfigSection" class="form-section initially-hidden">
-        <h3 id="llm-configuration" class="form-section-title">LLM Configuration</h3>
+        <h3 id="llm-configuration" class="form-section-title">Model Configuration</h3>
+        
         <div class="form-group">
-            <label for="repoId">Hugging Face Repo ID:</label>
-            <input type="text" id="repoId" name="repoId">
+            <label for="ModelSource">Model Source:</label>
+            <select id="modelSource" onchange="DataDialogue.handleModelSourceChange()">
+                <option value="">Select source...</option>
+                <option value="google">🌐 Google Cloud AI</option>
+                <option value="huggingface">🤗 Hugging Face</option>
+            </select>
         </div>
-        <div class="form-group">
+
+        <div id="repoIdGroup" class="form-group initially-hidden">
+            <label for="repoId">Repo ID:</label>
+            <input type="text" id="repoId" placeholder="Enter repository ID">
+        </div>
+
+        <div id="modelNameGroup" class="form-group initially-hidden">
             <label for="modelName">Model Name:</label>
-            <input type="text" id="modelName" name="modelName">
+            <input type="text" id="modelName" placeholder="Enter model name">
         </div>
-        <div class="form-group">
-            <label for="token">Hugging Face Token (optional):</label>
-            <input type="text" id="token" name="token">
+
+        <div id="tokenGroup" class="form-group initially-hidden">
+            <label for="token">Token:</label>
+            <input type="password" id="token" placeholder="Enter token">
         </div>
     </div>
 
     <div id="sourceConfigSection" class="form-section initially-hidden">
         <h3 id="source-configuration" class="form-section-title">Source Configuration</h3>
+        
         <div class="form-group">
             <label for="sourceType">Source Type:</label>
-            <select id="sourceType" name="sourceType">
+            <select id="sourceType">
                 <option value="postgresql">PostgreSQL</option>
             </select>
         </div>
+
         <div class="form-group">
-                    <label for="database">Database:</label>
-                    <input type="text" id="database" name="database">
+            <label for="dbname">Database:</label>
+            <input type="text" id="dbname" placeholder="Enter database name">
         </div>
+
         <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username">
+            <input type="text" id="username" placeholder="Enter username">
         </div>
+
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password">
+            <input type="password" id="password" placeholder="Enter password">
         </div>
+
         <div class="form-group">
             <label for="host">Host:</label>
-            <input type="text" id="host" name="host">
+            <input type="text" id="host" placeholder="Enter host">
         </div>
+
         <div class="form-group">
             <label for="port">Port:</label>
-            <input type="text" id="port" name="port">
+            <input type="text" id="port" placeholder="Enter port">
         </div>
     </div>
-    <button type="submit" class="submit-btn" onclick="DataDialogue.submitForm()">Connect</button>
-</form>
+
+    <button class="submit-btn" onclick="DataDialogue.submitForm()">Connect</button>
 </div>

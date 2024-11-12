@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class TextToSQLAgent:
     def __init__(self, language_model: Any,
                  database: Any, max_retries: int = 3,
-                 max_tokens: int = 100,
+                 max_tokens: int = 300,
                  initial_temperature: float = 0.3,
                  temperature_increase: float = 0.1):
         self._model = language_model
@@ -40,7 +40,7 @@ class TextToSQLAgent:
                 sql_result = self._generate_sql(question, temperature, previous_error)
 
             if not sql_result.success:
-                return "", None, "Failed to generate SQL query"
+                return "", None, None, "Failed to generate SQL query"
 
             sql = sql_result.data[0]
             logger.info(f"Attempt {attempt} - Raw SQL: {sql}")
@@ -49,14 +49,14 @@ class TextToSQLAgent:
 
             result = self._execute_query(cleaned_sql)
             if result.success:
-                return cleaned_sql, result.data, None
+                return cleaned_sql, result.data, result.column_names, None
 
             previous_error = result.error_message
             logger.warning(f"Attempt {attempt} failed. Error: {previous_error}")
 
             if attempt == self._max_retries:
                 logger.error(f"All {self._max_retries} attempts failed.")
-                return cleaned_sql, None, previous_error
+                return cleaned_sql, None, None, previous_error
 
     def _generate_sql(self, question: str, temperature: float, previous_error: str = None) -> QueryResult:
         """
@@ -89,7 +89,7 @@ class TextToSQLAgent:
                     db_type=self._database.db_type,
                     question=question
                 )
-        logger.info("SQL Generation Prompt:\n%s", prompt)
+        logger.debug("SQL Generation Prompt:\n%s", prompt)
         response = self._model(
             prompt,
             max_tokens=self._max_tokens,
