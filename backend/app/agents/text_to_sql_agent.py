@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class TextToSQLAgent:
     def __init__(self, language_model: Any,
                  database: Any, max_retries: int = 3,
-                 max_tokens: int = 100,
+                 max_tokens: int = 300,
                  initial_temperature: float = 0.3,
                  temperature_increase: float = 0.1):
         self._model = language_model
