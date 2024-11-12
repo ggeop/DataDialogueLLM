@@ -33,6 +33,7 @@ DataDialogue.createAgentHeader = (agentName, isSQLAgent, sqlResponse = null) => 
     const agentColor = isSQLAgent ? 'var(--sql-agent-color)' : 'var(--general-agent-color)';
     const buttons = isSQLAgent ? `
         <div class="agent-buttons">
+            ${DataDialogue.createVisualizationButton(sqlResponse)}
             <button class="export-btn" onclick="DataDialogue.exportToCSV(this)" 
                     data-results='${JSON.stringify(sqlResponse?.results || [])}' 
                     data-columns='${JSON.stringify(sqlResponse?.column_names || [])}'>
@@ -209,4 +210,238 @@ DataDialogue.exportToCSV = (button) => {
             button.textContent = 'Export CSV';
         }, 2000);
     }
+};
+
+DataDialogue.createVisualizationButton = (sqlResponse) => {
+    if (!sqlResponse?.results?.length || !sqlResponse?.column_names?.length) {
+        return '';
+    }
+
+    // Properly escape the JSON data for HTML attributes
+    const escapedResults = JSON.stringify(sqlResponse.results).replace(/"/g, '&quot;');
+    const escapedColumns = JSON.stringify(sqlResponse.column_names).replace(/"/g, '&quot;');
+
+    return `
+        <button class="plot-btn" onclick="DataDialogue.showVisualizationModal(this)" 
+                data-results='${escapedResults}' 
+                data-columns='${escapedColumns}'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Plot Data
+        </button>
+    `;
+};
+
+
+DataDialogue.showVisualizationModal = (button) => {
+    try {
+        // Get and decode the data attributes
+        const resultsStr = button.getAttribute('data-results').replace(/&quot;/g, '"');
+        const columnsStr = button.getAttribute('data-columns').replace(/&quot;/g, '"');
+        
+        const results = JSON.parse(resultsStr);
+        const columns = JSON.parse(columnsStr);
+
+        // Create modal HTML with more user-friendly labels
+        const modalHTML = `
+            <div class="visualization-modal">
+                <div class="visualization-modal-content">
+                    <h3>Create Bar Chart</h3>
+                    <div class="column-selectors">
+                        <div class="select-group">
+                            <label for="categorical-column">X-Axis (Categories):</label>
+                            <select id="categorical-column">
+                                ${columns.map(col => `<option value="${col}">${col}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="select-group">
+                            <label for="numerical-column">Y-Axis (Values):</label>
+                            <select id="numerical-column">
+                                ${columns.map(col => `<option value="${col}">${col}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="visualization-actions">
+                        <button class="cancel-btn" onclick="DataDialogue.closeVisualizationModal()">Cancel</button>
+                        <button class="create-plot-btn" onclick="DataDialogue.createVisualization()">Create Plot</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add modal to document
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Store the results data for later use
+        DataDialogue.currentVisualizationData = results;
+    } catch (error) {
+        console.error('Error showing visualization modal:', error);
+        alert('Error loading visualization data. Please try again.');
+    }
+};
+
+DataDialogue.closeVisualizationModal = () => {
+    const modal = document.querySelector('.visualization-modal');
+    if (modal) {
+        modal.remove();
+    }
+};
+
+DataDialogue.createVisualization = () => {
+    try {
+        const xAxis = document.getElementById('categorical-column').value;
+        const yAxis = document.getElementById('numerical-column').value;
+        
+        if (!DataDialogue.currentVisualizationData?.length) {
+            throw new Error('No data available for visualization');
+        }
+
+        // Store current columns for reference
+        DataDialogue.currentColumns = JSON.parse(
+            document.querySelector('.plot-btn').getAttribute('data-columns')
+        );
+
+        const data = DataDialogue.processDataForVisualization(
+            DataDialogue.currentVisualizationData,
+            xAxis,
+            yAxis
+        );
+
+        if (!data?.length) {
+            throw new Error('No valid data after processing');
+        }
+
+        const container = document.createElement('div');
+        container.className = 'visualization-container';
+        
+        const responseElement = document.querySelector('.app-response.sql-agent');
+        responseElement.appendChild(container);
+
+        ReactDOM.render(
+            React.createElement(DataDialogue.BarChart, {
+                data: data,
+                categoricalColumn: xAxis,
+                numericalColumn: yAxis
+            }),
+            container
+        );
+
+        DataDialogue.closeVisualizationModal();
+    } catch (error) {
+        console.error('Error in visualization creation:', error);
+        DataDialogue.closeVisualizationModal();
+        alert(`Error creating visualization: ${error.message}`);
+    }
+};
+
+DataDialogue.processDataForVisualization = (results, xAxis, yAxis) => {
+    console.log('Processing data:', { results, xAxis, yAxis });
+
+    try {
+        // Convert array results to array of objects if necessary
+        const processedResults = results.map(row => {
+            if (Array.isArray(row)) {
+                // Get column indices
+                const xIndex = DataDialogue.currentColumns.indexOf(xAxis);
+                const yIndex = DataDialogue.currentColumns.indexOf(yAxis);
+                
+                if (xIndex === -1 || yIndex === -1) {
+                    throw new Error('Column not found in data');
+                }
+
+                return {
+                    [xAxis]: row[xIndex],
+                    [yAxis]: row[yIndex]
+                };
+            }
+            return row;
+        });
+
+        // Group by x-axis values and sum y-axis values
+        const groupedData = processedResults.reduce((acc, row) => {
+            const key = String(row[xAxis] ?? 'Unknown');
+            const value = Number(row[yAxis]) || 0;
+            
+            if (!acc[key]) {
+                acc[key] = { category: key, value: 0 };
+            }
+            acc[key].value += value;
+            return acc;
+        }, {});
+
+        const chartData = Object.values(groupedData);
+        console.log('Processed chart data:', chartData);
+
+        return chartData;
+    } catch (error) {
+        console.error('Error processing data:', error);
+        throw new Error('Failed to process data for visualization');
+    }
+};
+
+
+DataDialogue.BarChart = function({ data, categoricalColumn, numericalColumn }) {
+    console.log('BarChart props:', { data, categoricalColumn, numericalColumn });
+
+    if (!window.Recharts) {
+        console.error('Recharts library not loaded');
+        return React.createElement('div', { className: 'error-message' },
+            'Visualization library not loaded'
+        );
+    }
+
+    const {
+        BarChart: RechartsBarChart,
+        Bar,
+        XAxis,
+        YAxis,
+        CartesianGrid,
+        Tooltip,
+        ResponsiveContainer
+    } = window.Recharts;
+
+    if (!data?.length) {
+        return React.createElement('div', { className: 'error-message' },
+            'No data available for visualization'
+        );
+    }
+
+    return React.createElement(ResponsiveContainer, { width: "100%", height: "100%" },
+        React.createElement(RechartsBarChart, {
+            data: data,
+            margin: { top: 20, right: 30, left: 40, bottom: 60 }
+        },
+            React.createElement(CartesianGrid, { strokeDasharray: "3 3" }),
+            React.createElement(XAxis, {
+                dataKey: "category",
+                angle: -45,
+                textAnchor: "end",
+                height: 60,
+                interval: 0,
+                label: {
+                    value: categoricalColumn,
+                    position: 'bottom',
+                    offset: 40
+                }
+            }),
+            React.createElement(YAxis, {
+                label: {
+                    value: numericalColumn,
+                    angle: -90,
+                    position: 'left',
+                    offset: -10
+                }
+            }),
+            React.createElement(Tooltip),
+            React.createElement(Bar, {
+                dataKey: "value",
+                fill: "#4ecca3",
+                name: numericalColumn
+            })
+        )
+    );
 };
