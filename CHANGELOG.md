@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.1...v1.2.2) (2024-11-13)
+
+
+### Bug Fixes
+
+* **backend:** Fix missing column_names in model error ([55903e0](https://github.com/ggeop/DataDialogueLLM/commit/55903e04f18df7b5b4a34c2139c56ae11f9fc9b7))
+* **frontend:** Reset forms after successful submission ([c2d2c30](https://github.com/ggeop/DataDialogueLLM/commit/c2d2c300f767f131cdc20df6c48dd4019a424c1f))
+
 ## [1.2.1](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.0...v1.2.1) (2024-11-13)
 
 
