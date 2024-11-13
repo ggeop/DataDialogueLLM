@@ -14,11 +14,13 @@ class DataDialogueAgent:
         self,
         database: DatabaseClient,
         model,
-        model_type: str
+        model_type: str,
+        agent_name: str
     ):
         self.model = model
         self.database = database
         self.model_type = model_type
+        self.name = agent_name
         self.is_sql_relevant = self.database and (self.model_type == AgentType.SQL.value)
         if self.is_sql_relevant:
             self.sql_agent = TextToSQLAgent(model, database)
@@ -26,15 +28,18 @@ class DataDialogueAgent:
             self.sql_agent = None
 
         self._model_name = model.metadata.get('general.name')
-        self.name = f"({self.model_type}) {self._model_name}"
 
     def generate(self, prompt: str) -> DialogueResult:
-        agent_name = self.model.__class__.__name__
 
         if self.sql_agent:
             sql_agent_name = self.sql_agent.__class__.__name__
             sql, data, column_names, error = self.sql_agent.generate(prompt)
-            response = SQLResponse(sql=sql, results=data, column_names=column_names, error=error)
+            response = SQLResponse(
+                sql=sql,
+                results=data,
+                column_names=column_names,
+                error=error
+            )
             agent = sql_agent_name
         else:
             prompt = f"Q: {prompt} A: "
@@ -46,7 +51,7 @@ class DataDialogueAgent:
                 echo=False)
             general_response = model_response['choices'][0]['text'].strip()
             response = GeneralResponse(response=general_response)
-            agent = agent_name
+            agent = self.name
 
         return DialogueResult(
             user_prompt=prompt,

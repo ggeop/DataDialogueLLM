@@ -393,6 +393,7 @@ DataDialogue.submitForm = async () => {
         console.log('Form submitted successfully:', result);
 
         // Update dropdown with new agent
+        // NOTE: The naming convention should be consistent with backend
         const agentName = `(${formData.agentType}) ${formData.modelName}`;
         DataDialogue.elements.dropdownButton.textContent = agentName;
 
