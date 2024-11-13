@@ -138,10 +138,14 @@ class AgentManagerService:
         database = self._configure_database(register_params)
         model = self._load_model(register_params)
 
+        # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
+        agent_name = f'({register_params.agentType}) {register_params.modelName}'
+
         agent = DataDialogueAgent(
             database=database,
             model=model,
-            model_type=register_params.agentType
+            model_type=register_params.agentType,
+            agent_name=agent_name
         )
         self.registered_agents[agent.name] = agent
         logger.info(f"Agent '{agent.name}' has been successfully registered.")
