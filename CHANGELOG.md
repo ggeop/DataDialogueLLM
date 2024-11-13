@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.0...v1.2.1) (2024-11-13)
+
+
+### Bug Fixes
+
+* Agent name parsing ([bdb1492](https://github.com/ggeop/DataDialogueLLM/commit/bdb1492a6b1545eb6c045515fe67cd966a3a734c))
+
 # [1.2.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.1.0...v1.2.0) (2024-11-12)
 
 
