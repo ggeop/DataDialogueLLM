@@ -17,13 +17,24 @@
 
 Data Dialogue is an advanced application that leverages AI to create prompts, retrieve data from various sources, and generate responses using an LLM backend. It's designed to run in Docker and consists of two main services: the LLM backend and the UI.
 
+
+
+
+![UI Screenshot](media/imgs/data_dialogue_steps.png)
+
 ### Demo 👇
-<video src="https://raw.githubusercontent.com/ggeop/ggeop/main/media/video/data_dialogue_short_demo_v1.mp4" controls="controls" width="640" height="360"></video>
+
+Try our demo by clicking the "Try Demo" button. The demo mode loads an open-source DVD database (PostgreSQL) for testing and experimentation. We provide several example prompts to get you started, but you're welcome to create your own custom prompts.
+The system supports both open-source language models from HuggingFace and commercial LLMs (such as Google Gemini).
+
+
+   Google Gemini provides a FREE API [get key](https://aistudio.google.com/app/apikey).
+   If your machine doesn't have enough processing power to run local HuggingFace models effectively, commercial LLMs are a great alternative.
+
+
+[![Data Dialogue Demo!](https://img.youtube.com/vi/breOr5o7r3Y/0.jpg)](https://www.youtube.com/watch?v=breOr5o7r3Y)
 
 ## Features
-
-![UI Screenshot](media/imgs/data_dialogue_agent_responses.png)
-
 - Natural language querying of databases
 - Integration with multiple language models
    - Integration with HuggingFace models
@@ -33,6 +44,8 @@ Data Dialogue is an advanced application that leverages AI to create prompts, re
 - Secure query execution with protection against harmful SQL commands
 - Create validated Queries (+ Copy option)
 - Results Visualization
+
+![UI Screenshot](media/imgs/data_dialogue_agent_responses.png)
 
 ## Table of Contents
 
