@@ -1,4 +1,4 @@
-from app.schemas.base import BaseModel
+from pydantic import BaseModel
 
 
 class Query(BaseModel):

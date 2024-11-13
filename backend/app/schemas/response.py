@@ -1,12 +1,13 @@
 from typing import Any, Optional, Union, List
 
-from app.schemas.base import BaseModel
+from pydantic import BaseModel
+from dataclasses import field
 
 
 class SQLResponse(BaseModel):
     sql: str
     results: Any
-    column_names: List[str]
+    column_names: List[str] = field(default_factory=list)
     error: Optional[str] = None
 
 

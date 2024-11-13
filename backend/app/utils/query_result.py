@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Tuple, Any
 
 
@@ -8,4 +8,4 @@ class QueryResult:
     data: List[Tuple[Any, ...]]
     error_message: str = ""
     affected_rows: int = 0
-    column_names: List[str] = None
+    column_names: List[str] = field(default_factory=list)
