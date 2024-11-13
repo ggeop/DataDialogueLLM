@@ -148,7 +148,44 @@ function setupFormListeners() {
     });
 }
 
-// Update submitDemoForm to handle the new structure
+DataDialogue.resetDemoForm = () => {
+    // Reset model source and related fields
+    const modelFields = {
+        'demoModelSource': '',
+        'demoRepoId': '',
+        'demoToken': '',
+        'googleModelName': '',
+        'huggingfaceModelName': '',
+        'googleCustomModel': '',
+        'huggingfaceCustomModel': ''
+    };
+
+    Object.entries(modelFields).forEach(([id, defaultValue]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = defaultValue;
+        }
+    });
+
+    // Hide conditional sections
+    const sectionsToHide = [
+        'googleModels',
+        'huggingfaceModels',
+        'googleCustomDiv',
+        'huggingfaceCustomDiv',
+        'demoRepoIdGroup',
+        'tokenGroup'
+    ];
+
+    sectionsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.classList.add('initially-hidden');
+        }
+    });
+};
+
+
 DataDialogue.submitDemoForm = async () => {
     const modelSource = document.getElementById('demoModelSource').value;
     if (!modelSource) {
@@ -221,6 +258,7 @@ DataDialogue.submitDemoForm = async () => {
         DataDialogue.elements.dropdownButton.textContent = agentName;
 
         DataDialogue.hideFormLoadingAnimation();
+        DataDialogue.resetDemoForm();
         DataDialogue.closeDemoForm();
         DataDialogue.showExampleSection();
     } catch (error) {
@@ -325,6 +363,44 @@ DataDialogue.closeRegisterForm = () => {
     if (tryDemoContainer) tryDemoContainer.style.display = 'block';
 };
 
+DataDialogue.resetDemoForm = () => {
+    // Reset model source and related fields
+    const modelFields = {
+        'demoModelSource': '',
+        'demoRepoId': '',
+        'demoToken': '',
+        'googleModelName': '',
+        'huggingfaceModelName': '',
+        'googleCustomModel': '',
+        'huggingfaceCustomModel': ''
+    };
+
+    Object.entries(modelFields).forEach(([id, defaultValue]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = defaultValue;
+        }
+    });
+
+    // Hide conditional sections
+    const sectionsToHide = [
+        'googleModels',
+        'huggingfaceModels',
+        'googleCustomDiv',
+        'huggingfaceCustomDiv',
+        'demoRepoIdGroup',
+        'tokenGroup'
+    ];
+
+    sectionsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.classList.add('initially-hidden');
+        }
+    });
+};
+
+
 DataDialogue.submitForm = async () => {
     const agentType = document.getElementById('agentType').value;
     const modelSource = document.getElementById('modelSource').value;
@@ -398,6 +474,7 @@ DataDialogue.submitForm = async () => {
         DataDialogue.elements.dropdownButton.textContent = agentName;
 
         DataDialogue.hideFormLoadingAnimation();
+        DataDialogue.resetRegisterForm();
         DataDialogue.closeRegisterForm();
     } catch (error) {
         console.error('Error submitting form:', error);
