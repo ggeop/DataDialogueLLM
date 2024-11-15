@@ -9,6 +9,7 @@ DataDialogue.init = () => {
     DataDialogue.renderExampleSection();
     DataDialogue.fetchAgentList();
     DataDialogue.hideExampleSection();
+    DataDialogue.initializeMessageSystem();
     console.log('Data Dialogue initialized successfully');
 };
 

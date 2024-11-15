@@ -114,12 +114,12 @@ DataDialogue.submitForm = async () => {
     const modelSource = document.getElementById('modelSource').value;
     
     if (!agentType) {
-        alert('Please select an agent type');
+        DataDialogue.showMessage('Please select an agent type');
         return;
     }
 
     if (!modelSource) {
-        alert('Please select a model source');
+        DataDialogue.showMessage('Please select a model source');
         return;
     }
 
@@ -136,7 +136,7 @@ DataDialogue.submitForm = async () => {
         // LLM Model
         modelSource: modelSource,
         repoID: document.getElementById('repoId')?.value || '',
-        modelFormat: document.getElementById('ModelFormat')?.value || '', // e.g gguf
+        modelFormat: document.getElementById('ModelFormat')?.value || '',
         modelName: document.getElementById('modelName')?.value || '',
         token: document.getElementById('token')?.value || ''
     };
@@ -144,18 +144,18 @@ DataDialogue.submitForm = async () => {
     // Validate required fields based on agent type and model source
     if (agentType === 'SQL') {
         if (!formData.dbname || !formData.username || !formData.host || !formData.port) {
-            alert('Please fill in all required database fields');
+            DataDialogue.showMessage('Please fill in all required database fields');
             return;
         }
     }
     
     if (!formData.modelName) {
-        alert('Please enter a model name');
+        DataDialogue.showMessage('Please enter a model name');
         return;
     }
 
     if (modelSource === 'huggingface' && !formData.repoID) {
-        alert('Please enter a repository ID');
+        DataDialogue.showMessage('Please enter a repository ID');
         return;
     }
 
@@ -176,8 +176,6 @@ DataDialogue.submitForm = async () => {
         const result = await response.json();
         console.log('Form submitted successfully:', result);
 
-        // Update dropdown with new agent
-        // NOTE: The naming convention should be consistent with backend
         const agentName = `(${formData.agentType}) ${formData.modelName}`;
         DataDialogue.elements.dropdownButton.textContent = agentName;
 
@@ -186,11 +184,8 @@ DataDialogue.submitForm = async () => {
         DataDialogue.closeRegisterForm();
     } catch (error) {
         console.error('Error submitting form:', error);
-        const loadingMessage = document.querySelector('.loading-message');
-        if (loadingMessage) {
-            loadingMessage.textContent = `Error registering new Agent: ${error.message}`;
-        }
-        setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
+        DataDialogue.hideFormLoadingAnimation();
+        DataDialogue.showMessage(`Error registering new Agent: ${error.message}`);
     }
 };
 

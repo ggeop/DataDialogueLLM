@@ -93,6 +93,58 @@ img, video, iframe {
     align-items: center;
 }
 
+
+/* Error Message */
+.message-overlay {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    background-color: #ef4444;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    min-width: 300px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.message-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.message-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.message-text {
+    margin-right: 16px;
+    font-size: 14px;
+}
+
+.message-close {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.message-close:hover {
+    opacity: 1;
+}
+
 .dot {
     width: 8px;
     height: 8px;

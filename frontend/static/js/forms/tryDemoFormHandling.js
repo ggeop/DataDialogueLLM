@@ -102,7 +102,7 @@ function setupFormListeners() {
 DataDialogue.submitDemoForm = async () => {
     const modelSource = document.getElementById('demoModelSource').value;
     if (!modelSource) {
-        alert('Please select a model source');
+        DataDialogue.showMessage('Please select a model source');
         return;
     }
 
@@ -121,13 +121,13 @@ DataDialogue.submitDemoForm = async () => {
         repoID = document.getElementById('demoRepoId').value;
         
         if (!repoID) {
-            alert('Please enter a repository ID');
+            DataDialogue.showMessage('Please enter a repository ID');
             return;
         }
     }
 
     if (!modelName) {
-        alert('Please select or enter a model name');
+        DataDialogue.showMessage('Please select or enter a model name');
         return;
     }
 
@@ -166,7 +166,6 @@ DataDialogue.submitDemoForm = async () => {
         const result = await response.json();
         console.log('Demo form submitted successfully:', result);
 
-        // Update dropdown with new agent
         const agentName = `(${formData.agentType}) ${formData.modelName}`;
         DataDialogue.elements.dropdownButton.textContent = agentName;
 
@@ -176,11 +175,8 @@ DataDialogue.submitDemoForm = async () => {
         DataDialogue.showExampleSection();
     } catch (error) {
         console.error('Error submitting form:', error);
-        const loadingMessage = document.querySelector('.loading-message');
-        if (loadingMessage) {
-            loadingMessage.textContent = `Error registering Demo Agent: ${error.message}`;
-        }
-        setTimeout(DataDialogue.hideFormLoadingAnimation, 2000);
+        DataDialogue.hideFormLoadingAnimation();
+        DataDialogue.showMessage(`Error registering Demo Agent: ${error.message}`);
     }
 };
 
