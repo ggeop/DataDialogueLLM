@@ -5,12 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('ComponentLoader: DOMContentLoaded event fired');
     const componentPromises = [
         loadComponent('header-component', 'header'),
-        loadComponent('register-form-component', 'register_form', 'forms'),
-        loadComponent('demo-form-component', 'demo_form', 'forms'),
-        loadComponent('question-input-component', 'question_input'),
         loadComponent('loading-indicator-component', 'loading_indicator'),
-        loadComponent('conversations-component', 'conversations'),
-        loadComponent('example-section-component', 'demo_examples')
+        loadComponent('example-section-component', 'demo_examples'),
+        loadComponent('question-input-component', 'question_input', 'conversation'),
+        loadComponent('conversations-component', 'conversations', 'conversation'),
+        loadComponent('register-form-component', 'register_form', 'forms'),
+        loadComponent('demo-form-component', 'demo_form', 'forms')
     ];
 
     Promise.all(componentPromises)
