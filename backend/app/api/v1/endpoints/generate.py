@@ -1,9 +1,5 @@
 import logging
-from fastapi import (
-    APIRouter,
-    HTTPException,
-    status
-)
+from fastapi import APIRouter, HTTPException, status
 
 from app.schemas import Query, DialogueResult
 from app.services.agents.agent_manager import agent_manager_service
@@ -23,5 +19,5 @@ async def generate_text(query: Query):
     except Exception as e:
         logger.error(f"Failed with error {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e))
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )

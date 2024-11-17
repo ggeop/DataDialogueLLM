@@ -19,5 +19,7 @@ class DatabaseClient(ABC):
         pass
 
     @abstractmethod
-    def execute_query(self, sql: str, parameters: Optional[Tuple[Any, ...]] = None) -> QueryResult:
+    def execute_query(
+        self, sql: str, parameters: Optional[Tuple[Any, ...]] = None
+    ) -> QueryResult:
         pass

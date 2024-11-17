@@ -8,7 +8,13 @@ from .utils import logger
 
 class ModelDownloader(ABC):
     @abstractmethod
-    def download(self, repo_id: str, save_path: str, force: bool = False, model_name: Optional[str] = None) -> str:
+    def download(
+        self,
+        repo_id: str,
+        save_path: str,
+        force: bool = False,
+        model_name: Optional[str] = None,
+    ) -> str:
         """
         Abstract method to download a model.
 
@@ -37,7 +43,13 @@ class HuggingFaceDownloader(ModelDownloader):
         else:
             self.auth = None
 
-    def download(self, repo_id: str, save_path: str, force: bool = False, model_name: Optional[str] = None) -> str:
+    def download(
+        self,
+        repo_id: str,
+        save_path: str,
+        force: bool = False,
+        model_name: Optional[str] = None,
+    ) -> str:
         """
         Download a model from HuggingFace.
 
@@ -60,11 +72,13 @@ class HuggingFaceDownloader(ModelDownloader):
                 filename=model_name,
                 local_dir=save_path,
                 force_download=force,
-                token=token
+                token=token,
             )
         except Exception as e:
             if token is None:
-                logger.warning(f"Download failed. This might be due to missing authentication. Error: {e}")
+                logger.warning(
+                    f"Download failed. This might be due to missing authentication. Error: {e}"
+                )
             else:
                 logger.error(f"Download failed. Error: {e}")
             raise

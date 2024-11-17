@@ -11,14 +11,14 @@ class SQLiteClient(DatabaseClient):
     def __init__(self, db_path: str):
         self.db_path = db_path
         self.connection = None
-        if self.db_path == ':memory:':
-            self.connection = sqlite3.connect(':memory:')
+        if self.db_path == ":memory:":
+            self.connection = sqlite3.connect(":memory:")
         self.blacklist = [
-            r'\bDROP\s+TABLE\b',
-            r'\bDELETE\s+FROM\b',
-            r'\bDROP\s+DATABASE\b',
-            r'\bTRUNCATE\s+TABLE\b',
-            r'\bALTER\s+TABLE\b.*\bDROP\b',
+            r"\bDROP\s+TABLE\b",
+            r"\bDELETE\s+FROM\b",
+            r"\bDROP\s+DATABASE\b",
+            r"\bTRUNCATE\s+TABLE\b",
+            r"\bALTER\s+TABLE\b.*\bDROP\b",
         ]
 
     @property
@@ -71,7 +71,9 @@ class SQLiteClient(DatabaseClient):
                     col_type = col[2]
                     is_nullable = "NULL" if col[3] == 0 else "NOT NULL"
                     is_pk = "PRIMARY KEY" if col[5] == 1 else ""
-                    schema.append(f"  - {col_name} ({col_type}) {is_nullable} {is_pk}".strip())
+                    schema.append(
+                        f"  - {col_name} ({col_type}) {is_nullable} {is_pk}".strip()
+                    )
 
                 # Get foreign key information
                 cursor.execute(f"PRAGMA foreign_key_list('{table_name}');")
@@ -89,12 +91,14 @@ class SQLiteClient(DatabaseClient):
 
             return "\n".join(schema)
 
-    def execute_query(self, sql: str, parameters: Optional[Tuple[Any, ...]] = None) -> QueryResult:
+    def execute_query(
+        self, sql: str, parameters: Optional[Tuple[Any, ...]] = None
+    ) -> QueryResult:
         if self._check_blacklist(sql):
             return QueryResult(
                 success=False,
                 data=[],
-                error_message="Query contains blacklisted commands"
+                error_message="Query contains blacklisted commands",
             )
 
         with self.get_connection() as conn:
@@ -107,26 +111,22 @@ class SQLiteClient(DatabaseClient):
 
                 if sql.strip().upper().startswith("SELECT"):
                     data = cursor.fetchall()
-                    column_names = [description[0] for description in cursor.description]
+                    column_names = [
+                        description[0] for description in cursor.description
+                    ]
                     return QueryResult(
                         success=True,
                         data=data,
                         affected_rows=len(data),
-                        column_names=column_names
+                        column_names=column_names,
                     )
                 else:
                     conn.commit()
                     return QueryResult(
-                        success=True,
-                        data=[],
-                        affected_rows=cursor.rowcount
+                        success=True, data=[], affected_rows=cursor.rowcount
                     )
             except sqlite3.Error as e:
-                return QueryResult(
-                    success=False,
-                    data=[],
-                    error_message=str(e)
-                )
+                return QueryResult(success=False, data=[], error_message=str(e))
 
     def close(self):
         if self.connection:

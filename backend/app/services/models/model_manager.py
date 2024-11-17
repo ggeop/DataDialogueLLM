@@ -33,7 +33,9 @@ class ModelManager:
         """
         self.loaders[format_name] = loader
 
-    def register_downloader(self, source_name: str, downloader: ModelDownloader) -> None:
+    def register_downloader(
+        self, source_name: str, downloader: ModelDownloader
+    ) -> None:
         """
         Register a new model downloader.
 
@@ -43,13 +45,15 @@ class ModelManager:
         """
         self.downloaders[source_name] = downloader
 
-    def load_model(self,
-                   repo_id: str,
-                   model_name: str,
-                   model_format: str,
-                   source: str = "huggingface",
-                   force_download: bool = False,
-                   **kwargs) -> Any:
+    def load_model(
+        self,
+        repo_id: str,
+        model_name: str,
+        model_format: str,
+        source: str = "huggingface",
+        force_download: bool = False,
+        **kwargs,
+    ) -> Any:
         """
         Load a model using the appropriate loader.
 
@@ -68,7 +72,9 @@ class ModelManager:
             ValueError: If the model format is not supported or the source is invalid
         """
         if source not in self.loaders:
-            raise ValueError(f"Unsupported model loader: {source}. Register model loaders: {self.loaders}")
+            raise ValueError(
+                f"Unsupported model loader: {source}. Register model loaders: {self.loaders}"
+            )
 
         model_key = f"{source}/{repo_id}/{model_name}"
         logger.info(f"Load model key {model_key}")
@@ -90,7 +96,7 @@ class ModelManager:
                     file_manager=self.file_manager,
                     downloader=self.downloaders.get(source),
                     force_download=force_download,
-                    **kwargs
+                    **kwargs,
                 )
 
                 self.models[model_key] = loaded_model
@@ -101,11 +107,13 @@ class ModelManager:
                 logger.error(f"Failed to load model {model_key}: {e}")
                 raise
 
-    def download_model(self,
-                       repo_id: str,
-                       source: str = "huggingface",
-                       force: bool = False,
-                       model_name: Optional[str] = None) -> str:
+    def download_model(
+        self,
+        repo_id: str,
+        source: str = "huggingface",
+        force: bool = False,
+        model_name: Optional[str] = None,
+    ) -> str:
         """
         Download a model using the appropriate downloader.
 
@@ -127,13 +135,17 @@ class ModelManager:
         save_path = self.file_manager.get_model_path(repo_id, model_name, source)
 
         if not force and self.file_manager.model_exists(repo_id, source, model_name):
-            logger.info(f"Model {repo_id} {'file ' + model_name if model_name else ''} already exists. Use force=True to re-download.")
+            logger.info(
+                f"Model {repo_id} {'file ' + model_name if model_name else ''} already exists. Use force=True to re-download."
+            )
             return save_path
 
         try:
             downloader = self.downloaders[source]
             model_path = downloader.download(repo_id, save_path, force, model_name)
-            logger.info(f"Model {repo_id} {'file ' + model_name if model_name else ''} downloaded successfully.")
+            logger.info(
+                f"Model {repo_id} {'file ' + model_name if model_name else ''} downloaded successfully."
+            )
             return model_path
         except Exception as e:
             logger.error(f"Failed to download model {repo_id}: {e}")
@@ -143,7 +155,9 @@ class ModelManager:
         """Clear all cached models."""
         self.models.clear()
 
-    def get_model_info(self, repo_id: str, source: str = "huggingface") -> Dict[str, Any]:
+    def get_model_info(
+        self, repo_id: str, source: str = "huggingface"
+    ) -> Dict[str, Any]:
         """Get information about a model."""
         return self.file_manager.get_model_info(repo_id, source)
 

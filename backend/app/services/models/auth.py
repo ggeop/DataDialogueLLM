@@ -22,7 +22,9 @@ class HuggingFaceAuth:
             bool: True if token is valid, False otherwise.
         """
         if not self.token:
-            logger.warning("No Hugging Face token provided. Some operations may be restricted.")
+            logger.warning(
+                "No Hugging Face token provided. Some operations may be restricted."
+            )
             return False
         try:
             self.api.whoami()
