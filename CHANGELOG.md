@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.2...v1.3.0) (2024-11-17)
+
+
+### Bug Fixes
+
+* Register model animation + loading messages in logs ([6112b3b](https://github.com/ggeop/DataDialogueLLM/commit/6112b3bf64f19f5e66d19005b665af8db0695eeb))
+
+
+### Features
+
+* **frontend:** Add error message in form submission error ([08581a4](https://github.com/ggeop/DataDialogueLLM/commit/08581a46bb0ee2ee945e34186c3b62f894cf0619))
+* **frontend:** Add model icons ([a9243c2](https://github.com/ggeop/DataDialogueLLM/commit/a9243c265cb178a5ef1ddf70a967687fa29acf97))
+* **frontend:** Create custom confirm popup box ([11b9a1f](https://github.com/ggeop/DataDialogueLLM/commit/11b9a1f6c990f365ca7627ca4c77b20887b9bafb))
+* **frontend:** Create custom confirmation cancel box ([796dbd7](https://github.com/ggeop/DataDialogueLLM/commit/796dbd734b2f79bcc51ef6ad594536d8d0d60159))
+
 ## [1.2.2](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.1...v1.2.2) (2024-11-13)
 
 
