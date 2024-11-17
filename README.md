@@ -152,10 +152,6 @@ data-dialogue/
 └── README.md
 ```
 
-## License
-
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
-
 ## 🤝 Contributing
 
 Your feedback and contributions make DataDialogue better! If you have:
@@ -165,7 +161,11 @@ Your feedback and contributions make DataDialogue better! If you have:
 
 Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
 
-## Support and Community
+## ♥️ Support and Community
 
 - Report issues via [GitHub Issues](https://github.com/ggeop/DataDialogueLLM/issues)
 - Join our community discussions [here](https://github.com/ggeop/DataDialogueLLM/discussions)
+
+## License
+
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
