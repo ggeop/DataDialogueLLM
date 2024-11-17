@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 
 from app.schemas import RegisterAgent
-from app.services.agent_manager import agent_manager_service
+from app.services.agents.agent_manager import agent_manager_service
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
