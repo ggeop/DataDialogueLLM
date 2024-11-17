@@ -1,3 +1,4 @@
+
 DataDialogue.toggleDropdown = async (event) => {
     event.stopPropagation();
     if (!DataDialogue.isDropdownOpen) {
@@ -70,6 +71,67 @@ DataDialogue.fetchAgentList = async () => {
     }
 };
 
+DataDialogue.initConfirmDialog = () => {
+    const confirmHtml = `
+        <div class="confirm-dialog">
+            <div class="confirm-dialog-title">Confirm Delete</div>
+            <div class="confirm-dialog-message"></div>
+            <div class="confirm-dialog-buttons">
+                <button class="confirm-dialog-button confirm-dialog-cancel">Cancel</button>
+                <button class="confirm-dialog-button confirm-dialog-confirm">Delete</button>
+            </div>
+        </div>
+    `;
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'confirm-dialog-overlay';
+    overlay.style.display = 'none';
+    overlay.innerHTML = confirmHtml;
+    document.body.appendChild(overlay);
+    
+    // Cache the elements
+    DataDialogue.elements.confirmDialog = overlay;
+    DataDialogue.elements.confirmMessage = overlay.querySelector('.confirm-dialog-message');
+    DataDialogue.elements.confirmCancelBtn = overlay.querySelector('.confirm-dialog-cancel');
+    DataDialogue.elements.confirmConfirmBtn = overlay.querySelector('.confirm-dialog-confirm');
+};
+
+DataDialogue.createConfirmDialog = (message) => {
+    return new Promise((resolve) => {
+        const { confirmDialog, confirmMessage, confirmCancelBtn, confirmConfirmBtn } = DataDialogue.elements;
+        
+        // Update message
+        confirmMessage.textContent = message;
+        
+        // Show dialog
+        confirmDialog.style.display = 'flex';
+        // Use the same animation class pattern you use elsewhere
+        confirmDialog.classList.add('fade-in-up');
+        
+        const closeDialog = (result) => {
+            confirmDialog.classList.remove('fade-in-up');
+            confirmDialog.style.display = 'none';
+            resolve(result);
+        };
+        
+        // Setup one-time event listeners
+        const cancelHandler = () => {
+            confirmCancelBtn.removeEventListener('click', cancelHandler);
+            confirmConfirmBtn.removeEventListener('click', confirmHandler);
+            closeDialog(false);
+        };
+        
+        const confirmHandler = () => {
+            confirmCancelBtn.removeEventListener('click', cancelHandler);
+            confirmConfirmBtn.removeEventListener('click', confirmHandler);
+            closeDialog(true);
+        };
+        
+        confirmCancelBtn.addEventListener('click', cancelHandler);
+        confirmConfirmBtn.addEventListener('click', confirmHandler);
+    });
+};
+
 DataDialogue.populateAgentList = (agents) => {
     const { dropdownList, dropdownButton } = DataDialogue.elements;
     dropdownList.innerHTML = ''; // Clear existing options
@@ -106,7 +168,11 @@ DataDialogue.populateAgentList = (agents) => {
             deleteBtn.addEventListener('click', async (e) => {
                 e.stopPropagation(); // Prevent dropdown item selection
                 
-                if (confirm(`Are you sure you want to delete agent "${agent}"?`)) {
+                const confirmed = await DataDialogue.createConfirmDialog(
+                    `Are you sure you want to delete agent "${agent}"?`
+                );
+                
+                if (confirmed) {
                     try {
                         const encodedAgent = encodeURIComponent(encodeURIComponent(agent));
                         const response = await fetch(`http://localhost:8000/api/v1/agents/${encodedAgent}`, {

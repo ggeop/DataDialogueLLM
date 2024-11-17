@@ -20,22 +20,28 @@
           </a>
         </p>
       </div>
-      <form id="demoForm">
-        <div class="form-group">
-          <label for="demoModelSource">Model Source</label>
-          <select id="demoModelSource" name="modelSource">
-              <option value="">Select source...</option>
-              <option value="google">🌐 Google Cloud AI</option>
-              <option value="huggingface">🤗 Hugging Face</option>
-          </select>
+
+      <div class="form-group">
+        <label>Model Source:</label>
+        <div class="select-with-icon">
+            <div class="model-icon">
+                <img src="{{ url_for('static', filename='images/google-logo.png') }}" alt="Google" data-source="google" class="source-icon">
+                <img src="{{ url_for('static', filename='images/hf-logo.png') }}" alt="Hugging Face" data-source="huggingface" class="source-icon">
+            </div>
+            <select id="demoModelSource" name="modelSource">
+                <option value="">Select source...</option>
+                <option value="google">Google Cloud AI (Suggested)</option>
+                <option value="huggingface">Hugging Face</option>
+            </select>
+        </div>
       </div>
       
       <div id="googleModels" class="form-group initially-hidden">
           <label for="googleModelName">Google Model</label>
           <select id="googleModelName" name="googleModelName">
               <option value="">Select model...</option>
+              <option value="models/gemini-pro">gemini-pro (Suggested)</option>
               <option value="models/gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
-              <option value="models/gemini-pro">gemini-pro</option>
               <option value="models/gemini-1.5-flash">gemini-1.5-flash</option>
               <option value="models/gemini-1.5-flash-8b">gemini-1.5-flash-8b</option>
               <option value="custom">Custom Model...</option>
@@ -54,12 +60,13 @@
           <label for="huggingfaceModelName">Hugging Face Model</label>
           <select id="huggingfaceModelName" name="huggingfaceModelName">
               <option value="">Select model...</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q8_0.gguf">Meta-Llama-3.1-8B-Instruct-Q8_0      (8.54GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q6_K.gguf">Meta-Llama-3.1-8B-Instruct-Q6_K      (6.60GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf">Meta-Llama-3.1-8B-Instruct-Q5_K_M  (5.73GB)</option>
+              <option value="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf">Meta-Llama-3.1-8B-Instruct-Q4_K_M (4.92GB)</option>
               <option value="Meta-Llama-3.1-8B-Instruct-IQ4_XS.gguf">Meta-Llama-3.1-8B-Instruct-IQ4_XS  (4.45GB)</option>
               <option value="Meta-Llama-3.1-8B-Instruct-Q3_K_L.gguf">Meta-Llama-3.1-8B-Instruct-Q3_K_L  (4.32GB)</option>
-              <option value="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf">Meta-Llama-3.1-8B-Instruct-Q4_K_M (4.92GB)</option>
-              <option value="Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf">Meta-Llama-3.1-8B-Instruct-Q5_K_M  (5.73GB)</option>
-              <option value="Meta-Llama-3.1-8B-Instruct-Q6_K.gguf">Meta-Llama-3.1-8B-Instruct-Q6_K      (6.60GB)</option>
-              <option value="Meta-Llama-3.1-8B-Instruct-Q8_0.gguf">Meta-Llama-3.1-8B-Instruct-Q8_0      (8.54GB)</option>
+  
               <option value="custom">Custom Model...</option>
           </select>
           <div id="huggingfaceCustomDiv" class="form-group initially-hidden">

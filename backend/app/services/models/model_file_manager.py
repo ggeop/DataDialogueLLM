@@ -19,7 +19,21 @@ class ModelFileManager:
         """
         self.base_path = base_path
 
-    def model_exists(self, repo_id: str, source: str = "huggingface", model_name: Optional[str] = None) -> bool:
+    def get_model_path(self, repo_id: str, model_name: str, source: str = "huggingface") -> str:
+        """
+        Get the path to a model file.
+
+        Args:
+            repo_id (str): Repository ID.
+            model_name (Optional[str]): Model name.
+            source (str): Source of the model (default is "huggingface").
+
+        Returns:
+            str: Path to the model file.
+        """
+        return os.path.join(self.base_path, source, repo_id, model_name)
+
+    def model_exists(self, repo_id: str, model_name: str, source: str = "huggingface") -> bool:
         """
         Check if a model file exists.
 
@@ -31,32 +45,10 @@ class ModelFileManager:
         Returns:
             bool: True if the model file exists, False otherwise.
         """
-        model_path = os.path.join(self.base_path, source, repo_id)
-        if model_name:
-            return os.path.exists(os.path.join(model_path, model_name))
+        model_path = self.get_model_path(source, repo_id, model_name)
         return os.path.exists(model_path)
 
-    def get_model_path(self, repo_id: str, model_name: str, source: str = "huggingface") -> str:
-        """
-        Get the path to a model file.
-
-        Args:
-            repo_id (str): Repository ID.
-            model_name (str): Model name.
-            source (str): Source of the model (default is "huggingface").
-
-        Returns:
-            str: Path to the model file.
-
-        Raises:
-            FileNotFoundError: If the model file is not found.
-        """
-        model_path = os.path.join(self.base_path, source, repo_id, model_name)
-        if not os.path.exists(model_path):
-            raise FileNotFoundError(f"Model file for Repo ID {repo_id} from source {source} not found.")
-        return model_path
-
-    def delete_model(self, repo_id: str, source: str = "huggingface") -> None:
+    def delete_model(self, repo_id: str, model_name: str, source: str = "huggingface") -> None:
         """
         Delete a model file.
 
@@ -64,7 +56,7 @@ class ModelFileManager:
             repo_id (str): Repository ID.
             source (str): Source of the model (default is "huggingface").
         """
-        model_path = os.path.join(self.base_path, source, repo_id)
+        model_path = self.get_model_path(source, repo_id, model_name)
         if os.path.exists(model_path):
             shutil.rmtree(model_path)
             logger.info(f"Model files for Repo ID {repo_id} deleted successfully.")
@@ -93,7 +85,7 @@ class ModelFileManager:
                     models.extend([f"{src}/{model}" for model in os.listdir(src_path)])
         return models
 
-    def get_model_info(self, repo_id: str, source: str = "huggingface") -> Dict[str, Any]:
+    def get_model_info(self, repo_id: str, model_name: str, source: str = "huggingface") -> Dict[str, Any]:
         """
         Get information about a model file.
 
@@ -104,7 +96,7 @@ class ModelFileManager:
         Returns:
             Dict[str, Any]: Dictionary containing model file information.
         """
-        model_path = os.path.join(self.base_path, source, repo_id)
+        model_path = self.get_model_path(source, repo_id, model_name)
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model files for Repo ID {repo_id} from source {source} not found.")
 
@@ -116,7 +108,7 @@ class ModelFileManager:
             "last_modified": os.path.getmtime(model_path)
         }
 
-    def get_model_size(self, repo_id: str, source: str = "huggingface") -> int:
+    def get_model_size(self, repo_id: str, model_name: str, source: str = "huggingface") -> int:
         """
         Get the size of a model's files.
 
@@ -127,38 +119,10 @@ class ModelFileManager:
         Returns:
             int: Size of the model files in bytes.
         """
-        model_path = os.path.join(self.base_path, source, repo_id)
+        model_path = self.get_model_path(source, repo_id, model_name)
         return sum(os.path.getsize(os.path.join(dirpath, filename))
                    for dirpath, _, filenames in os.walk(model_path)
                    for filename in filenames)
-
-    def rename_model(self, old_name: str, new_name: str, source: str = "huggingface") -> None:
-        """
-        Rename a model's directory.
-
-        Args:
-            old_name (str): Current name of the model directory.
-            new_name (str): New name for the model directory.
-            source (str): Source of the model (default is "huggingface").
-        """
-        old_path = os.path.join(self.base_path, source, old_name)
-        new_path = os.path.join(self.base_path, source, new_name)
-        os.rename(old_path, new_path)
-        logger.info(f"Model directory renamed from {old_name} to {new_name}")
-
-    def copy_model(self, repo_id: str, new_name: str, source: str = "huggingface") -> None:
-        """
-        Copy a model's files.
-
-        Args:
-            repo_id (str): Repository ID of the model to copy.
-            new_name (str): Name for the new copy.
-            source (str): Source of the model (default is "huggingface").
-        """
-        src_path = os.path.join(self.base_path, source, repo_id)
-        dst_path = os.path.join(self.base_path, source, new_name)
-        shutil.copytree(src_path, dst_path)
-        logger.info(f"Model files for Repo ID {repo_id} copied to {new_name}")
 
     def get_total_size(self) -> int:
         """

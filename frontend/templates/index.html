@@ -15,14 +15,15 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/question-input.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/table.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/plot.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/demo-examples.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/response-styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/demo-form.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation/question-input.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation/conversations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation/response-styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms/form-common.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms/try-demo-form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forms/register-form.css') }}">
 </head>
 <body>
     <div class="content-wrapper">
@@ -58,10 +59,14 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/componentLoader.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/queryHandling.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/responseRendering.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/conversation/questionInputHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/conversation/responseRendering.js') }}"></script>
     <script src="{{ url_for('static', filename='js/demoExamplesHandling.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/formsHandling.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/forms/commonFormFunctions.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/forms/registerFormHandling.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/forms/tryDemoFormHandling.js') }}"></script>
+
     <script src="{{ url_for('static', filename='js/agentsDropdownHandling.js') }}"></script>
     <script src="{{ url_for('static', filename='js/menuHandling.js') }}"></script>
     <script src="{{ url_for('static', filename='js/uiHandlers.js') }}"></script>

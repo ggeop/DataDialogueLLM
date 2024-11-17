@@ -3,8 +3,8 @@ from typing import Dict, List
 
 from app.clients.db import PostgresClient
 from app.schemas import RegisterAgent
-from app.agents.data_dialogue_agent import DataDialogueAgent
-from app.services.model_management import ModelManager
+from app.services.agents.data_dialogue_agent import DataDialogueAgent
+from app.services.models import ModelManager
 from app.core.config import settings
 from app.core.model_type import AgentType
 
@@ -39,6 +39,55 @@ class AgentManagerService:
         """
         self.registered_agents: Dict[str, DataDialogueAgent] = {}
         self.model_manager = ModelManager(base_path=settings.MODELS_BASE_PATH)
+
+    def register_agent(self, register_params: RegisterAgent):
+        """
+        Register a new agent based on the provided parameters.
+
+        This method validates the model type, configures the database (if applicable),
+        loads the model, and creates a new DataDialogueAgent instance.
+
+        Args:
+            register_params (RegisterAgent): Parameters for registering the agent.
+
+        Raises:
+            ValueError: If the model type is not supported or the source type is invalid.
+
+        Example:
+            params = RegisterAgent(
+                agentType="SQL",
+                sourceType="postgresql",
+                dbname="mydb",
+                username="user",
+                password="pass",
+                host="localhost",
+                port="5432",
+                repoID="myrepo",
+                modelName="mymodel"
+            )
+            try:
+                service.register_agent(params)
+                print("Agent successfully registered.")
+            except ValueError as e:
+                print(f"Error: {e}")
+        """
+        logger.info(f"Attempting to register agent with params: {register_params}")
+
+        self._validate_model_type(register_params.agentType)
+        database = self._configure_database(register_params)
+        model = self._load_model(register_params)
+
+        # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
+        agent_name = f'({register_params.agentType}) {register_params.modelName}'
+
+        agent = DataDialogueAgent(
+            database=database,
+            model=model,
+            model_type=register_params.agentType,
+            agent_name=agent_name
+        )
+        self.registered_agents[agent.name] = agent
+        logger.info(f"Agent '{agent.name}' has been successfully registered.")
 
     def get_agents(self) -> List[str]:
         """
@@ -100,55 +149,6 @@ class AgentManagerService:
             raise ValueError(f"Cannot delete '{agent_name}'. Registered agents are: {valid_agents}")
         del self.registered_agents[agent_name]
         logger.info(f"Agent '{agent_name}' has been successfully deleted.")
-
-    def register_agent(self, register_params: RegisterAgent):
-        """
-        Register a new agent based on the provided parameters.
-
-        This method validates the model type, configures the database (if applicable),
-        loads the model, and creates a new DataDialogueAgent instance.
-
-        Args:
-            register_params (RegisterAgent): Parameters for registering the agent.
-
-        Raises:
-            ValueError: If the model type is not supported or the source type is invalid.
-
-        Example:
-            params = RegisterAgent(
-                agentType="SQL",
-                sourceType="postgresql",
-                dbname="mydb",
-                username="user",
-                password="pass",
-                host="localhost",
-                port="5432",
-                repoID="myrepo",
-                modelName="mymodel"
-            )
-            try:
-                service.register_agent(params)
-                print("Agent successfully registered.")
-            except ValueError as e:
-                print(f"Error: {e}")
-        """
-        logger.info(f"Attempting to register agent with params: {register_params}")
-
-        self._validate_model_type(register_params.agentType)
-        database = self._configure_database(register_params)
-        model = self._load_model(register_params)
-
-        # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
-        agent_name = f'({register_params.agentType}) {register_params.modelName}'
-
-        agent = DataDialogueAgent(
-            database=database,
-            model=model,
-            model_type=register_params.agentType,
-            agent_name=agent_name
-        )
-        self.registered_agents[agent.name] = agent
-        logger.info(f"Agent '{agent.name}' has been successfully registered.")
 
     def _is_registered(self, agent_name: str) -> bool:
         """
@@ -226,12 +226,31 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
+        from ..models.models import GoogleAILoader, LlamaGGUFLoader
+        from ..models.downloader import HuggingFaceDownloader
+
+        if register_params.modelSource == "google":
+            self.model_manager.register_loader("google", GoogleAILoader(api_key=register_params.token))
+        elif register_params.modelSource == "huggingface":
+            if register_params.modelFormat == "gguf":
+                self.model_manager.register_loader(
+                    "huggingface",
+                    LlamaGGUFLoader()
+                )
+                self.model_manager.register_downloader(
+                    "huggingface",
+                    HuggingFaceDownloader(token=register_params.token)
+                )
+            else:
+                raise Exception(f"Not known `modelFormat`: {register_params.modelFormat}")
+        else:
+            raise Exception(f"Not known `modelSource`: {register_params.modelSource}")
+
         return self.model_manager.load_model(
             source=register_params.modelSource,
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
-            model_format=register_params.modelFormat,
-            auth_token=register_params.token
+            model_format=register_params.modelFormat
         )
 
 

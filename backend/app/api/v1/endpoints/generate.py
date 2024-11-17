@@ -1,8 +1,12 @@
-from fastapi import APIRouter, HTTPException, status
+import logging
+from fastapi import (
+    APIRouter,
+    HTTPException,
+    status
+)
 
 from app.schemas import Query, DialogueResult
-from app.services.agent_manager import agent_manager_service
-import logging
+from app.services.agents.agent_manager import agent_manager_service
 
 
 router = APIRouter()

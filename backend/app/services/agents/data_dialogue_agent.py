@@ -1,4 +1,4 @@
-from app.agents.text_to_sql_agent import TextToSQLAgent
+from app.services.agents.text_to_sql_agent import TextToSQLAgent
 from app.clients.db import DatabaseClient
 from app.core.model_type import AgentType
 from app.schemas import (
@@ -27,8 +27,6 @@ class DataDialogueAgent:
         else:
             self.sql_agent = None
 
-        self._model_name = model.metadata.get('general.name')
-
     def generate(self, prompt: str) -> DialogueResult:
 
         if self.sql_agent:
@@ -48,7 +46,7 @@ class DataDialogueAgent:
                 max_tokens=200,
                 temperature=0.6,
                 stop=["\n"],
-                echo=False)
+            )
             general_response = model_response['choices'][0]['text'].strip()
             response = GeneralResponse(response=general_response)
             agent = self.name

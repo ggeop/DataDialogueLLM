@@ -25,14 +25,17 @@ class ModelDownloader(ABC):
 
 
 class HuggingFaceDownloader(ModelDownloader):
-    def __init__(self, auth: Optional[HuggingFaceAuth] = None):
+    def __init__(self, token: str = None):
         """
         Initialize HuggingFaceDownloader.
 
         Args:
-            auth (Optional[HuggingFaceAuth]): HuggingFaceAuth object.
+            token: HuggingFace Access Token string
         """
-        self.auth = auth
+        if token:
+            self.auth = HuggingFaceAuth(token=token)
+        else:
+            self.auth = None
 
     def download(self, repo_id: str, save_path: str, force: bool = False, model_name: Optional[str] = None) -> str:
         """
