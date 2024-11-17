@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class BaseEnum(Enum):
-
     @classmethod
     def to_dict(cls):
         return {e.name: e.value for e in cls}

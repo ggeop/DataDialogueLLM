@@ -1,0 +1,10 @@
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+# Only include Python files from the backend directory
+src = "backend"
+extend-exclude = '''
+# Add any specific files in backend you want to exclude
+^/backend/venv/
+^/backend/logs/
+'''

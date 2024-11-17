@@ -1,12 +1,7 @@
-
 import logging
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import (
-    root,
-    generate,
-    agents
-)
+from app.api.v1.endpoints import root, generate, agents
 
 logger = logging.getLogger(__name__)
 

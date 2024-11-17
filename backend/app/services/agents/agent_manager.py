@@ -78,13 +78,13 @@ class AgentManagerService:
         model = self._load_model(register_params)
 
         # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
-        agent_name = f'({register_params.agentType}) {register_params.modelName}'
+        agent_name = f"({register_params.agentType}) {register_params.modelName}"
 
         agent = DataDialogueAgent(
             database=database,
             model=model,
             model_type=register_params.agentType,
-            agent_name=agent_name
+            agent_name=agent_name,
         )
         self.registered_agents[agent.name] = agent
         logger.info(f"Agent '{agent.name}' has been successfully registered.")
@@ -124,7 +124,9 @@ class AgentManagerService:
         """
         if not self._is_registered(agent_name):
             valid_agents = ", ".join(self.registered_agents.keys())
-            raise ValueError(f"'{agent_name}' is not a valid agent. Registered agents are: {valid_agents}")
+            raise ValueError(
+                f"'{agent_name}' is not a valid agent. Registered agents are: {valid_agents}"
+            )
         return self.registered_agents[agent_name]
 
     def delete_agent(self, agent_name: str) -> None:
@@ -146,7 +148,9 @@ class AgentManagerService:
         """
         if not self._is_registered(agent_name):
             valid_agents = ", ".join(self.registered_agents.keys())
-            raise ValueError(f"Cannot delete '{agent_name}'. Registered agents are: {valid_agents}")
+            raise ValueError(
+                f"Cannot delete '{agent_name}'. Registered agents are: {valid_agents}"
+            )
         del self.registered_agents[agent_name]
         logger.info(f"Agent '{agent_name}' has been successfully deleted.")
 
@@ -180,7 +184,9 @@ class AgentManagerService:
         """
         supported_model_types = AgentType.values()
         if model_type not in supported_model_types:
-            raise ValueError(f"'{model_type}' is not a valid model type. Supported types are: {', '.join(supported_model_types)}")
+            raise ValueError(
+                f"'{model_type}' is not a valid model type. Supported types are: {', '.join(supported_model_types)}"
+            )
 
     def _configure_database(self, register_params: RegisterAgent):
         """
@@ -199,18 +205,20 @@ class AgentManagerService:
             This is a private method intended for internal use only.
         """
         if register_params.agentType == AgentType.SQL.value:
-            if register_params.sourceType == 'postgresql':
+            if register_params.sourceType == "postgresql":
                 db = PostgresClient(
                     dbname=register_params.dbname,
                     user=register_params.username,
                     password=register_params.password,
                     host=register_params.host,
-                    port=register_params.port
+                    port=register_params.port,
                 )
                 db.test_connection()
                 return db
             else:
-                raise ValueError(f"Unsupported source type: {register_params.sourceType}")
+                raise ValueError(
+                    f"Unsupported source type: {register_params.sourceType}"
+                )
         return None
 
     def _load_model(self, register_params: RegisterAgent):
@@ -230,19 +238,19 @@ class AgentManagerService:
         from ..models.downloader import HuggingFaceDownloader
 
         if register_params.modelSource == "google":
-            self.model_manager.register_loader("google", GoogleAILoader(api_key=register_params.token))
+            self.model_manager.register_loader(
+                "google", GoogleAILoader(api_key=register_params.token)
+            )
         elif register_params.modelSource == "huggingface":
             if register_params.modelFormat == "gguf":
-                self.model_manager.register_loader(
-                    "huggingface",
-                    LlamaGGUFLoader()
-                )
+                self.model_manager.register_loader("huggingface", LlamaGGUFLoader())
                 self.model_manager.register_downloader(
-                    "huggingface",
-                    HuggingFaceDownloader(token=register_params.token)
+                    "huggingface", HuggingFaceDownloader(token=register_params.token)
                 )
             else:
-                raise Exception(f"Not known `modelFormat`: {register_params.modelFormat}")
+                raise Exception(
+                    f"Not known `modelFormat`: {register_params.modelFormat}"
+                )
         else:
             raise Exception(f"Not known `modelSource`: {register_params.modelSource}")
 
@@ -250,7 +258,7 @@ class AgentManagerService:
             source=register_params.modelSource,
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
-            model_format=register_params.modelFormat
+            model_format=register_params.modelFormat,
         )
 
 

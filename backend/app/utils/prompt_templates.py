@@ -1,4 +1,3 @@
-
 SQL_GENERATION_TEMPLATE = """Given the following {db_type} database schema:
 
 {schema}

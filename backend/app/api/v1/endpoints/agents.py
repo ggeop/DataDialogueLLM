@@ -19,18 +19,19 @@ async def get_agents():
 @router.post("/register")
 async def register(register_agent: RegisterAgent):
     try:
-        logger.info(f"Starting Register {register_agent.sourceType} source and model type {register_agent.agentType}")
+        logger.info(
+            f"Starting Register {register_agent.sourceType} source and model type {register_agent.agentType}"
+        )
         agent_manager_service.register_agent(register_agent)
         logger.info(f"Register {register_agent.sourceType} successful!")
         return JSONResponse(
             content={"message": "Registration successful"},
-            status_code=status.HTTP_200_OK
+            status_code=status.HTTP_200_OK,
         )
     except Exception as e:
         logger.error(f"Failed with error {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
 
 
@@ -43,17 +44,15 @@ async def delete_agent(agent_name: str):
         logger.info(f"Successfully deleted agent: {agent_name}")
         return JSONResponse(
             content={"message": f"Agent '{agent_name}' successfully deleted"},
-            status_code=status.HTTP_200_OK
+            status_code=status.HTTP_200_OK,
         )
     except ValueError as e:
         logger.error(f"Agent not found: {agent_name}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
     except Exception as e:
         logger.error(f"Failed to delete agent {agent_name}: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=str(e)
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
