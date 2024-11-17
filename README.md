@@ -17,9 +17,6 @@
 
 Data Dialogue is an advanced application that leverages AI to create prompts, retrieve data from various sources, and generate responses using an LLM backend. It's designed to run in Docker and consists of two main services: the LLM backend and the UI.
 
-
-
-
 ![UI Screenshot](media/imgs/data_dialogue_steps.png)
 
 ### Demo 👇
@@ -47,23 +44,14 @@ The system supports both open-source language models from HuggingFace and commer
 
 ![UI Screenshot](media/imgs/data_dialogue_agent_responses.png)
 
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Development](#development)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Installation
+## Quick Start Guide
 
 ### Prerequisites
 
 - Docker
 - Docker Compose
 
-### Quick Start
+### Production Setup
 
 1. Clone the repository:
    ```sh
@@ -83,13 +71,18 @@ The system supports both open-source language models from HuggingFace and commer
    docker-compose --profile production pull; if ($?) { docker-compose --profile production up}
    ```
 
-## Usage
+3. Access the frontend at `http://localhost:5000` in your web browser.
 
-After starting the services:
+## Development
 
-1. Access the frontend at `http://localhost:5000` in your web browser.
-2. Start interacting with the system using natural language queries.
-3. View the generated SQL and results from your queries.
+For local development and setup instructions, please refer to our [Local Development Setup Guide](LOCAL_SETUP.md).
+
+The guide includes:
+- Local environment setup for Windows and Linux
+- Code style configuration with Black
+- Development workflows
+- Common issues and troubleshooting
+- Contributing guidelines
 
 ## Project Structure
 
@@ -111,41 +104,25 @@ data-dialogue/
 │   │   └── templates/
 │   ├── app.py
 │   └── Dockerfile
+├── scripts/
+│   └── black/
+│       ├── setup_linux.sh
+│       └── setup_windows.bat
 ├── docker-compose.yml
 ├── .gitignore
-├── .env.example
+├── LOCAL_SETUP.md
 └── README.md
 ```
-
-## Development
-
-### Building the Backend
-
-TODO: Add instructions for building and running the backend locally.
-
-### Building the Frontend
-
-TODO: Add instructions for building and running the frontend locally.
-
-### Building with Docker Compose
-
-For local development with volume mounting:
-
-```sh
-docker-compose up try-demo-db-local backend-local frontend-local --build
-```
-
-This will start:
-- try-demo-db
-- backend-local
-- frontend-local
-
-The frontend will be available at `http://localhost:3000`, and the backend at `http://localhost:8000`.
-
-## Contributing
-
-👉 [Contributing Guidelines](./CONTRIBUTING.md)
 
 ## License
 
 Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+
+## Contributing
+
+Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
+
+## Support and Community
+
+- Report issues via [GitHub Issues](https://github.com/ggeop/DataDialogueLLM/issues)
+- Join our community discussions [here](https://github.com/ggeop/DataDialogueLLM/discussions)

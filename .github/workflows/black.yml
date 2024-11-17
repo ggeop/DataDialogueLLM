@@ -10,5 +10,5 @@ jobs:
       - uses: psf/black@stable
         with:
           options: "--check --verbose"
-          src: "./backend"  # Specify the backend directory
+          src: "./backend"
           version: "23.12.1"
