@@ -31,7 +31,7 @@ class LLMInterface(ABC):
         temperature: float = 0.7,
         top_p: float = 1.0,
         stop: Optional[Union[str, List[str]]] = None,
-        stream: bool = False
+        stream: bool = False,
     ) -> Union[CompletionResponse, Generator[CompletionResponse, None, None]]:
         """
         Generate completion for the given prompt.
@@ -64,16 +64,17 @@ class LLMInterface(ABC):
 
 
 class ModelLoader(ABC):
-
     @abstractmethod
-    def load_model(self,
-                   repo_id: str,
-                   model_name: str,
-                   source: str,
-                   file_manager: ModelFileManager,
-                   downloader: Optional[ModelDownloader] = None,
-                   force_download: bool = False,
-                   **kwargs) -> LLMInterface:
+    def load_model(
+        self,
+        repo_id: str,
+        model_name: str,
+        source: str,
+        file_manager: ModelFileManager,
+        downloader: Optional[ModelDownloader] = None,
+        force_download: bool = False,
+        **kwargs
+    ) -> LLMInterface:
         """
         Load a model with the specific implementation.
 

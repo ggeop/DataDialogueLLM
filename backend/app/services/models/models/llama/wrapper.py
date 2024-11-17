@@ -1,11 +1,6 @@
 from typing import Any, List, Optional, Union, Generator
 
-from ..base import (
-    LLMInterface,
-    TaskType,
-    CompletionResponse,
-    EmbeddingResponse
-)
+from ..base import LLMInterface, TaskType, CompletionResponse, EmbeddingResponse
 
 
 class LlamaWrapper(LLMInterface):
@@ -39,15 +34,17 @@ class LlamaWrapper(LLMInterface):
                     temperature=temperature,
                     top_p=top_p,
                     stop=stop,
-                    stream=True
+                    stream=True,
                 )
                 return (
                     CompletionResponse(
                         text=chunk["choices"][0]["text"],
                         finish_reason=chunk["choices"][0].get("finish_reason"),
                         prompt_tokens=chunk.get("usage", {}).get("prompt_tokens"),
-                        completion_tokens=chunk.get("usage", {}).get("completion_tokens"),
-                        total_tokens=chunk.get("usage", {}).get("total_tokens")
+                        completion_tokens=chunk.get("usage", {}).get(
+                            "completion_tokens"
+                        ),
+                        total_tokens=chunk.get("usage", {}).get("total_tokens"),
                     )
                     for chunk in response_stream
                 )
@@ -59,14 +56,16 @@ class LlamaWrapper(LLMInterface):
                     top_p=top_p,
                     stop=stop,
                     stream=False,
-                    echo=False
+                    echo=False,
                 )
                 return CompletionResponse(
                     text=response["choices"][0]["text"],
                     finish_reason=response["choices"][0].get("finish_reason"),
                     prompt_tokens=response.get("usage", {}).get("prompt_tokens"),
-                    completion_tokens=response.get("usage", {}).get("completion_tokens"),
-                    total_tokens=response.get("usage", {}).get("total_tokens")
+                    completion_tokens=response.get("usage", {}).get(
+                        "completion_tokens"
+                    ),
+                    total_tokens=response.get("usage", {}).get("total_tokens"),
                 )
         except Exception as e:
             raise RuntimeError(f"Error in Llama completion: {str(e)}")
