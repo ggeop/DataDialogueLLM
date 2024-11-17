@@ -9,6 +9,12 @@ DataDialogue.openDemoForm = () => {
         // Reset form elements
         document.getElementById('demoModelSource').value = '';
         
+        // Clear any existing custom select before reinitializing
+        const existingCustomSelect = document.querySelector('.custom-select-container');
+        if (existingCustomSelect) {
+            existingCustomSelect.remove();
+        }
+        
         // Hide all conditional elements using your CSS class
         const elementsToHide = [
             'googleModels',
@@ -24,6 +30,8 @@ DataDialogue.openDemoForm = () => {
                 element.classList.add('initially-hidden');
             }
         });
+
+        DataDialogue.initializeCustomSelect('demo');
 
         // Show the form
         demoFormOverlay.style.display = 'block';
@@ -52,31 +60,34 @@ DataDialogue.closeDemoForm = () => {
 
 function setupFormListeners() {
     // Model source change handler
-    document.getElementById('demoModelSource').addEventListener('change', function() {
-        const googleModels = document.getElementById('googleModels');
-        const huggingfaceModels = document.getElementById('huggingfaceModels');
-        const repoIdGroup = document.getElementById('demoRepoIdGroup');
-        const tokenGroup = document.getElementById('tokenGroup');
-        
-        // Reset and hide all model sections
-        [googleModels, huggingfaceModels, repoIdGroup].forEach(el => {
-            if (el) el.classList.add('initially-hidden');
-        });
-        
-        // Reset custom inputs
-        document.getElementById('googleCustomDiv')?.classList.add('initially-hidden');
-        document.getElementById('huggingfaceCustomDiv')?.classList.add('initially-hidden');
+    const demoModelSource = document.getElementById('demoModelSource');
+    if (demoModelSource) {
+        demoModelSource.addEventListener('change', function() {
+            const googleModels = document.getElementById('googleModels');
+            const huggingfaceModels = document.getElementById('huggingfaceModels');
+            const repoIdGroup = document.getElementById('demoRepoIdGroup');
+            const tokenGroup = document.getElementById('tokenGroup');
+            
+            // Reset and hide all model sections
+            [googleModels, huggingfaceModels, repoIdGroup].forEach(el => {
+                if (el) el.classList.add('initially-hidden');
+            });
+            
+            // Reset custom inputs
+            document.getElementById('googleCustomDiv')?.classList.add('initially-hidden');
+            document.getElementById('huggingfaceCustomDiv')?.classList.add('initially-hidden');
 
-        // Show relevant sections
-        if (this.value === 'google') {
-            googleModels?.classList.remove('initially-hidden');
-            tokenGroup?.classList.remove('initially-hidden');
-        } else if (this.value === 'huggingface') {
-            huggingfaceModels?.classList.remove('initially-hidden');
-            repoIdGroup?.classList.remove('initially-hidden');
-            tokenGroup?.classList.remove('initially-hidden');
-        }
-    });
+            // Show relevant sections
+            if (this.value === 'google') {
+                googleModels?.classList.remove('initially-hidden');
+                tokenGroup?.classList.remove('initially-hidden');
+            } else if (this.value === 'huggingface') {
+                huggingfaceModels?.classList.remove('initially-hidden');
+                repoIdGroup?.classList.remove('initially-hidden');
+                tokenGroup?.classList.remove('initially-hidden');
+            }
+        });
+    }
 
     // Google model change handler
     document.getElementById('googleModelName').addEventListener('change', function() {

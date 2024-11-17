@@ -1,5 +1,7 @@
 DataDialogue.handleModelSourceChange = (formPrefix = '') => {
-    const modelSource = document.getElementById(`${formPrefix}ModelSource`).value;
+    const modelSource = document.getElementById(`${formPrefix}ModelSource`);
+    if (!modelSource) return;
+
     const repoIdGroup = document.getElementById(`${formPrefix}RepoIdGroup`);
     const modelNameGroup = document.getElementById(`${formPrefix}ModelNameGroup`);
     const tokenGroup = document.getElementById(`${formPrefix}TokenGroup`);
@@ -10,11 +12,11 @@ DataDialogue.handleModelSourceChange = (formPrefix = '') => {
     tokenGroup?.classList.add('initially-hidden');
     
     // Show appropriate fields based on model source
-    if (modelSource === 'huggingface') {
+    if (modelSource.value === 'huggingface') {
         repoIdGroup?.classList.remove('initially-hidden');
         modelNameGroup?.classList.remove('initially-hidden');
         tokenGroup?.classList.remove('initially-hidden');
-    } else if (modelSource === 'google') {
+    } else if (modelSource.value === 'google') {
         modelNameGroup?.classList.remove('initially-hidden');
         tokenGroup?.classList.remove('initially-hidden');
     }
@@ -51,8 +53,15 @@ DataDialogue.openRegisterForm = () => {
             DataDialogue.handleAgentTypeChange(); // This will hide the sections
         }
         
+        // Clear any existing custom select before reinitializing
+        const existingCustomSelect = document.querySelector('.custom-select-container');
+        if (existingCustomSelect) {
+            existingCustomSelect.remove();
+        }
+        
         // Add handler for model source changes
         if (modelSource) {
+            modelSource.value = ''; // Reset model source value
             // Remove existing listener to prevent duplicates
             modelSource.removeEventListener('change', DataDialogue.handleModelSourceChange);
             // Add new listener
@@ -78,6 +87,9 @@ DataDialogue.openRegisterForm = () => {
                 }
             });
         }
+
+        // Initialize model source icons
+        DataDialogue.initializeCustomSelect('');
         
         formContainer.classList.add('show');
         pageOverlay.style.display = 'block';

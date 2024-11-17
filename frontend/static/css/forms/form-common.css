@@ -1,3 +1,167 @@
+.model-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.model-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+.select-with-icon {
+    position: relative;
+    width: 100%;
+}
+
+.select-with-icon {
+    position: relative;
+    width: 100%;
+}
+
+/* Select styling */
+.select-with-icon select {
+    width: 100%;
+    padding: 0.5rem 0.75rem 0.5rem 40px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    font-size: 0.9rem;
+}
+
+/* Option styling */
+.select-with-icon select option {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+}
+
+.model-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    z-index: 1;
+    pointer-events: none; /* Prevent icon from interfering with select clicks */
+}
+
+.model-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none; /* Hide all icons by default */
+}
+
+.model-icon img.active {
+    display: block; /* Only show the active icon */
+}
+
+
+.custom-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-container img {
+    width: 20px;
+    height: 20px;
+    min-width: 20px; /* Prevent flex shrinking */
+    min-height: 20px;
+    object-fit: contain;
+    display: block; /* Prevent inline spacing issues */
+}
+
+
+
+.custom-select-trigger {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem; 
+}
+
+.custom-select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-top: 4px;
+    z-index: 1000;
+    display: none;
+    font-size: 0.9rem;
+}
+
+.custom-select-options.show {
+    display: block;
+}
+
+.custom-select-option {
+    padding: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-select-option:hover {
+    background-color: var(--input-background);
+}
+
+.custom-select-option img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* Hide the original select */
+.custom-select-container select {
+    display: none;
+}
+
+.selected-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-arrow {
+    border: solid var(--text-color);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    margin-left: auto;
+}
+
+.custom-select-trigger.open .dropdown-arrow {
+    transform: rotate(-135deg);
+    margin-top: 3px;
+}
 
 .loading-overlay {
     display: flex;  
