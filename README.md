@@ -21,32 +21,6 @@
 
 DataDialogue is an innovative application that bridges the gap between your data and natural language understanding. By leveraging advanced AI capabilities, it enables intuitive data exploration and analysis through conversational interfaces.
 
-### ✨ Key Features
-
-- 🤖 **AI-Powered Prompts**: Intelligent prompt generation for natural data interactions
-- 🔄 **Multiple Data Sources**: Seamless integration with various data repositories
-- 🚀 **LLM Backend**: Advanced language model processing for accurate responses
-- 🎨 **Modern UI**: Clean, intuitive interface for enhanced user experience
-- 🐳 **Docker Ready**: Easy deployment with containerized services
-
-## 🚀 Quick Preview
-
-Try our demo by clicking the "Try Demo" button. The demo mode loads an open-source DVD database (PostgreSQL) for testing and experimentation. We provide several example prompts to get you started, but you're welcome to create your own custom prompts.
-The system supports both open-source language models from HuggingFace and commercial LLMs (such as Google Gemini).
-
-
-   Google Gemini provides a FREE API [get key](https://aistudio.google.com/app/apikey).
-   If your machine doesn't have enough processing power to run local HuggingFace models effectively, commercial LLMs are a great alternative.
-
-
-[![Data Dialogue Demo!](https://img.youtube.com/vi/breOr5o7r3Y/0.jpg)](https://www.youtube.com/watch?v=breOr5o7r3Y)
-
-### 🏗️ Architecture
-
-DataDialogue consists of two main components:
-- **LLM Backend**: Powers the AI processing and data analysis
-- **User Interface**: Provides an intuitive way to interact with the system
-
 ## 🌟 Preview Phase
 
 We're currently in an exciting preview phase! Here's what that means for you:
@@ -58,6 +32,36 @@ We're currently in an exciting preview phase! Here's what that means for you:
 
 
 Please don't hesitate to open an issue or submit a pull request.
+
+Experience our powerful demo with just one click! We've prepared everything you need to get started instantly:
+
+<div align="center">
+<div style="position: relative; display: inline-block; width: fit-content;">
+  <a href="https://www.youtube.com/watch?v=breOr5o7r3Y" style="text-decoration: none;">
+    <img src="media/imgs/data_dialogue_agent_responses.png" alt="Data Dialogue Demo" width="600" style="display: block; border-radius: 8px; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);"/>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+      <img src="media/youtube_button.png" alt="Play Button" style="width: 64px; transition: transform 0.2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'"/>
+    </div>
+  </a>
+</div>
+</div>
+
+### ✨ Key Features
+
+- **Demo Database**: Pre-loaded open-source DVD database (PostgreSQL)
+- **Example Prompts**: Curated selection of prompts to showcase capabilities
+- **Flexible Model Support**: Choose between:
+  - 🤗 HuggingFace open-source models
+  - 🤖 Commercial LLMs (like Google Gemini)
+
+### 🎯 Getting Started
+
+1. **Try the Demo**: Click the video above to see it in action
+2. **Choose Your Model**:
+   - Local: HuggingFace models (requires sufficient computing power)
+   - Cloud: Commercial LLMs (recommended for lighter setups)
+
+> **Pro Tip**: Get your [FREE Google Gemini API key](https://aistudio.google.com/app/apikey) for the best cloud-based experience!
 
 ---
 
