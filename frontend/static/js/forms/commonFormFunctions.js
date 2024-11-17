@@ -1,5 +1,9 @@
 DataDialogue.showFormLoadingAnimation = (agentType, modelName) => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
+    // Look for loading overlay inside the currently active form
+    const activeForm = document.querySelector('.form-container.show, #demoFormContainer.show');
+    const loadingOverlay = activeForm?.querySelector(':scope > .loading-overlay');
+    console.log('Loading overlay found:', loadingOverlay); // Add this for debugging
+    
     if (loadingOverlay) {
         const loadingMessage = loadingOverlay.querySelector('.loading-message');
         if (loadingMessage) {
@@ -10,7 +14,10 @@ DataDialogue.showFormLoadingAnimation = (agentType, modelName) => {
 };
 
 DataDialogue.hideFormLoadingAnimation = () => {
-    const loadingOverlay = document.querySelector('.loading-overlay');
+    // Look for loading overlay inside the currently active form
+    const activeForm = document.querySelector('.form-container.show, #demoFormContainer.show');
+    const loadingOverlay = activeForm?.querySelector(':scope > .loading-overlay');
+    
     if (loadingOverlay) {
         loadingOverlay.classList.remove('show');
     }

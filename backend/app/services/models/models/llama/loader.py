@@ -7,6 +7,7 @@ from .wrapper import LlamaWrapper
 
 from ...model_file_manager import ModelFileManager
 from ...downloader import ModelDownloader
+from ...utils import logger
 
 
 class LlamaGGUFLoader(ModelLoader):
@@ -25,6 +26,7 @@ class LlamaGGUFLoader(ModelLoader):
         # Download if needed
         if downloader and (force_download or not file_manager.model_exists(repo_id, source, model_name)):
             save_path = file_manager.get_model_path(repo_id, model_name, source)
+            logger.info(f"Model {model_name} downloading in {save_path}")
             model_path = downloader.download(repo_id, save_path, force_download, model_name)
         else:
             model_path = file_manager.get_model_path(repo_id, model_name, source)
