@@ -5,10 +5,12 @@ window.DataDialogue = window.DataDialogue || {};
 DataDialogue.init = () => {
     console.log('Initializing Data Dialogue');
     DataDialogue.cacheElements();
+    DataDialogue.initConfirmDialog();
     DataDialogue.attachEventListeners();
     DataDialogue.renderExampleSection();
     DataDialogue.fetchAgentList();
     DataDialogue.hideExampleSection();
+    DataDialogue.initializeMessageSystem();
     console.log('Data Dialogue initialized successfully');
 };
 
