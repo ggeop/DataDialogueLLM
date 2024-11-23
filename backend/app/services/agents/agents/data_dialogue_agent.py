@@ -1,4 +1,4 @@
-from app.services.agents.text_to_sql_agent import TextToSQLAgent
+from app.services.agents.agents.text_to_sql_agent import TextToSQLAgent
 from app.clients.db import DatabaseClient
 from app.core.model_type import AgentType
 from app.schemas import SQLResponse, GeneralResponse, DialogueResult
@@ -30,13 +30,13 @@ class DataDialogueAgent:
             agent = sql_agent_name
         else:
             prompt = f"Q: {prompt} A: "
-            model_response = self.model(
+            model_response = self.model.complete(
                 prompt,
                 max_tokens=200,
                 temperature=0.6,
                 stop=["\n"],
             )
-            general_response = model_response["choices"][0]["text"].strip()
+            general_response = model_response.text.strip()
             response = GeneralResponse(response=general_response)
             agent = self.name
 

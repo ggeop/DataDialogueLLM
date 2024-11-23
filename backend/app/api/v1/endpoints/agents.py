@@ -29,7 +29,7 @@ async def register(register_agent: RegisterAgent):
             status_code=status.HTTP_200_OK,
         )
     except Exception as e:
-        logger.error(f"Failed with error {e}")
+        logger.error(f"Failed with error {e}", stack_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
@@ -47,12 +47,12 @@ async def delete_agent(agent_name: str):
             status_code=status.HTTP_200_OK,
         )
     except ValueError as e:
-        logger.error(f"Agent not found: {agent_name}")
+        logger.error(f"Agent not found: {agent_name}", stack_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
     except Exception as e:
-        logger.error(f"Failed to delete agent {agent_name}: {e}")
+        logger.error(f"Failed to delete agent {agent_name}: {e}", stack_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
