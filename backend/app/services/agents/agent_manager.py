@@ -7,6 +7,15 @@ from app.services.agents.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.models import ModelManager
 from app.core.config import settings
 from app.core.model_type import AgentType
+from app.services.models.downloader import HuggingFaceDownloader
+from app.services.models.models import (
+    GoogleAILoader,
+    LlamaGGUFLoader,
+    OpenAILoader,
+    ModelSource,
+    ModelFormat
+)
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -235,35 +244,27 @@ class AgentManagerService:
             This is a private method intended for internal use only.
         """
 
-        from ..models.models import (
-            GoogleAILoader,
-            LlamaGGUFLoader,
-            OpenAILoader,
-            SupportedModelSources
-        )
-        from ..models.downloader import HuggingFaceDownloader
-
         # --------------------------------------------
         # Register model loader + downloaders
         # --------------------------------------------
-        if register_params.modelSource == SupportedModelSources.GOOGLE.value:
+        if register_params.modelSource == ModelSource.GOOGLE.value:
             self.model_manager.register_loader(
-                SupportedModelSources.GOOGLE.value,
+                ModelSource.GOOGLE.value,
                 GoogleAILoader(api_key=register_params.token)
             )
-        elif register_params.modelSource == SupportedModelSources.OPENAI.value:
+        elif register_params.modelSource == ModelSource.OPENAI.value:
             self.model_manager.register_loader(
-                SupportedModelSources.OPENAI.value,
+                ModelSource.OPENAI.value,
                 OpenAILoader(api_key=register_params.token)
             )
-        elif register_params.modelSource == SupportedModelSources.HUGGINGFACE.value:
-            if register_params.modelFormat == SupportedModelSources.GGUF.value:
+        elif register_params.modelSource == ModelSource.HUGGINGFACE.value:
+            if register_params.modelFormat == ModelFormat.GGUF.value:
                 self.model_manager.register_loader(
-                    SupportedModelSources.HUGGINGFACE.value,
+                    ModelSource.HUGGINGFACE.value,
                     LlamaGGUFLoader()
                 )
                 self.model_manager.register_downloader(
-                    SupportedModelSources.HUGGINGFACE.value,
+                    ModelSource.HUGGINGFACE.value,
                     HuggingFaceDownloader(token=register_params.token)
                 )
             else:
