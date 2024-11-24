@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.3.0...v1.4.0) (2024-11-24)
+
+
+### Features
+
+* **backend:** Create models list endpoint ([577d794](https://github.com/ggeop/DataDialogueLLM/commit/577d79413d67f05f99c0cc306233337ede6192eb))
+* **backend:** Improve apis response objects ([b8baa4b](https://github.com/ggeop/DataDialogueLLM/commit/b8baa4b180dc7f4c110d2f2f2591afbcda7b78a2))
+* Support OpenAI models ([f4bc38e](https://github.com/ggeop/DataDialogueLLM/commit/f4bc38e8776e7cd5af1fd94d0744ead8efdb1471))
+
 # [1.3.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.2.2...v1.3.0) (2024-11-17)
 
 
