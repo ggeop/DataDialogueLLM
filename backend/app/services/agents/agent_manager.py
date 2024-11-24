@@ -3,10 +3,19 @@ from typing import Dict, List
 
 from app.clients.db import PostgresClient
 from app.schemas import RegisterAgent
-from app.services.agents.data_dialogue_agent import DataDialogueAgent
+from app.services.agents.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.models import ModelManager
 from app.core.config import settings
 from app.core.model_type import AgentType
+from app.services.models.downloader import HuggingFaceDownloader
+from app.services.models.models import (
+    GoogleAILoader,
+    LlamaGGUFLoader,
+    OpenAILoader,
+    ModelSource,
+    ModelFormat,
+)
+
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -74,15 +83,17 @@ class AgentManagerService:
         logger.info(f"Attempting to register agent with params: {register_params}")
 
         self._validate_model_type(register_params.agentType)
-        database = self._configure_database(register_params)
-        model = self._load_model(register_params)
+
+        database = None
+        if register_params.agentType == AgentType.SQL.value:
+            database = self._configure_database(register_params)
 
         # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
         agent_name = f"({register_params.agentType}) {register_params.modelName}"
 
         agent = DataDialogueAgent(
             database=database,
-            model=model,
+            model=self._load_model(register_params),
             model_type=register_params.agentType,
             agent_name=agent_name,
         )
@@ -204,22 +215,18 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
-        if register_params.agentType == AgentType.SQL.value:
-            if register_params.sourceType == "postgresql":
-                db = PostgresClient(
-                    dbname=register_params.dbname,
-                    user=register_params.username,
-                    password=register_params.password,
-                    host=register_params.host,
-                    port=register_params.port,
-                )
-                db.test_connection()
-                return db
-            else:
-                raise ValueError(
-                    f"Unsupported source type: {register_params.sourceType}"
-                )
-        return None
+        if register_params.sourceType == "postgresql":
+            db = PostgresClient(
+                dbname=register_params.dbname,
+                user=register_params.username,
+                password=register_params.password,
+                host=register_params.host,
+                port=register_params.port,
+            )
+            db.test_connection()
+            return db
+        else:
+            raise ValueError(f"Unsupported source type: {register_params.sourceType}")
 
     def _load_model(self, register_params: RegisterAgent):
         """
@@ -234,18 +241,26 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
-        from ..models.models import GoogleAILoader, LlamaGGUFLoader
-        from ..models.downloader import HuggingFaceDownloader
 
-        if register_params.modelSource == "google":
+        # --------------------------------------------
+        # Register model loader + downloaders
+        # --------------------------------------------
+        if register_params.modelSource == ModelSource.GOOGLE.value:
             self.model_manager.register_loader(
-                "google", GoogleAILoader(api_key=register_params.token)
+                ModelSource.GOOGLE.value, GoogleAILoader(api_key=register_params.token)
             )
-        elif register_params.modelSource == "huggingface":
-            if register_params.modelFormat == "gguf":
-                self.model_manager.register_loader("huggingface", LlamaGGUFLoader())
+        elif register_params.modelSource == ModelSource.OPENAI.value:
+            self.model_manager.register_loader(
+                ModelSource.OPENAI.value, OpenAILoader(api_key=register_params.token)
+            )
+        elif register_params.modelSource == ModelSource.HUGGINGFACE.value:
+            if register_params.modelFormat == ModelFormat.GGUF.value:
+                self.model_manager.register_loader(
+                    ModelSource.HUGGINGFACE.value, LlamaGGUFLoader()
+                )
                 self.model_manager.register_downloader(
-                    "huggingface", HuggingFaceDownloader(token=register_params.token)
+                    ModelSource.HUGGINGFACE.value,
+                    HuggingFaceDownloader(token=register_params.token),
                 )
             else:
                 raise Exception(
@@ -254,12 +269,17 @@ class AgentManagerService:
         else:
             raise Exception(f"Not known `modelSource`: {register_params.modelSource}")
 
-        return self.model_manager.load_model(
+        # --------------------------------------------
+        # Load Model
+        # --------------------------------------------
+        model = self.model_manager.load_model(
             source=register_params.modelSource,
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
             model_format=register_params.modelFormat,
         )
+
+        return model
 
 
 agent_manager_service = AgentManagerService()

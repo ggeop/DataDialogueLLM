@@ -63,7 +63,10 @@ DataDialogue.fetchAgentList = async () => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const agents = await response.json();
+        const data = await response.json();
+        // Extract the agents array from the nested response
+        // If data.data.agents exists, use it; otherwise fallback to empty array
+        const agents = data?.data?.agents || [];
         DataDialogue.populateAgentList(agents);
     } catch (error) {
         console.error('Error fetching agent list:', error);
