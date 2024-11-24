@@ -16,6 +16,10 @@ DataDialogue.initializeCustomSelect = (formPrefix = '') => {
                 <img src="/static/images/google-logo.png" alt="Google Logo">
                 Google Cloud AI (Suggested)
             </div>
+            <div class="custom-select-option" data-value="openai">
+                <img src="/static/images/openai-logo.png" alt="OpenAI Logo">
+                OpenAI
+            </div>
             <div class="custom-select-option" data-value="huggingface">
                 <img src="/static/images/hf-logo.png" alt="Hugging Face Logo">
                 Hugging Face

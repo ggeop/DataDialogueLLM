@@ -21,6 +21,30 @@
 
 DataDialogue is an innovative application that bridges the gap between your data and natural language understanding. By leveraging advanced AI capabilities, it enables intuitive data exploration and analysis through conversational interfaces.
 
+A user can select a LLM model and connect it with a data source and do his analysis by writing simple prompts instead of writing SQL queries or code.
+
+**Supported LLMs:**
+|      | Provider | Status |
+|------|----------|:------:|
+| <img src="frontend/static/images/google-logo.png" width="20"> | Google | ✔️ |
+| <img src="frontend/static/images/hf-logo.png" width="20">     | HF     | ✔️ |
+| <img src="frontend/static/images/openai-logo.png" width="20"> | OpenAI | ✔️ |
+| <img src="frontend\static\images\claude-ai-logo.png" width="20"> | Claude | ➖ |
+| <img src="frontend\static\images\perplexity-ai-logo.png" width="20"> | Perplexity | ➖ |
+
+
+
+
+**Supported Data Sources:**
+|      | Source | Status |
+|------|----------|:------:|
+| <img src="frontend\static\images\postgresql-logo.png" width="20"> | PostgreSQL | ✔️ |
+| <img src="frontend\static\images\mysql-log.png" width="20"> | MySQL | ➖ |
+| <img src="frontend\static\images\csv-logo.png" width="20"> | CSV | ➖ |
+
+
+
+
 ## 🌟 Preview Phase
 
 We're currently in an exciting preview phase! Here's what that means for you:
@@ -152,10 +176,6 @@ data-dialogue/
 └── README.md
 ```
 
-## License
-
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
-
 ## 🤝 Contributing
 
 Your feedback and contributions make DataDialogue better! If you have:
@@ -165,7 +185,11 @@ Your feedback and contributions make DataDialogue better! If you have:
 
 Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
 
-## Support and Community
+## ♥️ Support and Community
 
 - Report issues via [GitHub Issues](https://github.com/ggeop/DataDialogueLLM/issues)
 - Join our community discussions [here](https://github.com/ggeop/DataDialogueLLM/discussions)
+
+## License
+
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.

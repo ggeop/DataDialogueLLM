@@ -2,22 +2,27 @@ DataDialogue.handleModelSourceChange = (formPrefix = '') => {
     const modelSource = document.getElementById(`${formPrefix}ModelSource`);
     if (!modelSource) return;
 
-    const repoIdGroup = document.getElementById(`${formPrefix}RepoIdGroup`);
-    const modelNameGroup = document.getElementById(`${formPrefix}ModelNameGroup`);
-    const tokenGroup = document.getElementById(`${formPrefix}TokenGroup`);
+    const repoIdGroup = document.getElementById('repoIdGroup');
+    const tokenGroup = document.getElementById('tokenGroup');
+    const googleModels = document.getElementById('googleModels');
+    const openaiModels = document.getElementById('openaiModels');
+    const huggingfaceModels = document.getElementById('huggingfaceModels');
     
     // First hide all model-related fields
-    repoIdGroup?.classList.add('initially-hidden');
-    modelNameGroup?.classList.add('initially-hidden');
-    tokenGroup?.classList.add('initially-hidden');
+    [repoIdGroup, tokenGroup, googleModels, openaiModels, huggingfaceModels].forEach(el => {
+        if (el) el.classList.add('initially-hidden');
+    });
     
     // Show appropriate fields based on model source
-    if (modelSource.value === 'huggingface') {
-        repoIdGroup?.classList.remove('initially-hidden');
-        modelNameGroup?.classList.remove('initially-hidden');
+    if (modelSource.value === 'google') {
+        googleModels?.classList.remove('initially-hidden');
         tokenGroup?.classList.remove('initially-hidden');
-    } else if (modelSource.value === 'google') {
-        modelNameGroup?.classList.remove('initially-hidden');
+    } else if (modelSource.value === 'openai') {
+        openaiModels?.classList.remove('initially-hidden');
+        tokenGroup?.classList.remove('initially-hidden');
+    } else if (modelSource.value === 'huggingface') {
+        huggingfaceModels?.classList.remove('initially-hidden');
+        repoIdGroup?.classList.remove('initially-hidden');
         tokenGroup?.classList.remove('initially-hidden');
     }
 };
@@ -46,7 +51,6 @@ DataDialogue.openRegisterForm = () => {
     if (formContainer && pageOverlay) {
         // Reset the form when opening
         const agentTypeSelect = document.getElementById('agentType');
-        const modelSource = document.getElementById('modelSource');
         
         if (agentTypeSelect) {
             agentTypeSelect.value = '';
@@ -59,37 +63,42 @@ DataDialogue.openRegisterForm = () => {
             existingCustomSelect.remove();
         }
         
-        // Add handler for model source changes
-        if (modelSource) {
-            modelSource.value = ''; // Reset model source value
-            // Remove existing listener to prevent duplicates
-            modelSource.removeEventListener('change', DataDialogue.handleModelSourceChange);
-            // Add new listener
-            modelSource.addEventListener('change', () => {
-                const modelSource = document.getElementById('modelSource').value;
-                const repoIdGroup = document.getElementById('repoIdGroup');
-                const modelNameGroup = document.getElementById('modelNameGroup');
-                const tokenGroup = document.getElementById('tokenGroup');
-                
-                // First hide all model-related fields
-                repoIdGroup.classList.add('initially-hidden');
-                modelNameGroup.classList.add('initially-hidden');
-                tokenGroup.classList.add('initially-hidden');
-                
-                // Show appropriate fields based on model source
-                if (modelSource === 'huggingface') {
-                    repoIdGroup.classList.remove('initially-hidden');
-                    modelNameGroup.classList.remove('initially-hidden');
-                    tokenGroup.classList.remove('initially-hidden');
-                } else if (modelSource === 'google') {
-                    modelNameGroup.classList.remove('initially-hidden');
-                    tokenGroup.classList.remove('initially-hidden');
-                }
-            });
-        }
-
-        // Initialize model source icons
+        // Initialize model source icons and custom select
         DataDialogue.initializeCustomSelect('');
+        
+        // Add model selection change handlers
+        document.getElementById('googleModelName')?.addEventListener('change', function() {
+            const customDiv = document.getElementById('googleCustomDiv');
+            if (this.value === 'custom') {
+                customDiv?.classList.remove('initially-hidden');
+            } else {
+                customDiv?.classList.add('initially-hidden');
+            }
+        });
+        
+        document.getElementById('openaiModelName')?.addEventListener('change', function() {
+            const customDiv = document.getElementById('openaiCustomDiv');
+            if (this.value === 'custom') {
+                customDiv?.classList.remove('initially-hidden');
+            } else {
+                customDiv?.classList.add('initially-hidden');
+            }
+        });
+        
+        document.getElementById('huggingfaceModelName')?.addEventListener('change', function() {
+            const customDiv = document.getElementById('huggingfaceCustomDiv');
+            if (this.value === 'custom') {
+                customDiv?.classList.remove('initially-hidden');
+            } else {
+                customDiv?.classList.add('initially-hidden');
+            }
+        });
+
+        // Add event listener for model source changes
+        const modelSource = document.getElementById('ModelSource');
+        if (modelSource) {
+            modelSource.addEventListener('change', () => DataDialogue.handleModelSourceChange(''));
+        }
         
         formContainer.classList.add('show');
         pageOverlay.style.display = 'block';
@@ -109,6 +118,66 @@ DataDialogue.openRegisterForm = () => {
     }
 };
 
+DataDialogue.resetRegisterForm = () => {
+    // Reset all form fields
+    const fieldsToReset = {
+        'agentType': '',
+        'ModelSource': '',
+        'googleModelName': '',
+        'openaiModelName': '',
+        'huggingfaceModelName': '',
+        'googleCustomModel': '',
+        'openaiCustomModel': '',
+        'huggingfaceCustomModel': '',
+        'repoId': '',
+        'token': '',
+        'sourceType': 'postgresql',
+        'dbname': '',
+        'username': '',
+        'password': '',
+        'host': '',
+        'port': ''
+    };
+
+    Object.entries(fieldsToReset).forEach(([id, defaultValue]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.value = defaultValue;
+        }
+    });
+
+    // Hide conditional sections
+    const sectionsToHide = [
+        'sourceConfigSection',
+        'llmConfigSection',
+        'googleModels',
+        'openaiModels',
+        'huggingfaceModels',
+        'googleCustomDiv',
+        'openaiCustomDiv',
+        'huggingfaceCustomDiv',
+        'repoIdGroup',
+        'tokenGroup'
+    ];
+
+    sectionsToHide.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.classList.add('initially-hidden');
+        }
+    });
+
+    // Reset the custom select if it exists
+    const customSelect = document.querySelector('.custom-select-container');
+    if (customSelect) {
+        const selectedOption = customSelect.querySelector('.selected-option');
+        if (selectedOption) {
+            selectedOption.innerHTML = 'Select source...';
+        }
+    }
+};
+
+
 DataDialogue.closeRegisterForm = () => {
     const { formContainer, pageOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
     if (formContainer) formContainer.classList.remove('show');
@@ -122,8 +191,8 @@ DataDialogue.closeRegisterForm = () => {
 
 
 DataDialogue.submitForm = async () => {
-    const agentType = document.getElementById('agentType').value;
-    const modelSource = document.getElementById('modelSource').value;
+    const agentType = document.getElementById('agentType')?.value;
+    const modelSource = document.getElementById('ModelSource')?.value;
     
     if (!agentType) {
         DataDialogue.showMessage('Please select an agent type');
@@ -133,6 +202,28 @@ DataDialogue.submitForm = async () => {
     if (!modelSource) {
         DataDialogue.showMessage('Please select a model source');
         return;
+    }
+
+    // Get the selected model name based on the model source
+    let modelName = '';
+    let repoID = '';
+    
+    if (modelSource === 'google') {
+        const googleModel = document.getElementById('googleModelName')?.value;
+        modelName = googleModel === 'custom' ? 
+            document.getElementById('googleCustomModel')?.value : 
+            googleModel;
+    } else if (modelSource === 'openai') {
+        const openaiModel = document.getElementById('openaiModelName')?.value;
+        modelName = openaiModel === 'custom' ? 
+            document.getElementById('openaiCustomModel')?.value : 
+            openaiModel;
+    } else if (modelSource === 'huggingface') {
+        const huggingfaceModel = document.getElementById('huggingfaceModelName')?.value;
+        modelName = huggingfaceModel === 'custom' ? 
+            document.getElementById('huggingfaceCustomModel')?.value : 
+            huggingfaceModel;
+        repoID = document.getElementById('repoId')?.value || '';
     }
 
     const formData = {
@@ -147,9 +238,9 @@ DataDialogue.submitForm = async () => {
         port: document.getElementById('port')?.value || '',
         // LLM Model
         modelSource: modelSource,
-        repoID: document.getElementById('repoId')?.value || '',
-        modelFormat: document.getElementById('ModelFormat')?.value || '',
-        modelName: document.getElementById('modelName')?.value || '',
+        repoID: repoID,
+        modelFormat: modelSource === 'huggingface' ? 'gguf' : '',
+        modelName: modelName,
         token: document.getElementById('token')?.value || ''
     };
 
@@ -161,8 +252,8 @@ DataDialogue.submitForm = async () => {
         }
     }
     
-    if (!formData.modelName) {
-        DataDialogue.showMessage('Please enter a model name');
+    if (!modelName) {
+        DataDialogue.showMessage('Please select or enter a model name');
         return;
     }
 

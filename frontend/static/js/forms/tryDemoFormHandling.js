@@ -18,8 +18,10 @@ DataDialogue.openDemoForm = () => {
         // Hide all conditional elements using your CSS class
         const elementsToHide = [
             'googleModels',
+            'openaiModels',
             'huggingfaceModels',
             'googleCustomDiv',
+            'openaiCustomDiv',
             'huggingfaceCustomDiv',
             'tokenGroup'
         ];
@@ -63,23 +65,28 @@ function setupFormListeners() {
     const demoModelSource = document.getElementById('demoModelSource');
     if (demoModelSource) {
         demoModelSource.addEventListener('change', function() {
-            const googleModels = document.getElementById('googleModels');
-            const huggingfaceModels = document.getElementById('huggingfaceModels');
+            const googleModels = document.getElementById('demoGoogleModels');
+            const openaiModels = document.getElementById('demoOpenaiModels');
+            const huggingfaceModels = document.getElementById('demoHuggingfaceModels');
             const repoIdGroup = document.getElementById('demoRepoIdGroup');
-            const tokenGroup = document.getElementById('tokenGroup');
+            const tokenGroup = document.getElementById('demoTokenGroup');
             
             // Reset and hide all model sections
-            [googleModels, huggingfaceModels, repoIdGroup].forEach(el => {
+            [googleModels, openaiModels, huggingfaceModels, repoIdGroup, tokenGroup].forEach(el => {
                 if (el) el.classList.add('initially-hidden');
             });
             
             // Reset custom inputs
-            document.getElementById('googleCustomDiv')?.classList.add('initially-hidden');
-            document.getElementById('huggingfaceCustomDiv')?.classList.add('initially-hidden');
+            document.getElementById('demoGoogleCustomDiv')?.classList.add('initially-hidden');
+            document.getElementById('demoHuggingfaceCustomDiv')?.classList.add('initially-hidden');
+            document.getElementById('demoOpenaiCustomDiv')?.classList.add('initially-hidden');
 
             // Show relevant sections
             if (this.value === 'google') {
                 googleModels?.classList.remove('initially-hidden');
+                tokenGroup?.classList.remove('initially-hidden');
+            } else if (this.value === 'openai') {
+                openaiModels?.classList.remove('initially-hidden');
                 tokenGroup?.classList.remove('initially-hidden');
             } else if (this.value === 'huggingface') {
                 huggingfaceModels?.classList.remove('initially-hidden');
@@ -90,8 +97,18 @@ function setupFormListeners() {
     }
 
     // Google model change handler
-    document.getElementById('googleModelName').addEventListener('change', function() {
-        const customDiv = document.getElementById('googleCustomDiv');
+    document.getElementById('demoGoogleModelName')?.addEventListener('change', function() {
+        const customDiv = document.getElementById('demoGoogleCustomDiv');
+        if (this.value === 'custom') {
+            customDiv?.classList.remove('initially-hidden');
+        } else {
+            customDiv?.classList.add('initially-hidden');
+        }
+    });
+
+    // OpenAI model change handler
+    document.getElementById('demoOpenaiModelName')?.addEventListener('change', function() {
+        const customDiv = document.getElementById('demoOpenaiCustomDiv');
         if (this.value === 'custom') {
             customDiv?.classList.remove('initially-hidden');
         } else {
@@ -100,8 +117,8 @@ function setupFormListeners() {
     });
 
     // Hugging Face model change handler
-    document.getElementById('huggingfaceModelName').addEventListener('change', function() {
-        const customDiv = document.getElementById('huggingfaceCustomDiv');
+    document.getElementById('demoHuggingfaceModelName')?.addEventListener('change', function() {
+        const customDiv = document.getElementById('demoHuggingfaceCustomDiv');
         if (this.value === 'custom') {
             customDiv?.classList.remove('initially-hidden');
         } else {
@@ -120,14 +137,19 @@ DataDialogue.submitDemoForm = async () => {
     let modelName = '';
     let repoID = '';
     if (modelSource === 'google') {
-        const googleModel = document.getElementById('googleModelName').value;
+        const googleModel = document.getElementById('demoGoogleModelName').value;
         modelName = googleModel === 'custom' ? 
-            document.getElementById('googleCustomModel').value : 
+            document.getElementById('demoGoogleCustomModel').value : 
             googleModel;
-    } else {
-        const huggingfaceModel = document.getElementById('huggingfaceModelName').value;
+    } else if (modelSource === 'openai') {
+        const openaiModel = document.getElementById('demoOpenaiModelName').value;
+        modelName = openaiModel === 'custom' ? 
+            document.getElementById('demoOpenaiCustomModel').value : 
+            openaiModel;
+    } else if (modelSource === 'huggingface') {
+        const huggingfaceModel = document.getElementById('demoHuggingfaceModelName').value;
         modelName = huggingfaceModel === 'custom' ? 
-            document.getElementById('huggingfaceCustomModel').value : 
+            document.getElementById('demoHuggingfaceCustomModel').value : 
             huggingfaceModel;
         repoID = document.getElementById('demoRepoId').value;
         
@@ -198,8 +220,10 @@ DataDialogue.resetDemoForm = () => {
         'demoRepoId': '',
         'demoToken': '',
         'googleModelName': '',
+        'openaiModelName': '',
         'huggingfaceModelName': '',
         'googleCustomModel': '',
+        'openaiCustomModel': '',
         'huggingfaceCustomModel': ''
     };
 
@@ -213,8 +237,10 @@ DataDialogue.resetDemoForm = () => {
     // Hide conditional sections
     const sectionsToHide = [
         'googleModels',
+        'openaiModels',
         'huggingfaceModels',
         'googleCustomDiv',
+        'openaiCustomDiv',
         'huggingfaceCustomDiv',
         'demoRepoIdGroup',
         'tokenGroup'
