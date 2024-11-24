@@ -13,7 +13,7 @@ from app.services.models.models import (
     LlamaGGUFLoader,
     OpenAILoader,
     ModelSource,
-    ModelFormat
+    ModelFormat,
 )
 
 
@@ -226,9 +226,7 @@ class AgentManagerService:
             db.test_connection()
             return db
         else:
-            raise ValueError(
-                    f"Unsupported source type: {register_params.sourceType}"
-            )
+            raise ValueError(f"Unsupported source type: {register_params.sourceType}")
 
     def _load_model(self, register_params: RegisterAgent):
         """
@@ -249,23 +247,20 @@ class AgentManagerService:
         # --------------------------------------------
         if register_params.modelSource == ModelSource.GOOGLE.value:
             self.model_manager.register_loader(
-                ModelSource.GOOGLE.value,
-                GoogleAILoader(api_key=register_params.token)
+                ModelSource.GOOGLE.value, GoogleAILoader(api_key=register_params.token)
             )
         elif register_params.modelSource == ModelSource.OPENAI.value:
             self.model_manager.register_loader(
-                ModelSource.OPENAI.value,
-                OpenAILoader(api_key=register_params.token)
+                ModelSource.OPENAI.value, OpenAILoader(api_key=register_params.token)
             )
         elif register_params.modelSource == ModelSource.HUGGINGFACE.value:
             if register_params.modelFormat == ModelFormat.GGUF.value:
                 self.model_manager.register_loader(
-                    ModelSource.HUGGINGFACE.value,
-                    LlamaGGUFLoader()
+                    ModelSource.HUGGINGFACE.value, LlamaGGUFLoader()
                 )
                 self.model_manager.register_downloader(
                     ModelSource.HUGGINGFACE.value,
-                    HuggingFaceDownloader(token=register_params.token)
+                    HuggingFaceDownloader(token=register_params.token),
                 )
             else:
                 raise Exception(

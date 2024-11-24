@@ -10,7 +10,7 @@ from app.schemas.responses import (
     AgentList,
     SQLResponse,
     GeneralResponse,
-    DialogueResult
+    DialogueResult,
 )
 from app.schemas.query import Query
 

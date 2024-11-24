@@ -1,10 +1,5 @@
 from typing import Any, List, Optional, Union, Generator
-from ..base import (
-    LLMInterface,
-    TaskType,
-    CompletionResponse,
-    EmbeddingResponse
-)
+from ..base import LLMInterface, TaskType, CompletionResponse, EmbeddingResponse
 
 
 class OpenAIWrapper(LLMInterface):
@@ -44,13 +39,15 @@ class OpenAIWrapper(LLMInterface):
 
             if stream:
                 response_stream = self._client.chat.completions.create(**params)
+
                 def generate_responses():
                     for chunk in response_stream:
                         if chunk.choices[0].delta.content:
                             yield CompletionResponse(
                                 text=chunk.choices[0].delta.content,
-                                finish_reason=chunk.choices[0].finish_reason
+                                finish_reason=chunk.choices[0].finish_reason,
                             )
+
                 return generate_responses()
             else:
                 response = self._client.chat.completions.create(**params)
@@ -59,7 +56,7 @@ class OpenAIWrapper(LLMInterface):
                     finish_reason=response.choices[0].finish_reason,
                     prompt_tokens=response.usage.prompt_tokens,
                     completion_tokens=response.usage.completion_tokens,
-                    total_tokens=response.usage.total_tokens
+                    total_tokens=response.usage.total_tokens,
                 )
         except Exception as e:
             raise RuntimeError(f"Error in OpenAI completion: {str(e)}")
@@ -67,12 +64,11 @@ class OpenAIWrapper(LLMInterface):
     def embed(self, text: str) -> EmbeddingResponse:
         try:
             response = self._client.embeddings.create(
-                model="text-embedding-3-small",
-                input=text
+                model="text-embedding-3-small", input=text
             )
             return EmbeddingResponse(
                 embedding=response.data[0].embedding,
-                model_name="text-embedding-3-small"
+                model_name="text-embedding-3-small",
             )
         except Exception as e:
             raise RuntimeError(f"Error in OpenAI embedding: {str(e)}")

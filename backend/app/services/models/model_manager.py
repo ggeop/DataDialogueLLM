@@ -173,4 +173,3 @@ class ModelManager:
         """Clear all model files and reset cache."""
         self.file_manager.clear_all_files()
         self.clear_cache()
-        
