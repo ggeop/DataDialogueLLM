@@ -9,6 +9,7 @@ repos:
     hooks:
     -   id: black
         language_version: python3
+        types: [python]
+        pass_filenames: false
         stages: [pre-commit]
         files: ^backend/  # Specify the backend directory
-        types: [python]
