@@ -31,7 +31,7 @@ class GoogleAILoader(ModelLoader):
         file_manager: ModelFileManager,
         downloader: Optional[ModelDownloader] = None,
         force_download: bool = False,
-        **kwargs
+        **kwargs,
     ) -> LLMInterface:
         """Load a Google AI model."""
         import google.generativeai as genai
