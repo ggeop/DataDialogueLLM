@@ -1,26 +1,26 @@
 from typing import Optional
 
 from ..base import LLMInterface, ModelLoader
-from .wrapper import GoogleAIWrapper
+from .wrapper import AnthropicWrapper
 
 from ...model_file_manager import ModelFileManager
 from ...downloader import ModelDownloader
 
 
-class GoogleAILoader(ModelLoader):
-    """Loader for Google AI models."""
+class AnthropicLoader(ModelLoader):
+    """Loader for Anthropic Claude models."""
 
     def __init__(self, api_key: str):
         """
-        Initialize Google AI loader.
+        Initialize Claude loader.
 
         Args:
-            api_key (str): Google AI API key
+            api_key (str): Anthropic API key
         """
-        import google.generativeai as genai
+        from anthropic import Anthropic
 
         self.api_key = api_key
-        genai.configure(api_key=api_key)
+        self.client = Anthropic(api_key=api_key)
 
     def load_model(
         self,
@@ -32,9 +32,6 @@ class GoogleAILoader(ModelLoader):
         force_download: bool = False,
         **kwargs,
     ) -> LLMInterface:
-        """Load a Google AI model."""
-        import google.generativeai as genai
-
-        # Google AI models are API-based, so we ignore file_manager and downloader
-        model = genai.GenerativeModel(model_name, **kwargs)
-        return GoogleAIWrapper(model)
+        """Load a Claude model."""
+        # Claude models are API-based, so we ignore file_manager and downloader
+        return AnthropicWrapper(self.client, model_name)

@@ -30,8 +30,7 @@ A user can select a LLM model and connect it with a data source and do his analy
 | <img src="frontend/static/images/google-logo.png" width="20"> | Google | ✔️ |
 | <img src="frontend/static/images/hf-logo.png" width="20">     | HF     | ✔️ |
 | <img src="frontend/static/images/openai-logo.png" width="20"> | OpenAI | ✔️ |
-| <img src="frontend\static\images\claude-ai-logo.png" width="20"> | Claude | ➖ |
-| <img src="frontend\static\images\perplexity-ai-logo.png" width="20"> | Perplexity | ➖ |
+| <img src="frontend\static\images\claude-ai-logo.png" width="20"> | Claude | ✔️ |
 
 
 
@@ -138,7 +137,7 @@ Experience our powerful demo with just one click! We've prepared everything you 
 
 ## Development
 
-For local development and setup instructions, please refer to our [Local Development Setup Guide](LOCAL_SETUP.md).
+For local development and setup instructions, please refer to our [Local Development Setup Guide](./docs/LOCAL_SETUP.md).
 
 The guide includes:
 - Local environment setup for Windows and Linux
@@ -173,7 +172,6 @@ data-dialogue/
 │       └── setup_windows.bat
 ├── docker-compose.yml
 ├── .gitignore
-├── LOCAL_SETUP.md
 └── README.md
 ```
 
@@ -184,7 +182,7 @@ Your feedback and contributions make DataDialogue better! If you have:
 - 🐞 Bug reports
 - 💡 General feedback
 
-Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
+Please read our [Contributing Guidelines](./docs/CONTRIBUTING.md) before submitting any pull requests.
 
 ## ♥️ Support and Community
 

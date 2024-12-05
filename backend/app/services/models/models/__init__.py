@@ -1,16 +1,18 @@
 from .base import ModelLoader
 from .google.loader import GoogleAILoader
-from .llama.loader import LlamaGGUFLoader
 from .openai.loader import OpenAILoader
-from .config import ModelSource, ModelFormat, ModelConfig, ModelOption
+from .anthropic.loader import AnthropicLoader
+from .llama.loader import LlamaGGUFLoader
+from .config import ModelProvider, ModelFormat, ModelConfig, ModelOption
 
 
 __all__ = [
     ModelLoader,
     GoogleAILoader,
-    LlamaGGUFLoader,
     OpenAILoader,
-    ModelSource,
+    AnthropicLoader,
+    LlamaGGUFLoader,
+    ModelProvider,
     ModelFormat,
     ModelConfig,
     ModelOption,

@@ -1,0 +1,58 @@
+commitizen:
+  name: cz_conventional_commits
+  version: 0.0.1
+  tag_format: $version
+  style: [
+    ["qmark", "fg:#ff9d00 bold"],
+    ["question", "bold"],
+    ["answer", "fg:#ff9d00 bold"],
+    ["pointer", "fg:#ff9d00 bold"],
+    ["highlighted", "fg:#ff9d00 bold"],
+    ["selected", "fg:#cc5454"],
+    ["separator", "fg:#cc5454"],
+    ["instruction", ""],
+    ["text", ""],
+    ["disabled", "fg:#858585 italic"]
+  ]
+  bump_message: "bump: version $current_version → $new_version"
+  commit:
+    message_template: "{{change_type}}{% if scope %}({{scope}}){% endif %}: {{message}}"
+  schema_pattern: "^(feat|fix|docs|style|refactor|perf|test|chore)(?:\\!)?(?:\\([^()]*\\))?\\!?:\\s.*$"
+  schema: |
+    <type>(<scope>): <description>
+    
+    [optional body]
+    
+    [optional footer(s)]
+  
+  questions:
+    - type: list
+      name: change_type
+      message: Select the type of change you are committing
+      choices:
+        - feat      # New feature (MINOR version)
+        - fix       # Bug fix (PATCH version)
+        - docs      # Documentation only
+        - style     # Code style changes
+        - refactor  # Code refactoring
+        - perf      # Performance improvements
+        - test      # Adding/updating tests
+        - chore     # Maintenance tasks
+    - type: input
+      name: scope
+      message: What is the scope of this change? (class/module name) (press [enter] to skip)
+      required: false
+    - type: input
+      name: message
+      message: Write a short description of the change
+      required: true
+  
+  example: |
+    feat(parser): add ability to parse arrays
+    fix(auth): handle JWT token expiration
+    docs(readme): update installation steps
+    style(users): format code according to guidelines
+    refactor(api): simplify error handling
+    perf(db): optimize query performance
+    test(login): add unit tests
+    chore(deps): update dependencies

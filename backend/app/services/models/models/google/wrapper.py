@@ -31,11 +31,9 @@ class GoogleAIWrapper(LLMInterface):
             "temperature": temperature,
             "top_p": top_p,
             "max_output_tokens": max_tokens,
-            "stop_sequences": stop
-            if isinstance(stop, list)
-            else [stop]
-            if stop
-            else None,
+            "stop_sequences": (
+                stop if isinstance(stop, list) else [stop] if stop else None
+            ),
         }
         generation_config = {
             k: v for k, v in generation_config.items() if v is not None

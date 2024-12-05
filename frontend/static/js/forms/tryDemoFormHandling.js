@@ -1,13 +1,9 @@
-DataDialogue.handleTryDemo = () => {
-    DataDialogue.openDemoForm();
-};
-
 DataDialogue.openDemoForm = () => {
     const { demoFormOverlay, demoFormContainer, menuIcon, tryDemoContainer } = DataDialogue.elements;
 
     if (demoFormOverlay && demoFormContainer) {
         // Reset form elements
-        document.getElementById('demoModelSource').value = '';
+        document.getElementById('demoModelProvider').value = '';
         
         // Clear any existing custom select before reinitializing
         const existingCustomSelect = document.querySelector('.custom-select-container');
@@ -15,25 +11,15 @@ DataDialogue.openDemoForm = () => {
             existingCustomSelect.remove();
         }
         
-        // Hide all conditional elements using your CSS class
-        const elementsToHide = [
-            'googleModels',
-            'openaiModels',
-            'huggingfaceModels',
-            'googleCustomDiv',
-            'openaiCustomDiv',
-            'huggingfaceCustomDiv',
-            'tokenGroup'
-        ];
+        // Hide conditional elements
+        const modelSelectContainer = document.getElementById('modelSelectContainer');
+        const tokenGroup = document.getElementById('tokenGroup');
         
-        elementsToHide.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.classList.add('initially-hidden');
-            }
-        });
-
-        DataDialogue.initializeCustomSelect('demo');
+        if (modelSelectContainer) modelSelectContainer.classList.add('initially-hidden');
+        if (tokenGroup) tokenGroup.classList.add('initially-hidden');
+        
+        // Initialize model selections - this now handles all the select creation logic
+        DataDialogue.initializeModelSelections('demo');
 
         // Show the form
         demoFormOverlay.style.display = 'block';
@@ -43,125 +29,43 @@ DataDialogue.openDemoForm = () => {
         // Hide menu icon and try demo button
         if (menuIcon) menuIcon.style.display = 'none';
         if (tryDemoContainer) tryDemoContainer.style.display = 'none';
-
-        // Set up event listeners
-        setupFormListeners();
     }
 };
-
-DataDialogue.closeDemoForm = () => {
-    const { demoFormContainer, demoFormOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
-    if (demoFormContainer) demoFormContainer.classList.remove('show');
-    if (demoFormOverlay) demoFormOverlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-    
-    // Show menu icon and try demo button
-    if (menuIcon) menuIcon.style.display = 'block';
-    if (tryDemoContainer) tryDemoContainer.style.display = 'block';
-};
-
-function setupFormListeners() {
-    // Model source change handler
-    const demoModelSource = document.getElementById('demoModelSource');
-    if (demoModelSource) {
-        demoModelSource.addEventListener('change', function() {
-            const googleModels = document.getElementById('demoGoogleModels');
-            const openaiModels = document.getElementById('demoOpenaiModels');
-            const huggingfaceModels = document.getElementById('demoHuggingfaceModels');
-            const repoIdGroup = document.getElementById('demoRepoIdGroup');
-            const tokenGroup = document.getElementById('demoTokenGroup');
-            
-            // Reset and hide all model sections
-            [googleModels, openaiModels, huggingfaceModels, repoIdGroup, tokenGroup].forEach(el => {
-                if (el) el.classList.add('initially-hidden');
-            });
-            
-            // Reset custom inputs
-            document.getElementById('demoGoogleCustomDiv')?.classList.add('initially-hidden');
-            document.getElementById('demoHuggingfaceCustomDiv')?.classList.add('initially-hidden');
-            document.getElementById('demoOpenaiCustomDiv')?.classList.add('initially-hidden');
-
-            // Show relevant sections
-            if (this.value === 'google') {
-                googleModels?.classList.remove('initially-hidden');
-                tokenGroup?.classList.remove('initially-hidden');
-            } else if (this.value === 'openai') {
-                openaiModels?.classList.remove('initially-hidden');
-                tokenGroup?.classList.remove('initially-hidden');
-            } else if (this.value === 'huggingface') {
-                huggingfaceModels?.classList.remove('initially-hidden');
-                repoIdGroup?.classList.remove('initially-hidden');
-                tokenGroup?.classList.remove('initially-hidden');
-            }
-        });
-    }
-
-    // Google model change handler
-    document.getElementById('demoGoogleModelName')?.addEventListener('change', function() {
-        const customDiv = document.getElementById('demoGoogleCustomDiv');
-        if (this.value === 'custom') {
-            customDiv?.classList.remove('initially-hidden');
-        } else {
-            customDiv?.classList.add('initially-hidden');
-        }
-    });
-
-    // OpenAI model change handler
-    document.getElementById('demoOpenaiModelName')?.addEventListener('change', function() {
-        const customDiv = document.getElementById('demoOpenaiCustomDiv');
-        if (this.value === 'custom') {
-            customDiv?.classList.remove('initially-hidden');
-        } else {
-            customDiv?.classList.add('initially-hidden');
-        }
-    });
-
-    // Hugging Face model change handler
-    document.getElementById('demoHuggingfaceModelName')?.addEventListener('change', function() {
-        const customDiv = document.getElementById('demoHuggingfaceCustomDiv');
-        if (this.value === 'custom') {
-            customDiv?.classList.remove('initially-hidden');
-        } else {
-            customDiv?.classList.add('initially-hidden');
-        }
-    });
-}
 
 DataDialogue.submitDemoForm = async () => {
-    const modelSource = document.getElementById('demoModelSource').value;
-    if (!modelSource) {
-        DataDialogue.showMessage('Please select a model source');
+    const modelProvider = document.getElementById('demoModelProvider').value;
+    if (!modelProvider) {
+        DataDialogue.showMessage('Please select a Model Provider');
         return;
     }
 
+    const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === modelProvider);
     let modelName = '';
     let repoID = '';
-    if (modelSource === 'google') {
-        const googleModel = document.getElementById('demoGoogleModelName').value;
-        modelName = googleModel === 'custom' ? 
-            document.getElementById('demoGoogleCustomModel').value : 
-            googleModel;
-    } else if (modelSource === 'openai') {
-        const openaiModel = document.getElementById('demoOpenaiModelName').value;
-        modelName = openaiModel === 'custom' ? 
-            document.getElementById('demoOpenaiCustomModel').value : 
-            openaiModel;
-    } else if (modelSource === 'huggingface') {
-        const huggingfaceModel = document.getElementById('demoHuggingfaceModelName').value;
-        modelName = huggingfaceModel === 'custom' ? 
-            document.getElementById('demoHuggingfaceCustomModel').value : 
-            huggingfaceModel;
-        repoID = document.getElementById('demoRepoId').value;
+    
+    if (selectedConfig?.options.some(opt => opt.repo_id)) {
+        repoID = document.getElementById('demoRepoSelect')?.value;
+        const variantSelect = document.getElementById('demoVariantSelect');
+        const customInput = document.getElementById('demoCustomModel');
+        modelName = variantSelect?.value === 'custom' ? customInput?.value : variantSelect?.value;
         
         if (!repoID) {
-            DataDialogue.showMessage('Please enter a repository ID');
+            DataDialogue.showMessage('Please select a repository');
             return;
         }
-    }
-
-    if (!modelName) {
-        DataDialogue.showMessage('Please select or enter a model name');
-        return;
+        if (!modelName) {
+            DataDialogue.showMessage('Please select a model variant or enter a custom model name');
+            return;
+        }
+    } else {
+        const modelSelect = document.getElementById('demoModelSelect');
+        const customInput = document.getElementById('demoCustomModel');
+        modelName = modelSelect?.value === 'custom' ? customInput?.value : modelSelect?.value;
+        
+        if (!modelName) {
+            DataDialogue.showMessage('Please select a model or enter a custom model name');
+            return;
+        }
     }
 
     const formData = {
@@ -172,11 +76,11 @@ DataDialogue.submitDemoForm = async () => {
         password: '123456',
         host: 'localhost',
         port: '5432',
-        modelSource: modelSource,
+        modelProvider: modelProvider,
         modelName: modelName,
         repoID: repoID,
         token: document.getElementById('demoToken')?.value || '',
-        modelFormat: modelSource === 'huggingface' ? 'gguf' : ''
+        modelFormat: modelProvider === 'huggingface' ? 'gguf' : ''
     };
 
     DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
@@ -214,42 +118,77 @@ DataDialogue.submitDemoForm = async () => {
 };
 
 DataDialogue.resetDemoForm = () => {
-    // Reset model source and related fields
-    const modelFields = {
-        'demoModelSource': '',
-        'demoRepoId': '',
-        'demoToken': '',
-        'googleModelName': '',
-        'openaiModelName': '',
-        'huggingfaceModelName': '',
-        'googleCustomModel': '',
-        'openaiCustomModel': '',
-        'huggingfaceCustomModel': ''
-    };
+    // Reset Model Provider
+    const demoModelProvider = document.getElementById('demoModelProvider');
+    if (demoModelProvider) {
+        demoModelProvider.value = '';
+    }
 
-    Object.entries(modelFields).forEach(([id, defaultValue]) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.value = defaultValue;
-        }
-    });
+    // Reset token
+    const tokenInput = document.getElementById('demoToken');
+    if (tokenInput) {
+        tokenInput.value = '';
+    }
 
-    // Hide conditional sections
-    const sectionsToHide = [
-        'googleModels',
-        'openaiModels',
-        'huggingfaceModels',
-        'googleCustomDiv',
-        'openaiCustomDiv',
-        'huggingfaceCustomDiv',
-        'demoRepoIdGroup',
-        'tokenGroup'
+    // Reset model select container and its contents
+    const modelSelectContainer = document.getElementById('demoModelSelectContainer');
+    if (modelSelectContainer) {
+        modelSelectContainer.innerHTML = ''; // Clear all dynamic content
+        modelSelectContainer.classList.add('initially-hidden');
+    }
+
+    // Explicitly reset all possible model-related fields
+    const fieldsToReset = [
+        'demoModelSelect',
+        'demoRepoSelect',
+        'demoVariantSelect',
+        'demoCustomModel'
     ];
 
-    sectionsToHide.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.classList.add('initially-hidden');
+    fieldsToReset.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.value = '';
         }
     });
+
+    // Reset custom model container if it exists
+    const customModelContainer = document.getElementById('demoCustomModelContainer');
+    if (customModelContainer) {
+        customModelContainer.style.display = 'none';
+    }
+
+    // Hide tokenGroup
+    const tokenGroup = document.getElementById('tokenGroup');
+    if (tokenGroup) {
+        tokenGroup.classList.add('initially-hidden');
+    }
+
+    // Reset custom select display
+    const customSelectTrigger = document.querySelector('.custom-select-trigger .selected-option');
+    if (customSelectTrigger) {
+        customSelectTrigger.innerHTML = 'Select provider...';
+    }
+
+    // Clear model icon
+    const modelIcon = document.querySelector('.model-icon');
+    if (modelIcon) {
+        modelIcon.innerHTML = '';
+    }
+
+    // Force a reflow to ensure all changes take effect
+    if (modelSelectContainer) {
+        modelSelectContainer.offsetHeight;
+    }
+};
+
+DataDialogue.closeDemoForm = () => {
+    const { demoFormContainer, demoFormOverlay, menuIcon, tryDemoContainer } = DataDialogue.elements;
+    if (demoFormContainer) demoFormContainer.classList.remove('show');
+    if (demoFormOverlay) demoFormOverlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    // Show menu icon and try demo button
+    if (menuIcon) menuIcon.style.display = 'block';
+    if (tryDemoContainer) tryDemoContainer.style.display = 'block';
 };
