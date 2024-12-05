@@ -35,10 +35,12 @@
 }
 
 .form-container.show {
+    margin-bottom: 1rem;
     display: block;
 }
 
 .form-group {
+    display: block;
     margin-bottom: 1rem;
 }
 
@@ -76,7 +78,16 @@ select, input[type="text"], input[type="password"] {
 }
 
 .initially-hidden {
-    display: none !important;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.form-group.visible {
+    opacity: 1;
+    height: auto;
+    overflow: visible;
 }
 
 .visible-section {

@@ -14,11 +14,14 @@ class ModelFormat(str, Enum):
 
 
 class ModelOption(BaseModel):
-    value: str
-    label: str
-    suggested: bool = False
+    value: Optional[str] = None
+    label: Optional[str] = None
+    suggested: Optional[bool] = False
     size: Optional[str] = None
     repo_id: Optional[str] = None
+    has_token: Optional[bool] = None
+    # Nested options for repo variants (e.g for HuggingFace models)
+    variants: Optional[List["ModelOption"]] = None
 
 
 class ModelConfig(BaseModel):
@@ -27,4 +30,8 @@ class ModelConfig(BaseModel):
     logo_path: str
     suggested: bool = False
     is_local: bool = False
+    has_token: Optional[bool] = None
     options: List[ModelOption]
+
+
+ModelOption.model_rebuild()

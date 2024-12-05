@@ -21,6 +21,7 @@ async def get_models():
             logo_path="/static/images/google-logo.png",
             suggested=True,
             is_local=False,
+            has_token=True,
             options=[
                 ModelOption(value="gemini-pro", label="gemini-pro", suggested=True),
                 ModelOption(
@@ -36,6 +37,7 @@ async def get_models():
             display_name="OpenAI",
             logo_path="/static/images/openai-logo.png",
             is_local=False,
+            has_token=True,
             options=[
                 ModelOption(value="gpt-4o", label="GPT-4o", suggested=True),
                 ModelOption(value="gpt-4o-mini", label="GPT-4o mini"),
@@ -46,27 +48,58 @@ async def get_models():
         ),
         ModelConfig(
             source_id=ModelSource.HUGGINGFACE,
-            display_name="Hugging Face",
+            display_name="Hugging Face (.gguf)",
             logo_path="/static/images/hf-logo.png",
             is_local=True,
             options=[
                 ModelOption(
                     repo_id="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-                    value="meta-llama-3.1-8b-instruct-q8_0",
-                    label="Meta-Llama-3.1-8B-Instruct-Q8_0",
-                    size="8.54GB",
+                    label="Meta-Llama-3.1-8B-Instruct-GGUF",
+                    has_token=False,
+                    variants=[
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-IQ4_XS.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-IQ4_XS",
+                            size="4.45GB",
+                        ),
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-Q3_K_L.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-Q3_K_L",
+                            size="4.32GB",
+                        ),
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-Q4_K_M",
+                            size="4.92GB",
+                        ),
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-Q5_K_M.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-Q5_K_M",
+                            size="5.73GB",
+                        ),
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-Q6_K.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-Q6_K",
+                            size="6.60GB",
+                        ),
+                        ModelOption(
+                            value="Meta-Llama-3.1-8B-Instruct-Q8_0.gguf",
+                            label="Meta-Llama-3.1-8B-Instruct-Q8_0",
+                            size="8.54GB",
+                        ),
+                    ],
                 ),
                 ModelOption(
-                    repo_id="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-                    value="meta-llama-3.1-8b-instruct-q6_k",
-                    label="Meta-Llama-3.1-8B-Instruct-Q6_K",
-                    size="6.60GB",
-                ),
-                ModelOption(
-                    repo_id="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF",
-                    value="meta-llama-3.1-8b-instruct-q5_k_m",
-                    label="Meta-Llama-3.1-8B-Instruct-Q5_K_M",
-                    size="5.73GB",
+                    repo_id="QuantFactory/NuExtract-GGUF",
+                    label="NuExtract-GGUF",
+                    has_token=False,
+                    variants=[
+                        ModelOption(
+                            value="NuExtract.Q8_0.gguf",
+                            label="NuExtract.Q8_0",
+                            size="4.06GB",
+                        ),
+                    ],
                 ),
             ],
         ),

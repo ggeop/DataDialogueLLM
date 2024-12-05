@@ -4,5 +4,7 @@ repos:
     hooks:
     -   id: black
         language_version: python3
-        # Specify the backend directory
-        files: ^backend/
+        stages: [commit]
+#         files: ^backend/  # Specify the backend directory
+#         types: [python]
+#         stages: [commit]  # This fixes the invalid 'pre-commit' stage

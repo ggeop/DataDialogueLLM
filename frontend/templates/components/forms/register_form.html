@@ -28,77 +28,18 @@
         <div class="form-group">
             <label>Model Source:</label>
             <div class="select-with-icon">
-                <div class="model-icon">
-                    <img src="/static/images/google-logo.png" class="source-icon" data-source="google" alt="Google Logo">
-                    <img src="/static/images/openai-logo.png" class="source-icon" data-source="openai" alt="OpenAI Logo">
-                    <img src="/static/images/hf-logo.png" class="source-icon" data-source="huggingface" alt="Hugging Face Logo">
-                </div>
-                <select id="ModelSource" name="ModelSource">
-                    <option value="">Select source...</option>
-                    <option value="google">Google Cloud AI (Suggested)</option>
-                    <option value="openai">OpenAI</option>
-                    <option value="huggingface">Hugging Face</option>
-                </select>
+                <div class="model-icon"></div>
+                <select id="ModelSource" class="form-control"></select>
             </div>
         </div>
-    
-        <div id="googleModels" class="form-group initially-hidden">
-            <label for="googleModelName">Google Model</label>
-            <select id="googleModelName" class="form-control">
-                <option value="">Select model...</option>
-                <option value="gemini-pro">gemini-pro (Suggested)</option>
-                <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
-                <option value="gemini-1.5-flash">gemini-1.5-flash</option>
-                <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b</option>
-                <option value="custom">Custom Model...</option>
-            </select>
-            <div id="googleCustomDiv" class="form-group initially-hidden">
-                <input type="text" id="googleCustomModel" class="form-control" placeholder="Enter custom model name">
-            </div>
+
+        <div id="modelSelectContainer" class="form-group initially-hidden">
+            <!-- Dynamic model selections will be inserted here -->
         </div>
-    
-        <div id="openaiModels" class="form-group initially-hidden">
-            <label for="openaiModelName">OpenAI Model</label>
-            <select id="openaiModelName" class="form-control">
-                <option value="">Select model...</option>
-                <option value="gpt-4o">GPT-4o (Suggested)</option>
-                <option value="gpt-4o-mini">GPT-4o mini</option>
-                <option value="gpt-4-turbo">GPT-4 turbo</option>
-                <option value="gpt-4">GPT-4</option>
-                <option value="gpt-3.5-turbo">GPT-3.5 turbo</option>
-                <option value="gpt-4o-latest">GPT-4o latest</option>
-                <option value="custom">Custom Model...</option>
-            </select>
-            <div id="openaiCustomDiv" class="form-group initially-hidden">
-                <input type="text" id="openaiCustomModel" class="form-control" placeholder="Enter custom model name">
-            </div>
-        </div>
-    
-        <div id="huggingfaceModels" class="form-group initially-hidden">
-            <label for="huggingfaceModelName">Hugging Face Model</label>
-            <select id="huggingfaceModelName" class="form-control">
-                <option value="">Select model...</option>
-                <option value="meta-llama-3.1-8b-instruct-q8_0">Meta-Llama-3.1-8B-Instruct-Q8_0 (8.54GB)</option>
-                <option value="meta-llama-3.1-8b-instruct-q6_k">Meta-Llama-3.1-8B-Instruct-Q6_K (6.60GB)</option>
-                <option value="meta-llama-3.1-8b-instruct-q5_k_m">Meta-Llama-3.1-8B-Instruct-Q5_K_M (5.73GB)</option>
-                <option value="meta-llama-3.1-8b-instruct-q4_k_m">Meta-Llama-3.1-8B-Instruct-Q4_K_M (4.92GB)</option>
-                <option value="meta-llama-3.1-8b-instruct-iq4_xs">Meta-Llama-3.1-8B-Instruct-IQ4_XS (4.45GB)</option>
-                <option value="meta-llama-3.1-8b-instruct-q3_k_l">Meta-Llama-3.1-8B-Instruct-Q3_K_L (4.32GB)</option>
-                <option value="custom">Custom Model...</option>
-            </select>
-            <div id="huggingfaceCustomDiv" class="form-group initially-hidden">
-                <input type="text" id="huggingfaceCustomModel" class="form-control" placeholder="Enter custom model name">
-            </div>
-        </div>
-    
-        <div id="repoIdGroup" class="form-group initially-hidden">
-            <label for="repoId">Repository ID:</label>
-            <input type="text" id="repoId" name="repoId" class="form-control">
-        </div>
-    
+
         <div id="tokenGroup" class="form-group initially-hidden">
             <label for="token">Token:</label>
-            <input type="password" id="token" name="token" class="form-control">
+            <input type="password" id="token" class="form-control">
         </div>
     </div>
 
@@ -107,34 +48,34 @@
         
         <div class="form-group">
             <label for="sourceType">Source Type:</label>
-            <select id="sourceType">
+            <select id="sourceType" class="form-control">
                 <option value="postgresql">PostgreSQL</option>
             </select>
         </div>
 
         <div class="form-group">
             <label for="dbname">Database:</label>
-            <input type="text" id="dbname" placeholder="Enter database name">
+            <input type="text" id="dbname" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="username">Username:</label>
-            <input type="text" id="username" placeholder="Enter username">
+            <input type="text" id="username" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Enter password">
+            <input type="password" id="password" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="host">Host:</label>
-            <input type="text" id="host" placeholder="Enter host">
+            <input type="text" id="host" class="form-control">
         </div>
 
         <div class="form-group">
             <label for="port">Port:</label>
-            <input type="text" id="port" placeholder="Enter port">
+            <input type="text" id="port" class="form-control">
         </div>
     </div>
 
