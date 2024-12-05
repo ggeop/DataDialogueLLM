@@ -20,7 +20,7 @@ class OpenAILoader(ModelLoader):
         file_manager: ModelFileManager,
         downloader: Optional[ModelDownloader] = None,
         force_download: bool = False,
-        **kwargs
+        **kwargs,
     ) -> LLMInterface:
         """Load an OpenAI model."""
         return OpenAIWrapper(self.client, model_name)

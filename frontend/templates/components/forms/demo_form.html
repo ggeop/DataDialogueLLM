@@ -1,9 +1,8 @@
 <div id="demoFormOverlay" class="page-overlay">
-    <div id="demoFormContainer" class="form-container demo-form">
+  <div id="demoFormContainer" class="form-container demo-form">
       <div class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-message">dfdfd
-        </div>
+          <div class="loading-spinner"></div>
+        <div class="loading-message"></div>
       </div>
       <button class="cancel-close-btn" onclick="DataDialogue.closeDemoForm()">&times;</button>
       <div class="demo-header">
@@ -22,84 +21,22 @@
       </div>
 
       <div class="form-group">
-        <label>Model Source:</label>
+        Model Provider:
         <div class="select-with-icon">
             <div class="model-icon">
-                <img src="{{ url_for('static', filename='images/google-logo.png') }}" alt="Google" data-source="google" class="source-icon">
-                <img src="{{ url_for('static', filename='images/openai-logo.png') }}" alt="OpenAI" data-source="openai" class="source-icon">
-                <img src="{{ url_for('static', filename='images/hf-logo.png') }}" alt="Hugging Face" data-source="huggingface" class="source-icon">
+                <!-- Icons will be populated dynamically -->
             </div>
-            <select id="demoModelSource" name="modelSource">
-                <option value="">Select source...</option>
-                <option value="google">Google Cloud AI (Suggested)</option>
-                <option value="openai">OpenAI</option>
-                <option value="huggingface">Hugging Face</option>
-            </select>
+            <select id="demoModelProvider" class="form-control"></select>
         </div>
       </div>
-      
-        <div id="demoGoogleModels" class="form-group initially-hidden">
-          <label for="demoGoogleModelName">Google Model</label>
-          <select id="demoGoogleModelName" class="form-control">
-              <option value="">Select model...</option>
-              <option value="gemini-pro">gemini-pro (Suggested)</option>
-              <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
-              <option value="gemini-1.5-flash">gemini-1.5-flash</option>
-              <option value="gemini-1.5-flash-8b">gemini-1.5-flash-8b</option>
-              <option value="custom">Custom Model...</option>
-          </select>
-          <div id="demoGoogleCustomDiv" class="form-group initially-hidden">
-              <input type="text" id="demoGoogleCustomModel" class="form-control" placeholder="Enter custom model name">
-          </div>
-      </div>
 
-      <div id="demoOpenaiModels" class="form-group initially-hidden">
-          <label for="demoOpenaiModelName">OpenAI Model</label>
-          <select id="demoOpenaiModelName" class="form-control">
-              <option value="">Select model...</option>
-              <option value="gpt-4o">GPT-4o (Suggested)</option>
-              <option value="gpt-4o-mini">GPT-4o mini</option>
-              <option value="gpt-4-turbo">GPT-4 turbo</option>
-              <option value="gpt-4">GPT-4</option>
-              <option value="gpt-3.5-turbo">GPT-3.5 turbo</option>
-              <option value="gpt-4o-latest">GPT-4o latest</option>
-              <option value="custom">Custom Model...</option>
-          </select>
-          <div id="demoOpenaiCustomDiv" class="form-group initially-hidden">
-              <input type="text" id="demoOpenaiCustomModel" class="form-control" placeholder="Enter custom model name">
-          </div>
-      </div>
+      <div id="demoModelSelectContainer" class="form-group initially-hidden"></div>
 
-      <div id="demoRepoIdGroup" class="form-group initially-hidden">
-        <label for="demoRepoId">Repository ID</label>
-        <input type="text" id="demoRepoId" name="repoId" value="lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF">
-      </div>
-
-      <div id="demoHuggingfaceModels" class="form-group initially-hidden">
-          <label for="demoHuggingfaceModelName">Hugging Face Model</label>
-          <select id="demoHuggingfaceModelName" class="form-control">
-              <option value="">Select model...</option>
-              <option value="meta-llama-3.1-8b-instruct-q8_0">Meta-Llama-3.1-8B-Instruct-Q8_0 (8.54GB)</option>
-              <option value="meta-llama-3.1-8b-instruct-q6_k">Meta-Llama-3.1-8B-Instruct-Q6_K (6.60GB)</option>
-              <option value="meta-llama-3.1-8b-instruct-q5_k_m">Meta-Llama-3.1-8B-Instruct-Q5_K_M (5.73GB)</option>
-              <option value="meta-llama-3.1-8b-instruct-q4_k_m">Meta-Llama-3.1-8B-Instruct-Q4_K_M (4.92GB)</option>
-              <option value="meta-llama-3.1-8b-instruct-iq4_xs">Meta-Llama-3.1-8B-Instruct-IQ4_XS (4.45GB)</option>
-              <option value="meta-llama-3.1-8b-instruct-q3_k_l">Meta-Llama-3.1-8B-Instruct-Q3_K_L (4.32GB)</option>
-              <option value="custom">Custom Model...</option>
-          </select>
-          <div id="demoHuggingfaceCustomDiv" class="form-group initially-hidden">
-              <input type="text" id="demoHuggingfaceCustomModel" class="form-control" placeholder="Enter custom model name">
-          </div>
-      </div>
-
-      
-      
       <div id="tokenGroup" class="form-group">
-          <label for="demoToken">Token (Optional)</label>
-          <input type="password" id="demoToken" name="token" placeholder="Enter your API token">
+          <label>Token (Optional)</label>
+          <input type="password" id="demoToken" class="form-control">
       </div>
 
       <button type="button" class="submit-btn demo-submit-btn" onclick="DataDialogue.submitDemoForm()">Launch Demo Experience</button>
-      </form>
-    </div>
   </div>
+</div>

@@ -1,8 +1,15 @@
 repos:
+- repo: https://github.com/commitizen-tools/commitizen
+  rev: v3.13.0
+  hooks:
+    - id: commitizen
+      stages: [commit-msg]
 -   repo: https://github.com/psf/black
     rev: 23.12.1
     hooks:
     -   id: black
         language_version: python3
-        # Specify the backend directory
-        files: ^backend/
+        types: [python]
+        stages: [pre-commit]
+        files: ^backend/.*\.py$
+        args: [backend]

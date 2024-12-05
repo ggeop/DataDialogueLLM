@@ -4,8 +4,8 @@ set -x  # Enable verbose logging
 
 echo "Starting init-db.sh script"
 
-# Unzip the dummy data
-unzip /docker-entrypoint-initdb.d/dvdrental.zip -d /tmp/dvdrental
+# Unzip the dummy data with overwrite flag (-o) to avoid prompts
+unzip -o /docker-entrypoint-initdb.d/dvdrental.zip -d /tmp/dvdrental
 
 # Extract the tar file
 tar -xvf /tmp/dvdrental/*.tar -C /tmp/dvdrental

@@ -12,7 +12,7 @@ class RegisterAgent(BaseModel):
     host: str
     port: str
     # Register Model
-    modelSource: str
+    modelProvider: str
     repoID: str
     modelFormat: str
     modelName: str

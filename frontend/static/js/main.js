@@ -53,11 +53,11 @@ DataDialogue.attachEventListeners = () => {
         visibleInput.addEventListener('keypress', DataDialogue.handleEnterKey);
     }
     if (menuIcon) menuIcon.addEventListener('click', DataDialogue.toggleMenu);
-    if (cancelCloseBtn) cancelCloseBtn.addEventListener('click', DataDialogue.toggleForm);
+    if (cancelCloseBtn) cancelCloseBtn.addEventListener('click', DataDialogue.closeForm);
     if (pageOverlay) pageOverlay.addEventListener('click', DataDialogue.handleOverlayClick);
     if (dropdownButton) dropdownButton.addEventListener('click', DataDialogue.toggleDropdown);
     if (dropdownList) dropdownList.addEventListener('click', DataDialogue.handleOptionClick);
-    if (tryDemoButton) tryDemoButton.addEventListener('click', DataDialogue.handleTryDemo);
+    if (tryDemoButton) tryDemoButton.addEventListener('click', DataDialogue.openDemoForm);
 
     // Global event handlers
     document.addEventListener('click', DataDialogue.handleOutsideClick);
@@ -97,5 +97,5 @@ document.addEventListener('DOMContentLoaded', initializeWhenReady);
 
 // Make necessary functions globally accessible
 window.DataDialogue = DataDialogue;
-window.toggleForm = DataDialogue.toggleForm;
+window.closeForm = DataDialogue.closeForm;
 window.submitForm = DataDialogue.submitForm;

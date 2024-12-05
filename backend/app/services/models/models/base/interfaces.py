@@ -73,7 +73,7 @@ class ModelLoader(ABC):
         file_manager: ModelFileManager,
         downloader: Optional[ModelDownloader] = None,
         force_download: bool = False,
-        **kwargs
+        **kwargs,
     ) -> LLMInterface:
         """
         Load a model with the specific implementation.
