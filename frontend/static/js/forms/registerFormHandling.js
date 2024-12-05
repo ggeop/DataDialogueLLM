@@ -57,22 +57,22 @@ DataDialogue.handleAgentTypeChange = () => {
 
 DataDialogue.submitForm = async () => {
     const agentType = document.getElementById('agentType')?.value;
-    const modelSource = document.getElementById('ModelSource')?.value;
+    const modelProvider = document.getElementById('ModelProvider')?.value;
     
     if (!agentType) {
         DataDialogue.showMessage('Please select an agent type');
         return;
     }
 
-    if (!modelSource) {
-        DataDialogue.showMessage('Please select a model source');
+    if (!modelProvider) {
+        DataDialogue.showMessage('Please select a Model Provider');
         return;
     }
 
     // Get the selected config to determine how to get the model name
-    const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === modelSource);
+    const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === modelProvider);
     if (!selectedConfig) {
-        DataDialogue.showMessage('Invalid model source');
+        DataDialogue.showMessage('Invalid Model Provider');
         return;
     }
 
@@ -118,9 +118,9 @@ DataDialogue.submitForm = async () => {
         host: document.getElementById('host')?.value || '',
         port: document.getElementById('port')?.value || '',
         // LLM Model
-        modelSource: modelSource,
+        modelProvider: modelProvider,
         repoID: repoID,
-        modelFormat: modelSource === 'huggingface' ? 'gguf' : '',
+        modelFormat: modelProvider === 'huggingface' ? 'gguf' : '',
         modelName: modelName,
         token: document.getElementById('token')?.value || ''
     };
@@ -138,7 +138,7 @@ DataDialogue.submitForm = async () => {
         return;
     }
 
-    if (modelSource === 'huggingface' && !formData.repoID) {
+    if (modelProvider === 'huggingface' && !formData.repoID) {
         DataDialogue.showMessage('Please enter a repository ID');
         return;
     }
@@ -199,7 +199,7 @@ DataDialogue.resetRegisterForm = () => {
     });
 
     // Reset model selections
-    const modelFields = ['ModelSource', 'modelSelect', 'repoSelect', 'variantSelect', 'token'];
+    const modelFields = ['ModelProvider', 'modelSelect', 'repoSelect', 'variantSelect', 'token'];
     modelFields.forEach(id => {
         const element = document.getElementById(id);
         if (element) {
@@ -220,7 +220,7 @@ DataDialogue.resetRegisterForm = () => {
     // Reset custom select display
     const customSelectTrigger = document.querySelector('.custom-select-trigger .selected-option');
     if (customSelectTrigger) {
-        customSelectTrigger.innerHTML = 'Select source...';
+        customSelectTrigger.innerHTML = 'Select provider...';
     }
 
     // Clear model icon

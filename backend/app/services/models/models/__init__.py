@@ -3,7 +3,7 @@ from .google.loader import GoogleAILoader
 from .openai.loader import OpenAILoader
 from .anthropic.loader import AnthropicLoader
 from .llama.loader import LlamaGGUFLoader
-from .config import ModelSource, ModelFormat, ModelConfig, ModelOption
+from .config import ModelProvider, ModelFormat, ModelConfig, ModelOption
 
 
 __all__ = [
@@ -12,7 +12,7 @@ __all__ = [
     OpenAILoader,
     AnthropicLoader,
     LlamaGGUFLoader,
-    ModelSource,
+    ModelProvider,
     ModelFormat,
     ModelConfig,
     ModelOption,

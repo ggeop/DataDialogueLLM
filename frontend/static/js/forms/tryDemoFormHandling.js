@@ -3,7 +3,7 @@ DataDialogue.openDemoForm = () => {
 
     if (demoFormOverlay && demoFormContainer) {
         // Reset form elements
-        document.getElementById('demoModelSource').value = '';
+        document.getElementById('demoModelProvider').value = '';
         
         // Clear any existing custom select before reinitializing
         const existingCustomSelect = document.querySelector('.custom-select-container');
@@ -33,13 +33,13 @@ DataDialogue.openDemoForm = () => {
 };
 
 DataDialogue.submitDemoForm = async () => {
-    const modelSource = document.getElementById('demoModelSource').value;
-    if (!modelSource) {
-        DataDialogue.showMessage('Please select a model source');
+    const modelProvider = document.getElementById('demoModelProvider').value;
+    if (!modelProvider) {
+        DataDialogue.showMessage('Please select a Model Provider');
         return;
     }
 
-    const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === modelSource);
+    const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === modelProvider);
     let modelName = '';
     let repoID = '';
     
@@ -76,11 +76,11 @@ DataDialogue.submitDemoForm = async () => {
         password: '123456',
         host: 'localhost',
         port: '5432',
-        modelSource: modelSource,
+        modelProvider: modelProvider,
         modelName: modelName,
         repoID: repoID,
         token: document.getElementById('demoToken')?.value || '',
-        modelFormat: modelSource === 'huggingface' ? 'gguf' : ''
+        modelFormat: modelProvider === 'huggingface' ? 'gguf' : ''
     };
 
     DataDialogue.showFormLoadingAnimation(formData.agentType, formData.modelName);
@@ -118,10 +118,10 @@ DataDialogue.submitDemoForm = async () => {
 };
 
 DataDialogue.resetDemoForm = () => {
-    // Reset model source
-    const demoModelSource = document.getElementById('demoModelSource');
-    if (demoModelSource) {
-        demoModelSource.value = '';
+    // Reset Model Provider
+    const demoModelProvider = document.getElementById('demoModelProvider');
+    if (demoModelProvider) {
+        demoModelProvider.value = '';
     }
 
     // Reset token
@@ -167,7 +167,7 @@ DataDialogue.resetDemoForm = () => {
     // Reset custom select display
     const customSelectTrigger = document.querySelector('.custom-select-trigger .selected-option');
     if (customSelectTrigger) {
-        customSelectTrigger.innerHTML = 'Select source...';
+        customSelectTrigger.innerHTML = 'Select provider...';
     }
 
     // Clear model icon

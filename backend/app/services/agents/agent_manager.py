@@ -13,7 +13,7 @@ from app.services.models.models import (
     OpenAILoader,
     AnthropicLoader,
     LlamaGGUFLoader,
-    ModelSource,
+    ModelProvider,
     ModelFormat,
 )
 
@@ -246,26 +246,27 @@ class AgentManagerService:
         # --------------------------------------------
         # Register model loader + downloaders
         # --------------------------------------------
-        if register_params.modelSource == ModelSource.GOOGLE.value:
+        if register_params.modelProvider == ModelProvider.GOOGLE.value:
             self.model_manager.register_loader(
-                ModelSource.GOOGLE.value, GoogleAILoader(api_key=register_params.token)
+                ModelProvider.GOOGLE.value,
+                GoogleAILoader(api_key=register_params.token),
             )
-        elif register_params.modelSource == ModelSource.OPENAI.value:
+        elif register_params.modelProvider == ModelProvider.OPENAI.value:
             self.model_manager.register_loader(
-                ModelSource.OPENAI.value, OpenAILoader(api_key=register_params.token)
+                ModelProvider.OPENAI.value, OpenAILoader(api_key=register_params.token)
             )
-        elif register_params.modelSource == ModelSource.ANTHROPIC.value:
+        elif register_params.modelProvider == ModelProvider.ANTHROPIC.value:
             self.model_manager.register_loader(
-                ModelSource.ANTHROPIC.value,
+                ModelProvider.ANTHROPIC.value,
                 AnthropicLoader(api_key=register_params.token),
             )
-        elif register_params.modelSource == ModelSource.HUGGINGFACE.value:
+        elif register_params.modelProvider == ModelProvider.HUGGINGFACE.value:
             if register_params.modelFormat == ModelFormat.GGUF.value:
                 self.model_manager.register_loader(
-                    ModelSource.HUGGINGFACE.value, LlamaGGUFLoader()
+                    ModelProvider.HUGGINGFACE.value, LlamaGGUFLoader()
                 )
                 self.model_manager.register_downloader(
-                    ModelSource.HUGGINGFACE.value,
+                    ModelProvider.HUGGINGFACE.value,
                     HuggingFaceDownloader(token=register_params.token),
                 )
             else:
@@ -273,13 +274,15 @@ class AgentManagerService:
                     f"Not known `modelFormat`: {register_params.modelFormat}"
                 )
         else:
-            raise Exception(f"Not known `modelSource`: {register_params.modelSource}")
+            raise Exception(
+                f"Not known `modelProvider`: {register_params.modelProvider}"
+            )
 
         # --------------------------------------------
         # Load Model
         # --------------------------------------------
         model = self.model_manager.load_model(
-            source=register_params.modelSource,
+            source=register_params.modelProvider,
             repo_id=register_params.repoID,
             model_name=register_params.modelName,
             model_format=register_params.modelFormat,

@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class ModelSource(str, Enum):
+class ModelProvider(str, Enum):
     GOOGLE = "google"
     OPENAI = "openai"
     ANTHROPIC = "anthropic"
@@ -26,7 +26,7 @@ class ModelOption(BaseModel):
 
 
 class ModelConfig(BaseModel):
-    source_id: ModelSource
+    source_id: ModelProvider
     display_name: str
     logo_path: str
     suggested: bool = False

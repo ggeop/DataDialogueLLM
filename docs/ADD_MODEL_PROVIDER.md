@@ -24,10 +24,10 @@
             def embed(...):
                 ...
         ```
-2. Add the new model provider enum in `ModelSource` under the `backend/app/services/models/models/config.py`
+2. Add the new model provider enum in `ModelProvider` under the `backend/app/services/models/models/config.py`
 
 ```python
-class ModelSource(str, Enum):
+class ModelProvider(str, Enum):
     GOOGLE = "google"
     OPENAI = "openai"
     ANTHROPIC = "anthropic"

@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter
 from typing import List
-from app.services.models.models import ModelConfig, ModelOption, ModelSource
+from app.services.models.models import ModelConfig, ModelOption, ModelProvider
 
 
 router = APIRouter()
@@ -16,7 +16,7 @@ async def get_models():
     # TODO: Be dynamic based on Providers APIs
     SUPPORTED_MODELS = [
         ModelConfig(
-            source_id=ModelSource.GOOGLE,
+            source_id=ModelProvider.GOOGLE,
             display_name="Google Cloud AI",
             logo_path="/static/images/logos/google-logo.png",
             suggested=True,
@@ -33,7 +33,7 @@ async def get_models():
             ],
         ),
         ModelConfig(
-            source_id=ModelSource.OPENAI,
+            source_id=ModelProvider.OPENAI,
             display_name="OpenAI",
             logo_path="/static/images/logos/openai-logo.png",
             is_local=False,
@@ -47,7 +47,7 @@ async def get_models():
             ],
         ),
         ModelConfig(
-            source_id=ModelSource.ANTHROPIC,
+            source_id=ModelProvider.ANTHROPIC,
             display_name="Anthropic",
             logo_path="/static/images/logos/anthropic-ai-logo.png",
             is_local=False,
@@ -63,7 +63,7 @@ async def get_models():
             ],
         ),
         ModelConfig(
-            source_id=ModelSource.HUGGINGFACE,
+            source_id=ModelProvider.HUGGINGFACE,
             display_name="Hugging Face (.gguf)",
             logo_path="/static/images/logos/hf-logo.png",
             is_local=True,

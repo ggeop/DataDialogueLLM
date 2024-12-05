@@ -8,13 +8,13 @@ DataDialogue.initializeModelSelections = async (formPrefix = '') => {
         DataDialogue.modelConfigs = modelConfigs;
 
         // Initialize custom select with dynamic model sources
-        const selectId = `${formPrefix}ModelSource`;
+        const selectId = `${formPrefix}ModelProvider`;
         const originalSelect = document.getElementById(selectId);
         if (!originalSelect) return;
 
         // Ensure the original select has the options too
         originalSelect.innerHTML = `
-            <option value="">Select source...</option>
+            <option value="">Select provider...</option>
             ${modelConfigs.map(config => 
                 `<option value="${config.source_id}">${config.display_name}</option>`
             ).join('')}
@@ -23,10 +23,10 @@ DataDialogue.initializeModelSelections = async (formPrefix = '') => {
         // Create and setup custom select UI
         await DataDialogue.initializeCustomSelect(formPrefix);
 
-        // Initialize model source icons
-        DataDialogue.initializeModelSourceIcons(formPrefix);
+        // Initialize Model Provider icons
+        DataDialogue.initializeModelProviderIcons(formPrefix);
 
-        // Add change handler for model source
+        // Add change handler for Model Provider
         originalSelect.addEventListener('change', () => {
             const selectedConfig = DataDialogue.modelConfigs?.find(c => c.source_id === originalSelect.value);
             if (!selectedConfig) return;
@@ -205,7 +205,7 @@ DataDialogue.initializeCustomSelect = async (formPrefix = '') => {
         // Store model configs for later use
         DataDialogue.modelConfigs = modelConfigs;
 
-        const selectId = `${formPrefix}ModelSource`;
+        const selectId = `${formPrefix}ModelProvider`;
         const originalSelect = document.getElementById(selectId);
         if (!originalSelect) return;
 
@@ -223,7 +223,7 @@ DataDialogue.initializeCustomSelect = async (formPrefix = '') => {
 
         customSelect.innerHTML = `
             <div class="custom-select-trigger">
-                <div class="selected-option">Select source...</div>
+                <div class="selected-option">Select provider...</div>
                 <span class="dropdown-arrow"></span>
             </div>
             <div class="custom-select-options">
@@ -258,7 +258,7 @@ DataDialogue.initializeCustomSelect = async (formPrefix = '') => {
                 originalSelect.value = value;
                 
                 // Update icon immediately
-                DataDialogue.initializeModelSourceIcons(formPrefix);
+                DataDialogue.initializeModelProviderIcons(formPrefix);
                 
                 // Trigger change event on original select
                 const event = new Event('change', { bubbles: true });
@@ -278,8 +278,8 @@ DataDialogue.initializeCustomSelect = async (formPrefix = '') => {
             }
         });
 
-        // Initialize model source icons
-        DataDialogue.initializeModelSourceIcons(formPrefix);
+        // Initialize Model Provider icons
+        DataDialogue.initializeModelProviderIcons(formPrefix);
 
     } catch (error) {
         console.error('Error initializing custom select:', error);
@@ -287,14 +287,14 @@ DataDialogue.initializeCustomSelect = async (formPrefix = '') => {
     }
 };
 
-DataDialogue.initializeModelSourceIcons = (formPrefix = '') => {
-    const modelSource = document.getElementById(`${formPrefix}ModelSource`);
-    if (!modelSource) return;
+DataDialogue.initializeModelProviderIcons = (formPrefix = '') => {
+    const modelProvider = document.getElementById(`${formPrefix}ModelProvider`);
+    if (!modelProvider) return;
 
     // Function to update icon visibility
     const updateIcon = (value) => {
         // Find the icon container within the same select-with-icon container
-        const selectWithIcon = modelSource.closest('.select-with-icon');
+        const selectWithIcon = modelProvider.closest('.select-with-icon');
         if (!selectWithIcon) return;
         
         const iconContainer = selectWithIcon.querySelector('.model-icon');
@@ -316,12 +316,12 @@ DataDialogue.initializeModelSourceIcons = (formPrefix = '') => {
     };
 
     // Initial state
-    updateIcon(modelSource.value);
+    updateIcon(modelProvider.value);
 
     // Remove any existing change listeners to prevent duplicates
     const newListener = (e) => updateIcon(e.target.value);
-    modelSource.removeEventListener('change', newListener);
-    modelSource.addEventListener('change', newListener);
+    modelProvider.removeEventListener('change', newListener);
+    modelProvider.addEventListener('change', newListener);
 };
 
 DataDialogue.showFormLoadingAnimation = (agentType, modelName) => {
