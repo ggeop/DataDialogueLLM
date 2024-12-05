@@ -56,7 +56,15 @@ For local development we need to setup few packages in our local machine. The in
    ```bash
    chmod +x scripts/setup_linux.sh
    ```
+
 4. Run the setup script:
+
+   *If you are using linux subsystem (e.g wsl) Run this command first:*
+   ```bash
+   sudo apt-get install dos2unix  # Install if not present
+   dos2unix scripts/setup_linux.sh
+   ```
+
    ```bash
    ./scripts/setup_linux.sh
    ```

@@ -53,7 +53,7 @@ call backend\venv\Scripts\activate
 
 :: Install requirements
 echo 📦 Installing required packages...
-python -m pip install -r scripts\requirements.txt
+python -m pip install -r .\scripts\requirements.txt
 
 :: Initialize pre-commit
 echo Setting up pre-commit...
