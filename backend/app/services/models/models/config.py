@@ -6,6 +6,7 @@ from typing import List, Optional
 class ModelSource(str, Enum):
     GOOGLE = "google"
     OPENAI = "openai"
+    ANTHROPIC = "anthropic"
     HUGGINGFACE = "huggingface"
 
 

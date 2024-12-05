@@ -10,8 +10,9 @@ from app.core.model_type import AgentType
 from app.services.models.downloader import HuggingFaceDownloader
 from app.services.models.models import (
     GoogleAILoader,
-    LlamaGGUFLoader,
     OpenAILoader,
+    AnthropicLoader,
+    LlamaGGUFLoader,
     ModelSource,
     ModelFormat,
 )
@@ -252,6 +253,11 @@ class AgentManagerService:
         elif register_params.modelSource == ModelSource.OPENAI.value:
             self.model_manager.register_loader(
                 ModelSource.OPENAI.value, OpenAILoader(api_key=register_params.token)
+            )
+        elif register_params.modelSource == ModelSource.ANTHROPIC.value:
+            self.model_manager.register_loader(
+                ModelSource.ANTHROPIC.value,
+                AnthropicLoader(api_key=register_params.token),
             )
         elif register_params.modelSource == ModelSource.HUGGINGFACE.value:
             if register_params.modelFormat == ModelFormat.GGUF.value:

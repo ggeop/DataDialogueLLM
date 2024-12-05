@@ -18,7 +18,7 @@ async def get_models():
         ModelConfig(
             source_id=ModelSource.GOOGLE,
             display_name="Google Cloud AI",
-            logo_path="/static/images/google-logo.png",
+            logo_path="/static/images/logos/google-logo.png",
             suggested=True,
             is_local=False,
             has_token=True,
@@ -35,7 +35,7 @@ async def get_models():
         ModelConfig(
             source_id=ModelSource.OPENAI,
             display_name="OpenAI",
-            logo_path="/static/images/openai-logo.png",
+            logo_path="/static/images/logos/openai-logo.png",
             is_local=False,
             has_token=True,
             options=[
@@ -47,9 +47,25 @@ async def get_models():
             ],
         ),
         ModelConfig(
+            source_id=ModelSource.ANTHROPIC,
+            display_name="Anthropic",
+            logo_path="/static/images/logos/anthropic-ai-logo.png",
+            is_local=False,
+            has_token=True,
+            options=[
+                ModelOption(
+                    value="claude-3-5-sonnet-latest",
+                    label="Claude 3.5 Sonnet",
+                    suggested=True,
+                ),
+                ModelOption(value="claude-3-5-haiku-latest", label="Claude 3.5 Haiku"),
+                ModelOption(value="claude-3-opus-latest", label="Claude 3 Opus"),
+            ],
+        ),
+        ModelConfig(
             source_id=ModelSource.HUGGINGFACE,
             display_name="Hugging Face (.gguf)",
-            logo_path="/static/images/hf-logo.png",
+            logo_path="/static/images/logos/hf-logo.png",
             is_local=True,
             options=[
                 ModelOption(
