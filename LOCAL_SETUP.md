@@ -31,7 +31,7 @@ data-dialogue/
 
 ## Code Style Setup
 
-We use Black for code formatting to maintain consistent code style across the project. The setup scripts are provided for both Windows and Linux environments.
+For local development we need to setup few packages in our local machine. The installation is handled by one script.
 
 ### Windows Setup
 
@@ -42,7 +42,7 @@ We use Black for code formatting to maintain consistent code style across the pr
    ```
 3. Run the setup script:
    ```batch
-   scripts\black\setup_windows.bat
+   scripts\setup_windows.bat
    ```
 
 ### Linux Setup
@@ -54,12 +54,14 @@ We use Black for code formatting to maintain consistent code style across the pr
    ```
 3. Make the script executable:
    ```bash
-   chmod +x scripts/black/setup_linux.sh
+   chmod +x scripts/setup_linux.sh
    ```
 4. Run the setup script:
    ```bash
-   ./scripts/black/setup_linux.sh
+   ./scripts/setup_linux.sh
    ```
+
+## Extras
 
 ### Manual Code Formatting
 
@@ -78,38 +80,6 @@ black backend --diff
 # Format a specific file
 black backend/app/main.py
 ```
-
-### Pre-commit Hooks
-
-The setup scripts install pre-commit hooks that automatically format your code before each commit. To manually run all pre-commit checks:
-```bash
-pre-commit run --all-files
-```
-
-## Local Development Environment
-
-### Backend Setup
-
-1. Create and activate virtual environment:
-
-   **Windows:**
-   ```batch
-   cd backend
-   python -m venv venv
-   venv\Scripts\activate
-   ```
-
-   **Linux:**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
 
 ### Running Services Locally
 
