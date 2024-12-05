@@ -1,3 +1,18 @@
+# [1.5.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.4.0...v1.5.0) (2024-12-05)
+
+
+### Bug Fixes
+
+* **backend:** Add anthropic dependency ([6bd2349](https://github.com/ggeop/DataDialogueLLM/commit/6bd2349142e2c7fb8d4df33580d13686037aa330))
+* Merge branch 'main' into develop ([677eeb9](https://github.com/ggeop/DataDialogueLLM/commit/677eeb9e301e9c7e3be739d1ab0acb3b0600e1e9))
+
+
+### Features
+
+* Generalize html forms model support ([32cf05a](https://github.com/ggeop/DataDialogueLLM/commit/32cf05a32cca959a612cbaeb51d9fb27439ba717))
+* Support Anthropic Provider ([52e23a2](https://github.com/ggeop/DataDialogueLLM/commit/52e23a29ce1c50d0112d2fcfd7d52ec0ef69aeea))
+* Update local setup windows script ([1c6ef2c](https://github.com/ggeop/DataDialogueLLM/commit/1c6ef2c4a73102283f3d6fc11e858a6085857531))
+
 # [1.4.0](https://github.com/ggeop/DataDialogueLLM/compare/v1.3.0...v1.4.0) (2024-11-24)
 
 
