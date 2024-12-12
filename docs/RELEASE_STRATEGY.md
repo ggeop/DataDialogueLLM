@@ -74,5 +74,5 @@ jobs:
 ```
 
 For more details, see:
-- [Changelog](./CHANGELOG.md)
+- [Changelog](../CHANGELOG.md)
 - [Contributing Guidelines](./CONTRIBUTING.md)

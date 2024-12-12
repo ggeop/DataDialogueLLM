@@ -69,12 +69,13 @@ DataDialogue.submitDemoForm = async () => {
     }
 
     const formData = {
-        agentType: 'SQL',
+        agentType: 'contextual',
         sourceType: 'postgresql',
         dbname: 'dvdrental',
         username: 'demo',
         password: '123456',
         host: 'localhost',
+        filepath: null,
         port: '5432',
         modelProvider: modelProvider,
         modelName: modelName,

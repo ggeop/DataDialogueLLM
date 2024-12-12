@@ -9,6 +9,7 @@
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)]()
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/ggeop/DataDialogueLLM?style=for-the-badge)](https://github.com/ggeop/DataDialogueLLM/releases/latest)
 
+![Python](https://img.shields.io/badge/python-3.12-blue.svg)
 [![Release Workflow](https://github.com/ggeop/DataDialogueLLM/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/release.yml)
 [![Black Code Formatter Check](https://github.com/ggeop/DataDialogueLLM/actions/workflows/black.yml/badge.svg)](https://github.com/ggeop/DataDialogueLLM/actions/workflows/black.yml)
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
@@ -24,26 +25,36 @@ DataDialogue is an innovative application that bridges the gap between your data
 
 A user can select a LLM model and connect it with a data source and do his analysis by writing simple prompts instead of writing SQL queries or code.
 
-**Supported LLMs:**
+
+<div style="display: flex; gap: 20px;">
+
+<div>
+
+**Supported Providers**
+
 |      | Provider | Status |
 |------|----------|:------:|
-| <img src="frontend/static/images/google-logo.png" width="20"> | Google | ✔️ |
-| <img src="frontend/static/images/hf-logo.png" width="20">     | HF     | ✔️ |
-| <img src="frontend/static/images/openai-logo.png" width="20"> | OpenAI | ✔️ |
-| <img src="frontend\static\images\claude-ai-logo.png" width="20"> | Claude | ✔️ |
+| <img src="frontend/static/images/logos/google-logo.png" width="20"> | Google | ✔️ |
+| <img src="frontend/static/images/logos/hf-logo.png" width="20">     | HF     | ✔️ |
+| <img src="frontend/static/images/logos/openai-logo.png" width="20"> | OpenAI | ✔️ |
+| <img src="frontend\static/images/logos/anthropic-ai-logo.png" width="20"> | Athropic | ✔️ |
 
+</div>
 
+<div>
 
-
-**Supported Data Sources:**
+**Supported Data Sources**
 |      | Source | Status |
 |------|----------|:------:|
-| <img src="frontend\static\images\postgresql-logo.png" width="20"> | PostgreSQL | ✔️ |
-| <img src="frontend\static\images\mysql-log.png" width="20"> | MySQL | ➖ |
-| <img src="frontend\static\images\csv-logo.png" width="20"> | CSV | ➖ |
+| <img src="frontend/static/images/logos/postgresql-logo.png" width="20"> | PostgreSQL | ✔️ |
+| <img src="frontend/static/images/logos/mysql-log.png" width="20"> | MySQL | ✔️ |
+| <img src="frontend/static/images/logos/databricks-logo.png" width="20"> | Databricks | ✔️ |
+| <img src="frontend/static/images/logos/mongo-db-logo.png" width="20"> | Mongo DB | ✔️ |
+| <img src="frontend/static/images/logos/csv-logo.png" width="20"> | CSV | ✔️ |
 
+</div>
 
-
+</div>
 
 ## 🌟 Preview Phase
 
@@ -113,7 +124,7 @@ Experience our powerful demo with just one click! We've prepared everything you 
 - Docker
 - Docker Compose
 
-### Production Setup
+### Run
 
 1. Clone the repository:
    ```sh
@@ -122,22 +133,16 @@ Experience our powerful demo with just one click! We've prepared everything you 
    ```
 
 2. Run Data Dialogue services:
-
-   **Linux**
-   ```sh
-   docker-compose --profile production pull && docker-compose --profile production up
+   ```
+   docker-compose --env-file .env.prod up
    ```
 
-   **Windows**
-   ```powershell
-   docker-compose --profile production pull; if ($?) { docker-compose --profile production up}
-   ```
 
 3. Access the frontend at `http://localhost:5000` in your web browser.
 
 ## Development
 
-For local development and setup instructions, please refer to our [Local Development Setup Guide](./docs/LOCAL_SETUP.md).
+For local development and setup instructions, please refer to our [Local Development Setup Guide](./docs/DEV_SETUP.md).
 
 The guide includes:
 - Local environment setup for Windows and Linux
@@ -146,34 +151,6 @@ The guide includes:
 - Common issues and troubleshooting
 - Contributing guidelines
 
-## Project Structure
-
-```
-data-dialogue/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   ├── core/
-│   │   ├── services/
-│   │   └── main.py
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-│   ├── static/
-│   │   ├── css/
-│   │   ├── images/
-│   │   ├── js/
-│   │   └── templates/
-│   ├── app.py
-│   └── Dockerfile
-├── scripts/
-│   └── black/
-│       ├── setup_linux.sh
-│       └── setup_windows.bat
-├── docker-compose.yml
-├── .gitignore
-└── README.md
-```
 
 ## 🤝 Contributing
 
@@ -188,6 +165,13 @@ Please read our [Contributing Guidelines](./docs/CONTRIBUTING.md) before submitt
 
 - Report issues via [GitHub Issues](https://github.com/ggeop/DataDialogueLLM/issues)
 - Join our community discussions [here](https://github.com/ggeop/DataDialogueLLM/discussions)
+
+## Need Help?
+
+Feel free to:
+- Open an issue on GitHub
+- Ask questions in pull requests
+- Contact project maintainers
 
 ## License
 

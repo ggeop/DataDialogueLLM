@@ -7,7 +7,7 @@ import logging
 from contextlib import contextmanager
 from typing import Tuple, Any, Optional
 
-from app.clients.db.base import DatabaseClient
+from app.services.sources.db.base import DatabaseClient
 from app.utils.query_result import QueryResult
 
 

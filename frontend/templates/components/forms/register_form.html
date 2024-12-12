@@ -16,8 +16,8 @@
             <label for="agentType">Select an agent type:</label>
             <select id="agentType" onchange="DataDialogue.handleAgentTypeChange()">
                 <option value="">Select type...</option>
-                <option value="SQL">SQL</option>
-                <option value="General">General</option>
+                <option value="contextual">Contextual</option>
+                <option value="general">General</option>
             </select>
         </div>
     </div>
@@ -49,8 +49,37 @@
         <div class="form-group">
             <label for="sourceType">Source Type:</label>
             <select id="sourceType" class="form-control">
+                <!-- TMP Solution, The supported source types should be parsed from backend dynamically -->
+                <option value="mysql">MySQL</option>
                 <option value="postgresql">PostgreSQL</option>
+                <option value="mongodb">Mongo DB</option>
+                <option value="csv">CSV</option>
+                <option value="databricks">Databricks</option>
             </select>
+        </div>
+
+        <div class="form-group" id="filepathGroup" style="display: none;">
+            <label>Load CSV File(s):</label>
+            <div class="file-selection-container">
+                <p class="file-selection-hint">Choose to upload either a single CSV file or select a folder containing CSV files:</p>
+                <div class="file-buttons">
+                    <div class="file-option">
+                        <button type="button" onclick="DataDialogue.selectFile()" class="file-select-btn">
+                            Select Single File
+                        </button>
+                        <span class="option-hint">(Choose one CSV file)</span>
+                    </div>
+                    <div class="file-option">
+                        <button type="button" onclick="DataDialogue.selectFolder()" class="file-select-btn">
+                            Select Folder
+                        </button>
+                        <span class="option-hint">(Choose a folder containing CSV files)</span>
+                    </div>
+                </div>
+                <div class="selected-path-display" id="selectedPathDisplay">
+                    No file or folder selected
+                </div>
+            </div>
         </div>
 
         <div class="form-group">

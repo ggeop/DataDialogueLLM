@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class RegisterAgent(BaseModel):
@@ -11,6 +12,7 @@ class RegisterAgent(BaseModel):
     password: str
     host: str
     port: str
+    filepath: Optional[str]
     # Register Model
     modelProvider: str
     repoID: str

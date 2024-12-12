@@ -1,0 +1,70 @@
+.file-selection-container {
+    background-color: var(--input-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.file-selection-hint {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.file-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.file-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.option-hint {
+    color: var(--text-color);
+    font-size: 0.6rem;
+    opacity: 0.7;
+}
+
+
+.file-select-btn {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.file-select-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.file-select-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.selected-path-display {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-color);
+    word-break: break-all;
+    min-height: 1.2rem;
+    opacity: 0.8;
+}
