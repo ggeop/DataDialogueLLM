@@ -2,7 +2,7 @@ import logging
 import re
 from typing import Tuple, Optional
 
-from app.clients.db.base import DatabaseClient
+from app.services.sources.db.base import DatabaseClient
 from app.services.models.models.base import LLMInterface
 from app.utils.query_result import QueryResult
 from app.utils.prompt_templates import SQL_GENERATION_TEMPLATE, SQL_CORRECTION_TEMPLATE

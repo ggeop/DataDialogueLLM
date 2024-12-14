@@ -4,10 +4,21 @@ DataDialogue.openRegisterForm = () => {
     if (formContainer && pageOverlay) {
         // Reset the form when opening
         const agentTypeSelect = document.getElementById('agentType');
+        const sourceType = document.getElementById('sourceType');
         
         if (agentTypeSelect) {
             agentTypeSelect.value = '';
-            DataDialogue.handleAgentTypeChange(); // This will hide the sections
+            // Remove existing listener to prevent duplicates
+            agentTypeSelect.removeEventListener('change', DataDialogue.handleAgentTypeChange);
+            // Add new listener
+            agentTypeSelect.addEventListener('change', DataDialogue.handleAgentTypeChange);
+        }
+
+        if (sourceType) {
+            // Remove existing listener to prevent duplicates
+            sourceType.removeEventListener('change', DataDialogue.handleSourceTypeChange);
+            // Add new listener
+            sourceType.addEventListener('change', DataDialogue.handleSourceTypeChange);
         }
         
         // Clear any existing custom select before reinitializing
@@ -26,14 +37,6 @@ DataDialogue.openRegisterForm = () => {
         // Hide menu icon and try demo button
         if (menuIcon) menuIcon.style.display = 'none';
         if (tryDemoContainer) tryDemoContainer.style.display = 'none';
-        
-        // Add event listener for agent type changes
-        if (agentTypeSelect) {
-            // Remove existing listener to prevent duplicates
-            agentTypeSelect.removeEventListener('change', DataDialogue.handleAgentTypeChange);
-            // Add new listener
-            agentTypeSelect.addEventListener('change', DataDialogue.handleAgentTypeChange);
-        }
     }
 };
 
@@ -47,17 +50,54 @@ DataDialogue.handleAgentTypeChange = () => {
     llmConfigSection.classList.add('initially-hidden');
     
     // Then show appropriate sections based on selection
-    if (agentType === 'SQL') {
+    if (agentType === 'contextual') {
         sourceConfigSection.classList.remove('initially-hidden');
         llmConfigSection.classList.remove('initially-hidden');
-    } else if (agentType === 'General') {
+        // Handle initial source type state
+        DataDialogue.handleSourceTypeChange();
+    } else if (agentType === 'general') {
         llmConfigSection.classList.remove('initially-hidden');
     }
 };
 
+DataDialogue.handleSourceTypeChange = () => {
+    const sourceType = document.getElementById('sourceType');
+    const databaseFields = ['dbname', 'username', 'password', 'host', 'port'];
+    const filepathGroup = document.getElementById('filepathGroup');
+    
+    // Show/hide fields based on source type
+    if (sourceType.value === 'csv') {
+        // Hide database fields
+        databaseFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) field.closest('.form-group').style.display = 'none';
+        });
+        
+        // Show filepath group
+        if (filepathGroup) {
+            filepathGroup.style.display = 'block';
+            filepathGroup.classList.remove('initially-hidden');
+        }
+    } else {
+        // Show database fields
+        databaseFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) field.closest('.form-group').style.display = 'block';
+        });
+        
+        // Hide filepath group
+        if (filepathGroup) {
+            filepathGroup.style.display = 'none';
+            filepathGroup.classList.add('initially-hidden');
+        }
+    }
+};
+
+
 DataDialogue.submitForm = async () => {
     const agentType = document.getElementById('agentType')?.value;
     const modelProvider = document.getElementById('ModelProvider')?.value;
+    const sourceType = document.getElementById('sourceType')?.value;
     
     if (!agentType) {
         DataDialogue.showMessage('Please select an agent type');
@@ -111,12 +151,13 @@ DataDialogue.submitForm = async () => {
         // General
         agentType: agentType,
         // Source
-        sourceType: document.getElementById('sourceType')?.value || 'postgresql',
+        sourceType: sourceType,
         dbname: document.getElementById('dbname')?.value || '',
         username: document.getElementById('username')?.value || '',
         password: document.getElementById('password')?.value || '',
         host: document.getElementById('host')?.value || '',
         port: document.getElementById('port')?.value || '',
+        filepath: document.getElementById('filepath')?.value || '',
         // LLM Model
         modelProvider: modelProvider,
         repoID: repoID,
@@ -125,10 +166,17 @@ DataDialogue.submitForm = async () => {
         token: document.getElementById('token')?.value || ''
     };
 
-    // Validate required fields based on agent type
-    if (agentType === 'SQL') {
-        if (!formData.dbname || !formData.username || !formData.host || !formData.port) {
+    // Validate required fields based on agent type and source type
+    if (agentType === 'contextual') {
+        // Skip database validation for CSV source type
+        if (sourceType !== 'csv' && (!formData.dbname || !formData.username || !formData.host || !formData.port)) {
             DataDialogue.showMessage('Please fill in all required database fields');
+            return;
+        }
+
+        // Validate filepath for CSV source type
+        if (sourceType === 'csv' && !formData.filepath) {
+            DataDialogue.showMessage('Please enter a file path');
             return;
         }
     }

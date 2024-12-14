@@ -10,7 +10,7 @@ DataDialogue.displayResponse = (data) => {
 };
 
 DataDialogue.createSQLResponse = (sqlResponse) => {
-    const agentHeader = DataDialogue.createAgentHeader('SQL Agent', true, sqlResponse);
+    const agentHeader = DataDialogue.createAgentHeader('Contextual Agent', true, sqlResponse);
     const sqlQuery = DataDialogue.createSQLQuerySection(sqlResponse.sql);
     const results = DataDialogue.createResultsSection(sqlResponse);
 
