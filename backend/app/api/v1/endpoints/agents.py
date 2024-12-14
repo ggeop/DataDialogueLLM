@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
     response_model=DataResponse[AgentList],
     responses={500: {"model": ErrorResponse}},
 )
-async def get_agents():
+async def get_agent_names():
     try:
-        agents = agent_manager_service.get_agents()
+        agents = agent_manager_service.get_agent_names()
         if len(agents) == 0:
             return DataResponse(
                 message="Not found register Agents", data=AgentList(agents=agents)

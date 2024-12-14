@@ -2,9 +2,9 @@ services:
 # ============================
 # Data Services
 # ============================
-  try-demo-db-local:
-    build: ./database/postgres
-    image: localhost/data-dialogue-try-demo-db:latest
+  try-demo-postgres-db:
+    build: ./sample_data/postgres
+    image: ${DOCKER_REGISTRY}/data-dialogue-try-demo-db:${TAG:-latest}
     environment:
       POSTGRES_DB: dvdrental
       POSTGRES_USER: demo
@@ -31,58 +31,51 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    profiles: ["local"]
 
-  try-demo-db-dev:
-    extends: try-demo-db-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
-    profiles: ["development"]
-
-  try-demo-db-prod:
-    extends: try-demo-db-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
-    profiles: ["production"]
+  mysql-db:
+    build: ./sample_data/mysql
+    image: ${DOCKER_REGISTRY}/data-dialogue-mysql-sakila:${TAG:-latest}
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sakila
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: 123456
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "demo", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 # ============================
 # Backend Services
 # ============================
-  backend-local:
+  backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: localhost/data-dialogue-backend:latest
-    env_file:
-      - .env
+    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
     ports:
       - "8000:8000"
     volumes:
       - ./backend:/app
       - models:/data/models
-    profiles: ["local"]
-
-  backend-dev:
-    extends: backend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
-    volumes:
-      - ./backend:/app
-      - models:/data/models
-    profiles: ["development"]
-
-  backend-prod:
-    extends: backend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-backend:${TAG:-latest}
-    volumes:
-      - models:/data/models
-    profiles: ["production"]
+      # Map host's home directory or specific data directories
+      - ${HOME}/data:/app/data
+      # Temporary upload directory
+      - /tmp/uploads:/tmp/uploads
 
 # ============================
 # Frontend Services
 # ============================
-  frontend-local:
+  frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: localhost/data-dialogue-frontend:latest
+    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
     environment:
       - FLASK_ENV=development
       - FLASK_DEBUG=1
@@ -90,32 +83,13 @@ services:
       - "5000:5000"
     volumes:
       - ./frontend:/app
-    profiles: ["local"]
-
-  frontend-dev:
-    extends: frontend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
-    depends_on:
-      - try-demo-db-dev
-      - backend-dev
-    volumes:
-      - ./frontend:/app
-    profiles: ["development"]
-      
-  frontend-prod:
-    extends: frontend-local
-    image: ${DOCKER_REGISTRY}/data-dialogue-frontend:${TAG:-latest}
-    depends_on:
-      - try-demo-db-prod
-      - backend-prod
-    profiles: ["production"]
 
 # ============================
 # Other
 # ============================
-
 volumes:
   try_on_data:
+  mysql_data:
   models:
 
 networks:

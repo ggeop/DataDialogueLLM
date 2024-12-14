@@ -20,5 +20,5 @@ class BaseEnum(Enum):
 
 
 class AgentType(BaseEnum):
-    GENERAL = "General"
-    SQL = "SQL"
+    GENERAL = "general"
+    CONTEXTUAL = "contextual"

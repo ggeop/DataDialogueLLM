@@ -1,7 +1,6 @@
 import logging
 from typing import Dict, List
 
-from app.clients.db import PostgresClient
 from app.schemas import RegisterAgent
 from app.services.agents.agents.data_dialogue_agent import DataDialogueAgent
 from app.services.models import ModelManager
@@ -16,6 +15,10 @@ from app.services.models.models import (
     ModelProvider,
     ModelFormat,
 )
+from app.services.sources.db import PostgresClient, MySQLClient, MongoDBClient
+from app.services.sources.cloud import DatabaseClient
+from app.services.sources.config import SourceType
+from app.services.sources.files.csv_client import CSVClient
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -27,7 +30,7 @@ class AgentManagerService:
     A service for managing model agents in a dialogue system.
 
     This service is responsible for registering, retrieving, and deleting model agents.
-    It supports different types of models and databases, and manages the lifecycle of these agents.
+    It supports different types of models and sources, and manages the lifecycle of these agents.
 
     Attributes:
         registered_agents (Dict[str, DataDialogueAgent]): A dictionary of registered agents.
@@ -54,7 +57,7 @@ class AgentManagerService:
         """
         Register a new agent based on the provided parameters.
 
-        This method validates the model type, configures the database (if applicable),
+        This method validates the model type, configures the source (if applicable),
         loads the model, and creates a new DataDialogueAgent instance.
 
         Args:
@@ -65,7 +68,7 @@ class AgentManagerService:
 
         Example:
             params = RegisterAgent(
-                agentType="SQL",
+                agentType="Contextual",
                 sourceType="postgresql",
                 dbname="mydb",
                 username="user",
@@ -85,15 +88,15 @@ class AgentManagerService:
 
         self._validate_model_type(register_params.agentType)
 
-        database = None
-        if register_params.agentType == AgentType.SQL.value:
-            database = self._configure_database(register_params)
+        source_client = None
+        if register_params.agentType == AgentType.CONTEXTUAL.value:
+            source_client = self._configure_source(register_params)
 
         # NOTE: The naming convention should be consistent with frontend (e.g FormsHandling.js)
         agent_name = f"({register_params.agentType}) {register_params.modelName}"
 
         agent = DataDialogueAgent(
-            database=database,
+            source_client=source_client,
             model=self._load_model(register_params),
             model_type=register_params.agentType,
             agent_name=agent_name,
@@ -101,7 +104,16 @@ class AgentManagerService:
         self.registered_agents[agent.name] = agent
         logger.info(f"Agent '{agent.name}' has been successfully registered.")
 
-    def get_agents(self) -> List[str]:
+    def get_agents(self) -> Dict:
+        """
+        Get a dictionary of all registered agent.
+
+        Returns:
+            Dict: A dict of all registered agents.
+        """
+        return self.registered_agents
+
+    def get_agent_names(self) -> List[str]:
         """
         Get a list of all registered agent names.
 
@@ -109,7 +121,7 @@ class AgentManagerService:
             List[str]: A list of strings representing the names of all registered agents.
 
         Example:
-            agent_names = service.get_agents()
+            agent_names = service.get_agent_names()
             print(f"Registered agents: {', '.join(agent_names)}")
         """
         return list(self.registered_agents.keys())
@@ -200,15 +212,15 @@ class AgentManagerService:
                 f"'{model_type}' is not a valid model type. Supported types are: {', '.join(supported_model_types)}"
             )
 
-    def _configure_database(self, register_params: RegisterAgent):
+    def _configure_source(self, register_params: RegisterAgent):
         """
-        Configure and return the database client based on the registration parameters.
+        Configure and return the source client based on the registration parameters.
 
         Args:
-            register_params (RegisterAgent): The registration parameters containing database configuration.
+            register_params (RegisterAgent): The registration parameters containing source configuration.
 
         Returns:
-            Optional[PostgresClient]: A configured database client, or None if no database is required.
+            Optional[PostgresClient]: A configured source client, or None if no source is required.
 
         Raises:
             ValueError: If an unsupported source type is specified.
@@ -216,16 +228,49 @@ class AgentManagerService:
         Note:
             This is a private method intended for internal use only.
         """
-        if register_params.sourceType == "postgresql":
-            db = PostgresClient(
+        if register_params.sourceType == SourceType.POSTGRESQL.value:
+            client = PostgresClient(
                 dbname=register_params.dbname,
                 user=register_params.username,
                 password=register_params.password,
                 host=register_params.host,
                 port=register_params.port,
             )
-            db.test_connection()
-            return db
+            client.test_connection()
+            return client
+        elif register_params.sourceType == SourceType.MYSQL.value:
+            client = MySQLClient(
+                dbname=register_params.dbname,
+                user=register_params.username,
+                password=register_params.password,
+                host=register_params.host,
+                port=register_params.port,
+            )
+            client.test_connection()
+            return client
+        elif register_params.sourceType == SourceType.MONGODB.value:
+            client = MongoDBClient(
+                dbname=register_params.dbname,
+                user=register_params.username,
+                password=register_params.password,
+                host=register_params.host,
+                port=register_params.port,
+            )
+            client.test_connection()
+            return client
+        elif register_params.sourceType == SourceType.DATABRICKS.value:
+            client = DatabaseClient(
+                dbname=register_params.dbname,
+                user=register_params.username,
+                password=register_params.password,
+                host=register_params.host,
+                port=register_params.port,
+            )
+            client.test_connection()
+            return client
+        elif register_params.sourceType == SourceType.CSV.value:
+            client = CSVClient(path=register_params.filepath)
+            return client
         else:
             raise ValueError(f"Unsupported source type: {register_params.sourceType}")
 

@@ -1,22 +1,29 @@
+from typing import Union
+
 from app.services.agents.agents.text_to_sql_agent import TextToSQLAgent
-from app.clients.db import DatabaseClient
+from app.services.sources.db import DatabaseClient
+from app.services.sources.files import CSVClient
 from app.core.model_type import AgentType
 from app.schemas import SQLResponse, GeneralResponse, DialogueResult
 
 
 class DataDialogueAgent:
     def __init__(
-        self, database: DatabaseClient, model, model_type: str, agent_name: str
+        self,
+        source_client: Union[DatabaseClient, CSVClient],
+        model,
+        model_type: str,
+        agent_name: str,
     ):
         self.model = model
-        self.database = database
+        self.source_client = source_client
         self.model_type = model_type
         self.name = agent_name
-        self.is_sql_relevant = self.database and (
-            self.model_type == AgentType.SQL.value
+        self.is_contextual = self.source_client and (
+            self.model_type == AgentType.CONTEXTUAL.value
         )
-        if self.is_sql_relevant:
-            self.sql_agent = TextToSQLAgent(model, database)
+        if self.is_contextual:
+            self.sql_agent = TextToSQLAgent(model, source_client)
         else:
             self.sql_agent = None
 
@@ -44,5 +51,5 @@ class DataDialogueAgent:
             user_prompt=prompt,
             agent=agent,
             response=response,
-            is_sql_response=bool(self.is_sql_relevant),
+            is_sql_response=bool(self.is_contextual),
         )
