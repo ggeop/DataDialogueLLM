@@ -1,0 +1,115 @@
+:root {
+    --md-primary-fg-color: #4ecca3;
+    --md-primary-fg-color--light: #3da88a;
+    --md-primary-fg-color--dark: #45b393;
+    --md-accent-fg-color: #4ecca3;
+    --md-accent-fg-color--transparent: rgba(78, 204, 163, 0.1);
+}
+
+[data-md-color-scheme="default"] {
+    --md-typeset-a-color: #4ecca3;
+    --md-primary-fg-color: #4ecca3;
+    --md-accent-fg-color: #45b393;
+}
+
+[data-md-color-scheme="slate"] {
+    --md-default-bg-color: #1a1a2e;
+    --md-default-fg-color: #ffffff;
+    --md-typeset-a-color: #4ecca3;
+    --md-primary-fg-color: #4ecca3;
+    --md-accent-fg-color: #45b393;
+    --md-code-bg-color: #232741;
+    --md-code-fg-color: #ffffff;
+    --md-footer-bg-color: #1a1a2e;
+    --md-footer-fg-color: #ffffff;
+}
+
+/* Custom styles for code blocks */
+.md-typeset pre {
+    background-color: #232741;
+    border: 1px solid #2c2c44;
+}
+
+.md-typeset code {
+    color: #4ecca3;
+    background-color: #232741;
+}
+
+/* Custom styles for admonitions */
+.md-typeset .admonition {
+    background-color: #232741;
+    border-color: #2c2c44;
+}
+
+/* Custom styles for tables */
+.md-typeset table:not([class]) {
+    background-color: #232741;
+    border-color: #2c2c44;
+}
+
+.md-typeset table:not([class]) th {
+    background-color: #2a2a4a;
+    color: #ffffff;
+}
+
+/* Custom styles for navigation */
+.md-nav__link--active {
+    color: #4ecca3;
+}
+
+.md-nav__link:hover {
+    color: #4ecca3;
+}
+
+/* Custom styles for search */
+.md-search__input {
+    background-color: #2a2a4a;
+    color: #ffffff;
+}
+
+.md-search__input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Custom styles for buttons */
+.md-typeset .md-button {
+    background-color: #4ecca3;
+    color: #ffffff;
+}
+
+.md-typeset .md-button:hover {
+    background-color: #3da88a;
+}
+
+/* Custom styles for tabs */
+.md-tabs {
+    background-color: #1a1a2e;
+    border-bottom: 1px solid #2c2c44;
+}
+
+.md-tabs__link {
+    color: #ffffff;
+}
+
+.md-tabs__link--active {
+    color: #4ecca3;
+}
+
+/* Custom styles for headers */
+.md-typeset h1 {
+    color: #4ecca3;
+}
+
+.md-typeset h2 {
+    color: #4ecca3;
+}
+
+/* Custom styles for footer */
+.md-footer {
+    background-color: #1a1a2e;
+    color: #ffffff;
+}
+
+.md-footer-meta {
+    background-color: #1a1a2e;
+} 

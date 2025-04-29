@@ -1,0 +1,97 @@
+site_name: DataDialogue
+site_description: Transform the way you interact with data using AI-powered conversations
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+  font:
+    text: Roboto
+    code: Roboto Mono
+  custom_dir: docs_theme
+  icon:
+    repo: fontawesome/brands/github
+
+repo_name: DataDialogueLLM
+repo_url: https://github.com/ggeop/DataDialogueLLM
+edit_uri: edit/main/docs/
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Quick Start: getting-started/quick-start.md
+    - Installation: getting-started/installation.md
+  - Development:
+    - Setup Guide: development/DEV_SETUP.md
+    - Adding Model Provider: development/ADD_MODEL_PROVIDER.md
+    - Common Issues: development/COMMON_ISSUES.md
+  - Release Management:
+    - Release Strategy: release-management/RELEASE_STRATEGY.md
+    - Release Process: release-management/RELEASE.md
+  - Community:
+    - Contributing: community/CONTRIBUTING.md
+  - Documentation:
+    - Setup Guide: documentation/setup.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [backend]
+
+# Add static files configuration
+extra:
+  static:
+    - frontend/static/images/logos/
+    - media/imgs/
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ggeop/DataDialogueLLM
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/u/datadialogue
+    - icon: fontawesome/solid/star
+      link: https://github.com/ggeop/DataDialogueLLM/stargazers
+      name: Stars
+    - icon: fontawesome/solid/code-fork
+      link: https://github.com/ggeop/DataDialogueLLM/network/members
+      name: Forks 
