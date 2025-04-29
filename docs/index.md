@@ -1,9 +1,5 @@
-<div align="center">
-
-<span style="font-size: 2em; font-weight: bold;">Data Dialogue</span>
-<br>
-<span style="font-size: 1.2em; font-style: italic;">Elevate Your Data Insights</span>
-<hr>
+# Data Dialogue
+## Elevate Your Data Insights
 
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/datadialogue)
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)]()
@@ -15,34 +11,9 @@
 [![Pydantic v2](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json)](https://pydantic.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-</div>
+---
 
 ## 🎉 Welcome to Data Dialogue
-
-<div align="center">
-  <table>
-    <tr>
-      <td align="center">
-        <a href="https://www.youtube.com/watch?v=breOr5o7r3Y">
-          <picture>
-            <img src="docs/media/imgs/data_dialogue_agent_responses.png" alt="Data Dialogue Demo" width="600" style="max-width: 100%; border-radius: 10px; margin-bottom: -40px;"/>
-          </picture>
-          <br/>
-        </a>
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <a href="https://www.youtube.com/watch?v=breOr5o7r3Y" style="text-decoration: none;">
-          <picture>
-            <img src="docs/media/youtube_button.png" alt="Play Button" width="20" style="margin-right: 5px; vertical-align: middle;"/>
-          </picture>
-          <sup>Click to watch the demo video</sup>
-        </a>
-      </td>
-    </tr>
-  </table>
-</div>
 
 > Transform the way you interact with data using AI-powered conversations
 
@@ -50,32 +21,22 @@ DataDialogue is an innovative application that bridges the gap between your data
 
 A user can select a LLM model and connect it with a data source and do his analysis by writing simple prompts instead of writing SQL queries or code.
 
-
-We're currently in an exciting preview phase! Here's what that means for you:
-
-- 💡 **Early Access**: Get a first look at cutting-edge AI-data interaction
-- 🔄 **Regular Updates**: Frequent improvements and new features
-- 👥 **Community Driven**: Your feedback shapes the future of DataDialogue
-- 🐞 **Bug Reports Welcome**: Help us polish the experience
-
-
-Please don't hesitate to open an issue or submit a pull request.
-
+![Data Dialogue Steps](media/imgs/data_dialogue_steps.png)
+![Data Dialogue Agent Responses](media/imgs/data_dialogue_agent_responses.png)
 
 ## ✨ Key Features
 
-- Natural language querying of databases
-- Integration with multiple language models
-   - Integration with HuggingFace models
-   - Integration with Commercial models (currently with Google LLMs)
-- Flexible architecture for extending to different data sources
-- RESTful API for easy integration
-- Secure query execution with protection against harmful SQL commands
-- Create validated Queries (+ Copy option)
-- Results Visualization
-- **Supported Models**: Choose between HuggingFace & public providers
-- **Data Sources**: Suppoorts connection with multiple data sources
- 
+- **Natural Language Querying**: Interact with your data using simple prompts instead of SQL
+- **Multiple LLM Integration**:
+  - HuggingFace models
+  - Commercial models (Google LLMs)
+- **Flexible Architecture**: Extend to different data sources easily
+- **RESTful API**: Easy integration with other systems
+- **Secure Query Execution**: Protection against harmful SQL commands
+- **Query Validation**: Create and validate queries with copy option
+- **Results Visualization**: Interactive data visualization
+- **Multiple Data Source Support**: Connect to various data sources
+
 <table>
 <tr>
 <td valign="top">
@@ -105,15 +66,12 @@ Please don't hesitate to open an issue or submit a pull request.
 
 ## 🎯 Getting Started
 
-![UI Screenshot](docs/media/imgs/data_dialogue_steps.png)
-![UI Screenshot](docs/media/imgs/data_dialogue_agent_responses.png)
-
 ### Prerequisites
 
 - Docker
 - Docker Compose
 
-### Run
+### Quick Installation
 
 1. Clone the repository:
    ```sh
@@ -122,32 +80,22 @@ Please don't hesitate to open an issue or submit a pull request.
    ```
 
 2. Run Data Dialogue services:
-   ```
+   ```sh
    docker-compose --env-file .env.prod up
    ```
 
-
 3. Access the frontend at `http://localhost:5000` in your web browser.
-
-4. **Try the Demo**: Click the video above to see it in action
-5. **Choose Your Model**:
-   - Local: HuggingFace models (requires sufficient computing power)
-   - Cloud: Commercial LLMs (recommended for lighter setups)
 
 > **Pro Tip**: Get your [FREE Google Gemini API key](https://aistudio.google.com/app/apikey) for the best cloud-based experience!
 
+## 📚 Documentation
 
-## 📑 Development
-
-For local development and setup instructions, please refer to our [Local Development Setup Guide](./docs/DEV_SETUP.md).
-
-The guide includes:
-- Local environment setup for Windows and Linux
-- Code style configuration with Black
-- Development workflows
-- Common issues and troubleshooting
-- Contributing guidelines
-
+- [Installation Guide](getting-started/installation.md) - Detailed setup instructions
+- [Quick Start Guide](getting-started/quick-start.md) - Get up and running quickly
+- [Features](user-guide/features.md) - Explore all features
+- [Configuration](user-guide/configuration.md) - Configure DataDialogue
+- [API Reference](api-reference.md) - Technical API documentation
+- [Contributing](contributing.md) - How to contribute
 
 ## 🤝 Contributing
 
@@ -156,20 +104,13 @@ Your feedback and contributions make DataDialogue better! If you have:
 - 🐞 Bug reports
 - 💡 General feedback
 
-Please read our [Contributing Guidelines](./docs/CONTRIBUTING.md) before submitting any pull requests.
+Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
 
 ## ♥️ Support and Community
 
 - Report issues via [GitHub Issues](https://github.com/ggeop/DataDialogueLLM/issues)
 - Join our community discussions [here](https://github.com/ggeop/DataDialogueLLM/discussions)
 
-## ✋ Need Help?
-
-Feel free to:
-- Open an issue on GitHub
-- Ask questions in pull requests
-- Contact project maintainers
-
 ## 📎 License
 
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information. 
