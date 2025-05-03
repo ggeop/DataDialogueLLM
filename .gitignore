@@ -68,3 +68,6 @@ venv
 # Virtual Environment
 docs_venv/
 DataDialogue.code-workspace
+
+# MKDocs
+site/

@@ -92,10 +92,7 @@ A user can select a LLM model and connect it with a data source and do his analy
 
 - [Installation Guide](getting-started/installation.md) - Detailed setup instructions
 - [Quick Start Guide](getting-started/quick-start.md) - Get up and running quickly
-- [Features](user-guide/features.md) - Explore all features
-- [Configuration](user-guide/configuration.md) - Configure DataDialogue
-- [API Reference](api-reference.md) - Technical API documentation
-- [Contributing](contributing.md) - How to contribute
+- [Contributing](community/CONTRIBUTING.md) - How to contribute
 
 ## 🤝 Contributing
 
@@ -104,7 +101,7 @@ Your feedback and contributions make DataDialogue better! If you have:
 - 🐞 Bug reports
 - 💡 General feedback
 
-Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting any pull requests.
+Please read our [Contributing Guidelines](community/CONTRIBUTING.md) before submitting any pull requests.
 
 ## ♥️ Support and Community
 
@@ -113,4 +110,4 @@ Please read our [Contributing Guidelines](./CONTRIBUTING.md) before submitting a
 
 ## 📎 License
 
-Distributed under the MIT License. See [LICENSE](./LICENSE) for more information. 
+Distributed under the MIT License. See [License](license.md) for more information. 
