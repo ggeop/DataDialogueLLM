@@ -129,4 +129,4 @@ docs: update deployment guide
 
 ## Development Setup
 
-Follow the instructions [Development Setup](./DEV_SETUP.md)
+Follow the instructions [Development Setup](../development/DEV_SETUP.md)
