@@ -1,4 +1,8 @@
-MIT License
+# License
+
+DataDialogue is distributed under the MIT License. The full text of the license is available in the root of the repository at [LICENSE](https://github.com/ggeop/DataDialogueLLM/blob/main/LICENSE).
+
+## MIT License
 
 Copyright (c) 2025 Georgios Papachristou
 
@@ -18,4 +22,4 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+SOFTWARE. 
