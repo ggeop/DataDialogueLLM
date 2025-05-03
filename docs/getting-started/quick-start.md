@@ -60,6 +60,5 @@ This guide will help you get up and running with DataDialogue in minutes.
 
 ## Next Steps
 
-- Explore [advanced features](../user-guide/features.md)
 - Learn about [local development](../development/DEV_SETUP.md)
 - Join our [community discussions](https://github.com/ggeop/DataDialogueLLM/discussions) 

@@ -29,7 +29,7 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
-  custom_dir: docs_theme
+  custom_dir: docs/docs_theme
   icon:
     repo: fontawesome/brands/github
 
@@ -53,6 +53,8 @@ nav:
     - Contributing: community/CONTRIBUTING.md
   - Documentation:
     - Setup Guide: documentation/setup.md
+  - License:
+    - License: license.md
 
 markdown_extensions:
   - admonition

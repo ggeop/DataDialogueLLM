@@ -76,7 +76,6 @@ After installation, you might want to configure:
 2. Database settings
 3. API endpoints
 
-See the [Configuration Guide](../user-guide/configuration.md) for more details.
 
 ## Verifying Installation
 
@@ -97,6 +96,5 @@ If you encounter any issues during installation:
 
 ## Next Steps
 
-- Follow our [Quick Start Guide](quick-start.md) to begin using DataDialogue
-- Explore the [Features](../user-guide/features.md) documentation
-- Join our community and [contribute](../contributing.md) to the project 
+- Follow our [Quick Start Guide](../getting-started/quick-start.md) to begin using DataDialogue
+- Join our community and [contribute](../community/CONTRIBUTING.md) to the project 
